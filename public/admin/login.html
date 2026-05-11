@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Subzero</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@800&display=swap" rel="stylesheet">
+<style>
+  :root { --ice-500:#00BCD4; --ice-600:#00ACC1; --ice-50:#E0F7FA; --slate-900:#0F172A; --slate-600:#475569; --slate-200:#E2E8F0; --white:#FFFFFF; --error:#EF4444; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--slate-900); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .card { background: var(--white); border-radius: 20px; padding: 44px 40px; width: 100%; max-width: 400px; }
+  .logo { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; color: var(--slate-900); text-align: center; margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: var(--slate-600); text-align: center; margin-bottom: 36px; }
+  .form-group { margin-bottom: 18px; }
+  label { font-size: 13px; font-weight: 600; color: var(--slate-600); display: block; margin-bottom: 7px; }
+  input { width: 100%; padding: 12px 14px; border: 2px solid var(--slate-200); border-radius: 10px; font-size: 14px; font-family: inherit; transition: border-color 200ms; }
+  input:focus { outline: none; border-color: var(--ice-500); }
+  .btn { width: 100%; background: var(--ice-500); color: var(--white); border: none; border-radius: 99px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 200ms; margin-top: 8px; }
+  .btn:hover { background: var(--ice-600); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .error-msg { color: var(--error); font-size: 13px; margin-top: 12px; text-align: center; display: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">SUBZERO</div>
+  <p class="subtitle">Panel de administración — Solo equipo autorizado</p>
+
+  <form id="loginForm" novalidate>
+    <div class="form-group">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" placeholder="admin@subzero.com" required autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+    </div>
+    <button type="submit" class="btn" id="loginBtn">Ingresar</button>
+    <p class="error-msg" id="errorMsg"></p>
+  </form>
+</div>
+
+<script type="module">
+import { auth } from "../assets/js/firebase-config.js";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// Si ya está logueado, redirigir al dashboard
+onAuthStateChanged(auth, user => {
+  if (user) window.location.replace("dashboard.html");
+});
+
+document.getElementById("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = document.getElementById("loginBtn");
+  const err = document.getElementById("errorMsg");
+  btn.disabled = true;
+  btn.textContent = "Ingresando...";
+  err.style.display = "none";
+
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      document.getElementById("email").value,
+      document.getElementById("password").value
+    );
+    window.location.replace("dashboard.html");
+  } catch (error) {
+    const mensajes = {
+      "auth/wrong-password":    "Contraseña incorrecta.",
+      "auth/user-not-found":    "Usuario no encontrado.",
+      "auth/invalid-credential":"Credenciales inválidas.",
+      "auth/too-many-requests": "Demasiados intentos. Espera unos minutos.",
+    };
+    err.textContent = mensajes[error.code] || "Error al ingresar. Intenta de nuevo.";
+    err.style.display = "block";
+    btn.disabled = false;
+    btn.textContent = "Ingresar";
+  }
+});
+</script>
+</body>
+</html>

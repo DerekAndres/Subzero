@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ─── Facturas PDF ─────────────────────────────────────────
+    // Escritura: solo desde service account (Cloud Functions)
+    // Lectura:   pública (URL directa en el correo)
+    match /facturas/{fileName} {
+      allow read:  if true;
+      allow write: if false; // solo Cloud Functions via Admin SDK
+    }
+
+    // ─── Imágenes de productos ───────────────────────────────
+    // Lectura pública, escritura solo admin autenticado
+    match /productos/{fileName} {
+      allow read:  if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

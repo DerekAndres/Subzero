@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Cocina — Subzero</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ice-500:#00BCD4; --ice-600:#00ACC1; --ice-50:#E0F7FA; --ice-100:#B2EBF2;
+    --slate-900:#0F172A; --slate-800:#1E293B; --slate-700:#334155;
+    --slate-600:#475569; --slate-400:#94A3B8; --slate-200:#E2E8F0; --slate-100:#F1F5F9;
+    --white:#FFFFFF; --success:#10B981; --warning:#F59E0B; --error:#EF4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #F6FEFF; color: var(--slate-800); }
+
+  /* Sidebar */
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 240px; background: var(--slate-900); padding: 28px 20px;
+    display: flex; flex-direction: column; flex-shrink: 0; position: sticky; top: 0; height: 100vh;
+  }
+  .sidebar-logo { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--white); margin-bottom: 32px; }
+  .sidebar-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--slate-400); margin-bottom: 10px; margin-top: 20px; }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    border-radius: 10px; color: var(--slate-400); font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all 200ms; text-decoration: none; margin-bottom: 4px;
+  }
+  .sidebar-link:hover, .sidebar-link.active { background: rgba(255,255,255,.08); color: var(--white); }
+  .sidebar-link.active { background: rgba(0,188,212,.15); color: var(--ice-400); }
+  .sidebar-footer { margin-top: auto; }
+  .logout-btn {
+    width: 100%; background: rgba(239,68,68,.15); color: #FCA5A5; border: none;
+    border-radius: 10px; padding: 10px 12px; font-size: 14px; font-weight: 500;
+    cursor: pointer; text-align: left; display: flex; align-items: center; gap: 10px;
+    transition: background 200ms;
+  }
+  .logout-btn:hover { background: rgba(239,68,68,.25); }
+
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; }
+  .topbar {
+    background: var(--white); border-bottom: 1px solid var(--slate-200);
+    padding: 18px 32px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .topbar-title { font-size: 18px; font-weight: 700; color: var(--slate-900); }
+  .topbar-user { font-size: 13px; color: var(--slate-400); }
+  .content { padding: 32px; flex: 1; }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .stat-card { background: var(--white); border-radius: 14px; padding: 20px 22px; border: 1px solid var(--slate-200); }
+  .stat-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--slate-400); margin-bottom: 8px; }
+  .stat-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--slate-900); }
+  .stat-sub { font-size: 12px; color: var(--slate-400); margin-top: 4px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+  .tab-btn {
+    padding: 8px 16px; border-radius: 99px; font-size: 13px; font-weight: 600;
+    border: 2px solid transparent; cursor: pointer; transition: all 200ms;
+    background: var(--white); color: var(--slate-600); border-color: var(--slate-200);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab-btn.active { background: var(--ice-500); color: var(--white); border-color: var(--ice-500); }
+  .tab-badge { background: rgba(255,255,255,.3); border-radius: 99px; padding: 1px 7px; font-size: 11px; }
+
+  /* Orders grid */
+  .orders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .order-card {
+    background: var(--white); border-radius: 14px; border: 1px solid var(--slate-200);
+    overflow: hidden; transition: box-shadow 200ms;
+  }
+  .order-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+  .order-card.nuevo { border-left: 4px solid var(--error); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.3)} 50%{box-shadow:0 0 0 8px rgba(239,68,68,0)} }
+  .order-head { padding: 16px 18px; border-bottom: 1px solid var(--slate-100); display: flex; align-items: center; justify-content: space-between; }
+  .order-id { font-size: 13px; font-weight: 700; color: var(--slate-900); }
+  .order-time { font-size: 12px; color: var(--slate-400); }
+  .status-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; }
+  .status-PENDIENTE      { background: #FEF9C3; color: #92400E; }
+  .status-EN_PREPARACION { background: #FEF3C7; color: #92400E; }
+  .status-LISTO          { background: #D1FAE5; color: #065F46; }
+  .status-ENTREGADO      { background: var(--slate-100); color: var(--slate-400); }
+  .status-CANCELADO      { background: #FEE2E2; color: #991B1B; }
+  .order-body { padding: 14px 18px; }
+  .order-client { font-size: 13px; font-weight: 600; color: var(--slate-700); margin-bottom: 2px; }
+  .order-email  { font-size: 12px; color: var(--slate-400); margin-bottom: 12px; }
+  .order-items  { font-size: 13px; color: var(--slate-600); line-height: 1.6; margin-bottom: 12px; }
+  .order-total  { font-size: 15px; font-weight: 700; color: var(--ice-600); }
+  .order-actions { padding: 14px 18px; border-top: 1px solid var(--slate-100); display: flex; gap: 8px; }
+  .action-btn {
+    flex: 1; padding: 9px; border-radius: 99px; font-size: 12px; font-weight: 600;
+    border: none; cursor: pointer; transition: all 200ms;
+  }
+  .action-primary { background: var(--ice-500); color: var(--white); }
+  .action-primary:hover { background: var(--ice-600); }
+  .action-secondary { background: var(--slate-100); color: var(--slate-600); }
+  .action-secondary:hover { background: var(--slate-200); }
+  .action-success { background: #D1FAE5; color: #065F46; }
+  .action-success:hover { background: #A7F3D0; }
+  .empty-orders { text-align: center; padding: 60px 24px; color: var(--slate-400); }
+
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .content { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">SUBZERO</div>
+    <div class="sidebar-label">Cocina</div>
+    <a class="sidebar-link active" href="#">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
+    <div class="sidebar-label">Inventario</div>
+    <a class="sidebar-link" href="#">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+      Productos
+    </a>
+    <a class="sidebar-link" href="#">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Extras / Toppings
+    </a>
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Cerrar sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">Dashboard de Cocina</div>
+      <div class="topbar-user" id="adminUser">Cargando...</div>
+    </div>
+    <div class="content">
+      <!-- Estadísticas -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Pendientes</div>
+          <div class="stat-value" id="cntPendiente">—</div>
+          <div class="stat-sub">Por atender</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">En preparación</div>
+          <div class="stat-value" id="cntPreparacion">—</div>
+          <div class="stat-sub">En cocina</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Listos</div>
+          <div class="stat-value" id="cntListo">—</div>
+          <div class="stat-sub">Para entregar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Hoy entregados</div>
+          <div class="stat-value" id="cntEntregado">—</div>
+          <div class="stat-sub">Completados</div>
+        </div>
+      </div>
+
+      <!-- Tabs filtro -->
+      <div class="tabs">
+        <button class="tab-btn active" onclick="filtrar('PENDIENTE',this)">
+          Pendientes <span class="tab-badge" id="b-PENDIENTE">0</span>
+        </button>
+        <button class="tab-btn" onclick="filtrar('EN_PREPARACION',this)">
+          En preparación <span class="tab-badge" id="b-EN_PREPARACION">0</span>
+        </button>
+        <button class="tab-btn" onclick="filtrar('LISTO',this)">
+          Listos <span class="tab-badge" id="b-LISTO">0</span>
+        </button>
+        <button class="tab-btn" onclick="filtrar('ENTREGADO',this)">Historial</button>
+      </div>
+
+      <!-- Pedidos -->
+      <div class="orders-grid" id="ordersGrid">
+        <div class="empty-orders">Cargando pedidos...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notificación sonora invisible -->
+<audio id="notifSound" src="" preload="none"></audio>
+
+<script type="module">
+import { auth, db } from "../assets/js/firebase-config.js";
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ─── Auth guard ─────────────────────────────────────────
+onAuthStateChanged(auth, user => {
+  if (!user) { window.location.replace("login.html"); return; }
+  document.getElementById("adminUser").textContent = user.email;
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () =>
+  signOut(auth).then(() => window.location.replace("login.html"))
+);
+
+// ─── Estado ─────────────────────────────────────────────
+let allOrders = [];
+let estadoActivo = "PENDIENTE";
+let prevIds = new Set();
+
+// ─── Escucha pedidos en tiempo real ─────────────────────
+const hoyInicio = new Date(); hoyInicio.setHours(0,0,0,0);
+
+const q = query(
+  collection(db, "pedidos"),
+  where("fecha", ">=", Timestamp.fromDate(hoyInicio)),
+  orderBy("fecha", "desc")
+);
+
+onSnapshot(q, snap => {
+  allOrders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+  // Detectar pedidos nuevos para notificar
+  const nuevosPendientes = allOrders.filter(o => o.estado === "PENDIENTE" && !prevIds.has(o.id));
+  if (nuevosPendientes.length && prevIds.size > 0) {
+    document.title = `🔔 ¡${nuevosPendientes.length} nuevo(s)! — Dashboard`;
+    setTimeout(() => { document.title = "Dashboard Cocina — Subzero"; }, 5000);
+  }
+  prevIds = new Set(allOrders.map(o => o.id));
+
+  actualizarContadores();
+  renderOrders();
+});
+
+// ─── Contadores ─────────────────────────────────────────
+function actualizarContadores() {
+  const estados = ["PENDIENTE","EN_PREPARACION","LISTO","ENTREGADO"];
+  estados.forEach(e => {
+    const cnt = allOrders.filter(o => o.estado === e).length;
+    const el = document.getElementById(`cnt${e.replace("_","")}`);
+    if (el) el.textContent = cnt;
+    const badge = document.getElementById(`b-${e}`);
+    if (badge) badge.textContent = cnt;
+  });
+}
+
+// ─── Render ──────────────────────────────────────────────
+function renderOrders() {
+  const grid = document.getElementById("ordersGrid");
+  const filtered = allOrders.filter(o => o.estado === estadoActivo);
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-orders">No hay pedidos en este estado.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(o => {
+    const fecha = o.fecha?.toDate?.() || new Date();
+    const hora  = fecha.toLocaleTimeString("es-CR", { hour:"2-digit", minute:"2-digit" });
+    const esNuevo = o.estado === "PENDIENTE";
+
+    const itemsHTML = (o.items || []).map(i =>
+      `<div>• ${i.nombre}${i.meta ? ` <span style="color:var(--slate-400)">(${i.meta})</span>` : ""}</div>`
+    ).join("");
+
+    const acciones = {
+      PENDIENTE:      `<button class="action-btn action-primary" onclick="cambiarEstado('${o.id}','EN_PREPARACION')">Empezar preparación</button>`,
+      EN_PREPARACION: `<button class="action-btn action-success" onclick="cambiarEstado('${o.id}','LISTO')">Marcar como LISTO</button>`,
+      LISTO:          `<button class="action-btn action-primary" onclick="cambiarEstado('${o.id}','ENTREGADO')">Marcar ENTREGADO</button>`,
+      ENTREGADO:      `<button class="action-btn action-secondary" disabled>Completado</button>`,
+    };
+
+    return `
+      <div class="order-card ${esNuevo ? 'nuevo' : ''}">
+        <div class="order-head">
+          <div>
+            <div class="order-id">Pedido #${o.id.slice(-6).toUpperCase()}</div>
+            <div class="order-time">${hora}</div>
+          </div>
+          <span class="status-badge status-${o.estado}">${o.estado.replace("_"," ")}</span>
+        </div>
+        <div class="order-body">
+          <div class="order-client">${o.clienteNombre || "Cliente"}</div>
+          <div class="order-email">${o.clienteEmail || ""}</div>
+          <div class="order-items">${itemsHTML || "Sin detalle"}</div>
+          <div class="order-total">₡${(o.total || 0).toLocaleString()}</div>
+        </div>
+        <div class="order-actions">${acciones[o.estado] || ""}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+// ─── Cambiar estado ──────────────────────────────────────
+window.cambiarEstado = async (pedidoId, nuevoEstado) => {
+  await updateDoc(doc(db, "pedidos", pedidoId), { estado: nuevoEstado });
+};
+
+// ─── Tabs ────────────────────────────────────────────────
+window.filtrar = (estado, btn) => {
+  estadoActivo = estado;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderOrders();
+};
+</script>
+</body>
+</html>

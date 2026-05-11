@@ -1,0 +1,31 @@
+{
+  "sabores": [
+    { "id": "fresa",      "nombre": "Fresa",      "precio": 0,   "categoria": "sabores", "color": "#F48FB1", "activo": true },
+    { "id": "mango",      "nombre": "Mango",      "precio": 0,   "categoria": "sabores", "color": "#FFCC80", "activo": true },
+    { "id": "limon",      "nombre": "Limón",      "precio": 0,   "categoria": "sabores", "color": "#E6EE9C", "activo": true },
+    { "id": "tamarindo",  "nombre": "Tamarindo",  "precio": 0,   "categoria": "sabores", "color": "#BCAAA4", "activo": true },
+    { "id": "maracuya",   "nombre": "Maracuyá",   "precio": 200, "categoria": "sabores", "color": "#FFD54F", "activo": true },
+    { "id": "guanabana",  "nombre": "Guanábana",  "precio": 200, "categoria": "sabores", "color": "#A5D6A7", "activo": true },
+    { "id": "jamaica",    "nombre": "Jamaica",    "precio": 0,   "categoria": "sabores", "color": "#EF9A9A", "activo": true },
+    { "id": "coco",       "nombre": "Coco",       "precio": 200, "categoria": "sabores", "color": "#F5F5F5", "activo": true }
+  ],
+  "gomitas": [
+    { "id": "g_fresa",      "nombre": "Gomitas de fresa",    "precio": 200, "categoria": "gomitas", "activo": true },
+    { "id": "g_agridulce",  "nombre": "Gomitas agridulces",  "precio": 200, "categoria": "gomitas", "activo": true },
+    { "id": "g_enchilada",  "nombre": "Gomitas enchiladas",  "precio": 250, "categoria": "gomitas", "activo": true },
+    { "id": "g_gusanos",    "nombre": "Gusanos de azúcar",   "precio": 200, "categoria": "gomitas", "activo": true }
+  ],
+  "toppings": [
+    { "id": "t_lechera",    "nombre": "Lechera",           "precio": 150, "categoria": "toppings", "activo": true },
+    { "id": "t_chamoy",     "nombre": "Chamoy",            "precio": 100, "categoria": "toppings", "activo": true },
+    { "id": "t_chocolate",  "nombre": "Chocolate",         "precio": 150, "categoria": "toppings", "activo": true },
+    { "id": "t_chile",      "nombre": "Chile en polvo",    "precio": 100, "categoria": "toppings", "activo": true },
+    { "id": "t_cajeta",     "nombre": "Cajeta",            "precio": 200, "categoria": "toppings", "activo": true },
+    { "id": "t_tamarindo",  "nombre": "Tamarindo líquido", "precio": 150, "categoria": "toppings", "activo": true }
+  ],
+  "tamanos": [
+    { "id": "pequeno", "nombre": "Pequeño",  "precio": 1500, "categoria": "tamanos", "activo": true },
+    { "id": "mediano", "nombre": "Mediano",  "precio": 2000, "categoria": "tamanos", "activo": true },
+    { "id": "grande",  "nombre": "Grande",   "precio": 2500, "categoria": "tamanos", "activo": true }
+  ]
+}

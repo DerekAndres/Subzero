@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subzero — Raspados Artesanales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --pink:       #E8186D;
+  --pink-light: #FF6B9D;
+  --pink-pale:  #FFE8F2;
+  --pink-dim:   #FFADD1;
+  --cream:      #FAF4ED;
+  --cream-2:    #F3EBE0;
+  --white:      #FFFFFF;
+  --ink:        #1C0D14;
+  --ink-2:      #3D1E2E;
+  --gray-1:     #F9F3EE;
+  --gray-2:     #EDE0D5;
+  --gray-3:     #C9AEAA;
+  --gray-5:     #8A6070;
+  --success:    #22C55E;
+  --danger:     #EF4444;
+  --r-sm:10px; --r-md:18px; --r-lg:28px; --r-xl:40px; --r-full:999px;
+  --shadow-sm:  0 2px 8px rgba(232,24,109,.08);
+  --shadow-md:  0 8px 32px rgba(232,24,109,.12);
+  --shadow-lg:  0 20px 60px rgba(232,24,109,.18);
+  --shadow-pink:    0 8px 40px rgba(232,24,109,.25);
+  --shadow-pink-lg: 0 16px 60px rgba(232,24,109,.35);
+  --ease-out:   cubic-bezier(.16,1,.3,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.6;overflow-x:hidden}
+img,svg{display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;border:none;cursor:pointer}
+ul{list-style:none}
+.container{width:min(100%,1240px);margin-inline:auto;padding-inline:clamp(20px,5vw,60px)}
+
+/* ── NAVBAR ── */
+.nav{position:fixed;inset-block-start:0;inset-inline:0;z-index:90;padding:14px 0;transition:background 300ms,box-shadow 300ms}
+.nav.scrolled{background:rgba(250,244,237,.96);backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(232,24,109,.1)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Fredoka One',sans-serif;font-size:22px;letter-spacing:.5px;color:var(--pink)}
+.logo-mark{width:36px;height:36px;border-radius:10px;background:var(--pink);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{font-size:15px;font-weight:700;color:var(--ink-2);padding:8px 14px;border-radius:var(--r-full);transition:all 200ms}
+.nav-link:hover{color:var(--pink);background:var(--pink-pale)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.cart-btn{position:relative;display:flex;align-items:center;gap:8px;background:var(--pink);color:var(--white);padding:10px 20px;border-radius:var(--r-full);font-size:14px;font-weight:800;transition:all 220ms var(--ease-out);box-shadow:var(--shadow-pink)}
+.cart-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-pink-lg);background:var(--pink-light)}
+.cart-bubble{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--white);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid var(--cream);transform:scale(0);transition:transform 300ms var(--ease-spring)}
+.cart-bubble.show{transform:scale(1)}
+.ham{display:none;flex-direction:column;gap:5px;background:none;padding:8px;border-radius:10px;transition:background 200ms}
+.ham:hover{background:var(--pink-pale)}
+.ham span{display:block;width:22px;height:2.5px;background:var(--ink);border-radius:99px;transition:all 300ms}
+
+/* Mobile nav */
+.mobile-nav{display:none;position:fixed;inset:0;background:var(--cream);z-index:98;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.mobile-nav.open{display:flex}
+.mobile-nav .nav-link{font-size:26px;font-family:'Fredoka One',sans-serif;color:var(--ink)}
+.mobile-close{position:absolute;top:20px;right:20px;width:42px;height:42px;border-radius:50%;background:var(--pink-pale);border:2px solid var(--pink-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--pink)}
+
+/* ── HERO ── */
+.hero{min-height:100svh;background:var(--cream);position:relative;overflow:hidden;display:flex;align-items:center;padding-block:120px 80px}
+.hero-blob-1{position:absolute;top:-20%;right:-15%;width:clamp(400px,60vw,820px);aspect-ratio:1;background:radial-gradient(circle at 50% 40%,rgba(232,24,109,.13) 0%,transparent 65%);border-radius:50%;pointer-events:none}
+.hero-blob-2{position:absolute;bottom:-20%;left:-10%;width:clamp(300px,40vw,580px);aspect-ratio:1;background:radial-gradient(circle,rgba(255,107,157,.09) 0%,transparent 65%);border-radius:50%;pointer-events:none}
+#confettiCanvas{position:absolute;inset:0;pointer-events:none;z-index:0}
+.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,100px);align-items:center}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--pink-pale);border:1.5px solid var(--pink-dim);color:var(--pink);font-size:12px;font-weight:800;letter-spacing:.4px;padding:6px 14px;border-radius:var(--r-full)}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--success);flex-shrink:0;animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-family:'Fredoka One',sans-serif;font-size:clamp(50px,7.5vw,100px);font-weight:400;line-height:.95;color:var(--ink);margin-bottom:28px}
+.hero-title .hl{color:var(--pink);display:block}
+.hero-title .hl2{color:var(--pink-light);display:block}
+.hero-body{font-size:clamp(15px,1.6vw,18px);color:var(--gray-5);line-height:1.72;max-width:460px;margin-bottom:44px;font-weight:600}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.btn-pink{display:inline-flex;align-items:center;gap:10px;background:var(--pink);color:var(--white);font-size:15px;font-weight:800;padding:15px 30px;border-radius:var(--r-full);box-shadow:var(--shadow-pink);transition:all 220ms var(--ease-out)}
+.btn-pink:hover{background:var(--pink-light);transform:translateY(-2px);box-shadow:var(--shadow-pink-lg)}
+.btn-outline{display:inline-flex;align-items:center;gap:10px;background:var(--white);color:var(--pink);border:2px solid var(--pink-dim);font-size:15px;font-weight:800;padding:13px 28px;border-radius:var(--r-full);transition:all 220ms}
+.btn-outline:hover{background:var(--pink-pale);border-color:var(--pink)}
+.hero-stats{display:flex;gap:clamp(24px,4vw,48px);margin-top:56px;padding-top:36px;border-top:2px dashed var(--gray-2)}
+.stat-val{font-family:'Fredoka One',sans-serif;font-size:clamp(24px,3vw,34px);color:var(--pink)}
+.stat-lbl{font-size:12px;color:var(--gray-5);margin-top:2px;font-weight:700}
+
+/* Hero visual */
+.hero-visual{display:flex;align-items:center;justify-content:center;position:relative}
+.cup-wrap{position:relative;width:clamp(240px,36vw,440px);animation:levitate 6s ease-in-out infinite}
+@keyframes levitate{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}
+.cup-svg{width:100%;filter:drop-shadow(0 40px 80px rgba(232,24,109,.28))}
+.fbadge{position:absolute;display:flex;align-items:center;gap:10px;background:var(--white);border:2px solid var(--pink-pale);border-radius:var(--r-md);padding:12px 18px;color:var(--ink);font-size:13px;font-weight:800;box-shadow:var(--shadow-md)}
+.fbadge-1{top:8%;right:-5%;animation:fb1 4s ease-in-out infinite}
+.fbadge-2{bottom:18%;left:-8%;animation:fb2 5s ease-in-out infinite}
+@keyframes fb1{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
+@keyframes fb2{0%,100%{transform:translateY(0)}50%{transform:translateY(12px)}}
+.fbadge-icon{width:32px;height:32px;border-radius:10px;background:var(--pink-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fbadge-sub{font-size:11px;color:var(--gray-5);font-weight:600;display:block;margin-top:1px}
+
+/* ── REVEAL ── */
+[data-reveal]{opacity:0;transform:translateY(30px);transition:opacity 580ms var(--ease-out),transform 580ms var(--ease-out)}
+[data-reveal].in{opacity:1;transform:none}
+[data-reveal-delay="1"]{transition-delay:100ms}
+[data-reveal-delay="2"]{transition-delay:200ms}
+[data-reveal-delay="3"]{transition-delay:300ms}
+[data-reveal-delay="4"]{transition-delay:400ms}
+
+/* ── SECTION BASE ── */
+.section{padding-block:clamp(72px,10vw,120px)}
+.chip{display:inline-flex;align-items:center;gap:8px;color:var(--pink);font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px;background:var(--pink-pale);padding:6px 16px;border-radius:var(--r-full)}
+.display{font-family:'Fredoka One',sans-serif;font-size:clamp(32px,4.5vw,58px);font-weight:400;line-height:1.05;color:var(--ink);margin-bottom:16px}
+.lead{font-size:clamp(15px,1.5vw,17px);color:var(--gray-5);line-height:1.7;max-width:540px;font-weight:600}
+.section-head{margin-bottom:clamp(40px,6vw,72px)}
+.section-head.center{text-align:center}
+.section-head.center .lead{margin-inline:auto}
+.section-head.center .chip{display:inline-flex}
+
+/* ── CATALOG ── */
+.catalog{background:var(--white)}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.bc{background:var(--cream);border-radius:var(--r-xl);overflow:hidden;border:2px solid var(--gray-2);display:flex;flex-direction:column;transition:transform 300ms var(--ease-out),box-shadow 300ms,border-color 300ms;cursor:pointer}
+.bc:hover{transform:translateY(-8px) scale(1.01);box-shadow:var(--shadow-pink);border-color:var(--pink-dim)}
+.bc-img{aspect-ratio:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:24px}
+.bc-bg{position:absolute;inset:0;transition:transform 400ms var(--ease-out)}
+.bc:hover .bc-bg{transform:scale(1.07)}
+.bc-cup{position:relative;z-index:1;transition:transform 400ms var(--ease-out)}
+.bc:hover .bc-cup{transform:translateY(-8px) scale(1.05)}
+.bc-badge{position:absolute;top:14px;left:14px;z-index:2;background:var(--pink);color:var(--white);font-size:10px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;padding:5px 12px;border-radius:var(--r-full)}
+.bc-dots{position:absolute;bottom:14px;right:14px;z-index:2;display:flex;gap:5px}
+.fdot{width:12px;height:12px;border-radius:50%;border:2px solid rgba(255,255,255,.7);box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+.bc-body{padding:20px 22px 24px;display:flex;flex-direction:column;gap:8px;background:var(--white);flex:1}
+.bc-name{font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--ink)}
+.bc-desc{font-size:13px;color:var(--gray-5);line-height:1.5;flex:1;font-weight:600}
+.bc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.bc-price{font-family:'Fredoka One',sans-serif;font-size:22px;color:var(--ink)}
+.bc-price sub{font-size:12px;font-weight:400;color:var(--gray-5);font-family:'Nunito',sans-serif}
+.add-circle{width:42px;height:42px;border-radius:50%;background:var(--pink);color:var(--white);display:flex;align-items:center;justify-content:center;transition:all 220ms var(--ease-spring);flex-shrink:0;box-shadow:0 4px 12px rgba(232,24,109,.3)}
+.add-circle:hover{background:var(--pink-light);transform:rotate(90deg) scale(1.12);box-shadow:var(--shadow-pink)}
+
+/* ── FEATURES ── */
+.features{background:var(--pink)}
+.features .display{color:var(--white)}
+.features .lead{color:rgba(255,255,255,.75)}
+.features .chip{background:rgba(255,255,255,.15);color:var(--white)}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.feat{background:rgba(255,255,255,.12);border-radius:var(--r-xl);padding:32px 28px;border:2px solid rgba(255,255,255,.18);transition:transform 300ms var(--ease-out),background 300ms}
+.feat:hover{transform:translateY(-4px);background:rgba(255,255,255,.2)}
+.feat-icon{width:56px;height:56px;border-radius:var(--r-md);background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:26px}
+.feat-title{font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--white);margin-bottom:8px}
+.feat-desc{font-size:14px;color:rgba(255,255,255,.72);line-height:1.65;font-weight:600}
+
+/* ── CUSTOMIZER ── */
+.customizer{background:var(--cream)}
+.cust-wrap{display:grid;grid-template-columns:1fr 380px;gap:clamp(28px,4vw,56px);align-items:start}
+.step-nav{display:flex;background:var(--white);border-radius:var(--r-xl);padding:6px;margin-bottom:28px;gap:0;border:2px solid var(--gray-2)}
+.sn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:calc(var(--r-xl) - 6px);font-size:13px;font-weight:800;color:var(--gray-5);cursor:pointer;transition:all 200ms;border:none;background:none}
+.sn.active{background:var(--pink);color:var(--white);box-shadow:var(--shadow-pink)}
+.sn.done{color:var(--success)}
+.sn-num{width:22px;height:22px;border-radius:50%;background:var(--gray-2);color:var(--gray-5);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 200ms}
+.sn.active .sn-num{background:rgba(255,255,255,.3);color:var(--white)}
+.sn.done .sn-num{background:var(--success);color:var(--white)}
+.sp{display:none;animation:fsIn 280ms var(--ease-out) forwards}
+.sp.active{display:block}
+@keyframes fsIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+.cust-panel{background:var(--white);border-radius:var(--r-xl);padding:28px;border:2px solid var(--gray-2)}
+.sp-title{font-family:'Fredoka One',sans-serif;font-size:26px;color:var(--ink);margin-bottom:8px}
+.sp-hint{font-size:14px;color:var(--gray-5);margin-bottom:24px;font-weight:600}
+.size-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.sz{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 12px;border-radius:var(--r-lg);background:var(--cream);border:2px solid var(--gray-2);cursor:pointer;transition:all 200ms;color:var(--ink)}
+.sz:hover{border-color:var(--pink-dim);background:var(--pink-pale)}
+.sz.selected{border-color:var(--pink);background:var(--pink-pale)}
+.sz-icon{height:48px;display:flex;align-items:flex-end;justify-content:center}
+.sz-label{font-family:'Fredoka One',sans-serif;font-size:16px}
+.sz-price{font-size:12px;color:var(--gray-5);font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opt{display:flex;align-items:center;gap:9px;padding:11px 18px;border-radius:var(--r-full);background:var(--cream);color:var(--ink);border:2px solid var(--gray-2);font-size:14px;font-weight:700;cursor:pointer;transition:all 180ms}
+.opt:hover{border-color:var(--pink-dim);background:var(--pink-pale)}
+.opt.selected{border-color:var(--pink);background:var(--pink-pale);color:var(--pink)}
+.opt-sw{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+.opt-p{font-size:11px;color:var(--gray-5);margin-left:2px;font-weight:700}
+.ctr-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:2px dashed var(--gray-2)}
+.ctr-item:last-child{border-bottom:none}
+.ctr-name{flex:1;font-size:14px;font-weight:800}
+.ctr-plbl{font-size:12px;color:var(--gray-5);font-weight:600}
+.ctr-ctrl{display:flex;align-items:center;gap:14px}
+.cb{width:32px;height:32px;border-radius:50%;background:var(--cream);border:2px solid var(--gray-2);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 180ms;color:var(--gray-5);line-height:1}
+.cb:hover{background:var(--pink-pale);border-color:var(--pink);color:var(--pink)}
+.cv{font-size:16px;font-weight:900;min-width:22px;text-align:center;color:var(--pink);font-family:'Fredoka One',sans-serif}
+.sp-actions{display:flex;gap:12px;margin-top:28px}
+.btn-next{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--pink);color:var(--white);padding:13px 26px;border-radius:var(--r-full);font-size:14px;font-weight:800;cursor:pointer;transition:all 200ms var(--ease-out);box-shadow:var(--shadow-pink)}
+.btn-next:hover:not(:disabled){background:var(--pink-light);transform:translateY(-1px)}
+.btn-next:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn-back{display:flex;align-items:center;gap:8px;background:var(--white);color:var(--gray-5);border:2px solid var(--gray-2);padding:11px 22px;border-radius:var(--r-full);font-size:14px;font-weight:700;cursor:pointer;transition:all 200ms}
+.btn-back:hover{background:var(--cream);color:var(--ink)}
+.summary{background:var(--pink);border-radius:var(--r-xl);padding:32px;color:var(--white);position:sticky;top:100px}
+.sum-title{font-family:'Fredoka One',sans-serif;font-size:22px;margin-bottom:24px}
+.sum-preview{aspect-ratio:1;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.25);border-radius:var(--r-lg);display:flex;align-items:center;justify-content:center;margin-bottom:24px;overflow:hidden}
+.sum-preview svg{width:110px;transition:all 400ms var(--ease-out)}
+.sum-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.sum-row{display:flex;justify-content:space-between;font-size:13px}
+.sum-row span:first-child{color:rgba(255,255,255,.65);font-weight:700}
+.sum-row span:last-child{color:var(--white);font-weight:800}
+.sum-row.total{font-size:17px;padding-top:14px;border-top:2px dashed rgba(255,255,255,.25);margin-top:4px}
+.sum-row.total span:last-child{font-size:24px;font-family:'Fredoka One',sans-serif}
+.add-btn{width:100%;background:var(--white);color:var(--pink);border-radius:var(--r-full);padding:16px;font-size:15px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 220ms var(--ease-out)}
+.add-btn:hover:not(:disabled){background:var(--pink-pale);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.15)}
+.add-btn:disabled{opacity:.5;cursor:not-allowed}
+.sum-note{font-size:12px;color:rgba(255,255,255,.6);text-align:center;margin-top:12px;font-weight:700}
+
+/* ── ABOUT ── */
+.about{background:var(--cream)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,100px);align-items:center}
+.how{display:flex;flex-direction:column;margin-top:40px}
+.how-item{display:flex;gap:20px;padding:20px 0;border-bottom:2px dashed var(--gray-2);transition:padding-left 200ms}
+.how-item:last-child{border-bottom:none}
+.how-item:hover{padding-left:6px}
+.how-n{font-family:'Fredoka One',sans-serif;font-size:28px;color:var(--pink);min-width:44px;line-height:1}
+.how-title{font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--ink);margin-bottom:4px}
+.how-desc{font-size:13px;color:var(--gray-5);line-height:1.6;font-weight:600}
+.about-box{background:var(--white);border-radius:var(--r-xl);padding:clamp(24px,4vw,48px);border:2px solid var(--gray-2)}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.kpi{background:var(--pink-pale);border:2px solid var(--pink-dim);border-radius:var(--r-lg);padding:22px 18px;transition:all 200ms}
+.kpi:hover{background:var(--pink);border-color:var(--pink)}
+.kpi:hover .kpi-val,.kpi:hover .kpi-lbl{color:rgba(255,255,255,.9)}
+.kpi-val{font-family:'Fredoka One',sans-serif;font-size:36px;color:var(--pink);transition:color 200ms}
+.kpi-lbl{font-size:12px;color:var(--gray-5);margin-top:4px;font-weight:700;transition:color 200ms}
+.tech-tag{display:inline-flex;padding:5px 12px;border-radius:var(--r-full);background:var(--pink-pale);border:1.5px solid var(--pink-dim);font-size:12px;font-weight:700;color:var(--pink)}
+
+/* ── FOOTER ── */
+.footer{background:var(--ink);color:var(--white);padding-block:64px 36px}
+.footer-grid{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:clamp(28px,5vw,60px);margin-bottom:56px}
+.footer-logo{display:flex;align-items:center;gap:10px;font-family:'Fredoka One',sans-serif;font-size:24px;color:var(--pink);margin-bottom:14px}
+.footer-tagline{font-size:14px;color:rgba(255,255,255,.4);line-height:1.65;max-width:260px;font-weight:600}
+.fc-title{font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:18px}
+.fc-links{display:flex;flex-direction:column;gap:10px}
+.fc-link{font-size:14px;color:rgba(255,255,255,.45);transition:color 180ms;font-weight:600}
+.fc-link:hover{color:var(--pink)}
+.footer-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding-top:28px;border-top:1px solid rgba(255,255,255,.08)}
+.footer-copy{font-size:13px;color:rgba(255,255,255,.25);font-weight:600}
+.footer-badges{display:flex;gap:10px;flex-wrap:wrap}
+.fbadge-item{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.35)}
+
+/* ── CART DRAWER ── */
+.overlay{position:fixed;inset:0;background:rgba(28,13,20,.55);z-index:95;opacity:0;pointer-events:none;transition:opacity 300ms;backdrop-filter:blur(4px)}
+.overlay.open{opacity:1;pointer-events:all}
+.drawer{position:fixed;inset-block:0;inset-inline-end:0;width:min(420px,100vw);background:var(--white);z-index:96;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 360ms var(--ease-out);border-left:2px solid var(--gray-2)}
+.drawer.open{transform:none}
+.d-head{display:flex;align-items:center;justify-content:space-between;padding:24px;border-bottom:2px solid var(--gray-2)}
+.d-title{font-family:'Fredoka One',sans-serif;font-size:22px;color:var(--ink)}
+.d-close{width:36px;height:36px;border-radius:50%;border:2px solid var(--gray-2);background:var(--cream);color:var(--gray-5);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 180ms}
+.d-close:hover{background:var(--pink-pale);border-color:var(--pink);color:var(--pink)}
+.d-body{flex:1;overflow-y:auto;padding:20px 24px}
+.d-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--gray-5)}
+.d-empty svg{opacity:.2}
+.d-empty p{font-family:'Fredoka One',sans-serif;font-size:18px}
+.ci{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:2px dashed var(--gray-2)}
+.ci:last-child{border-bottom:none}
+.ci-img{width:56px;height:56px;border-radius:12px;background:var(--pink-pale);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-name{font-family:'Fredoka One',sans-serif;font-size:16px;color:var(--ink);margin-bottom:3px}
+.ci-meta{font-size:12px;color:var(--gray-5);line-height:1.5;font-weight:600}
+.ci-price{font-family:'Fredoka One',sans-serif;font-size:16px;color:var(--pink);margin-left:auto;white-space:nowrap}
+.ci-rm{background:none;border:none;cursor:pointer;color:var(--gray-3);padding:4px;border-radius:6px;transition:all 180ms;display:flex;align-items:center}
+.ci-rm:hover{color:var(--danger);background:#fff0f3}
+.d-foot{padding:20px 24px 28px;border-top:2px solid var(--gray-2)}
+.d-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.d-total span:first-child{font-size:16px;font-weight:800;color:var(--gray-5)}
+.d-total span:last-child{font-family:'Fredoka One',sans-serif;font-size:26px;color:var(--pink)}
+.pay-btn{width:100%;background:var(--pink);color:var(--white);border-radius:var(--r-full);padding:17px;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 220ms var(--ease-out);box-shadow:var(--shadow-pink)}
+.pay-btn:hover{background:var(--pink-light);box-shadow:var(--shadow-pink-lg);transform:translateY(-1px)}
+
+/* Toast */
+.toast{position:fixed;bottom:30px;left:50%;z-index:200;transform:translateX(-50%) translateY(16px);background:var(--ink);color:var(--white);border-radius:var(--r-full);padding:14px 24px;font-size:14px;font-weight:800;display:flex;align-items:center;gap:10px;box-shadow:0 12px 40px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:all 340ms var(--ease-spring);white-space:nowrap;max-width:calc(100vw - 40px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.t-icon{color:var(--success);flex-shrink:0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1080px){
+  .hero-inner{grid-template-columns:1fr;gap:48px}
+  .hero-visual{order:-1}
+  .cup-wrap{width:min(280px,70vw)}
+  .card-grid{grid-template-columns:repeat(2,1fr)}
+  .cust-wrap{grid-template-columns:1fr}
+  .summary{position:static}
+  .about-grid{grid-template-columns:1fr;gap:48px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .ham{display:flex}
+  .fbadge{display:none}
+  .hero-title{font-size:clamp(44px,13vw,72px)}
+  .hero-stats{gap:20px;flex-wrap:wrap}
+  .card-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .size-grid{grid-template-columns:1fr;gap:8px}
+  .sz{flex-direction:row;padding:14px 18px}
+  .sz-icon{height:auto}
+  .sn span{display:none}
+  .footer-grid{grid-template-columns:1fr;gap:28px}
+  .footer-bar{flex-direction:column;text-align:center}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:540px){
+  .card-grid{grid-template-columns:1fr}
+  .hero-ctas{flex-direction:column}
+  .btn-pink,.btn-outline{justify-content:center}
+  .hero-stats{gap:16px}
+  .hero-stats > div{flex:1;min-width:0}
+}
+@media(prefers-reduced-motion:reduce){*,::before,::after{animation-duration:1ms!important;transition-duration:1ms!important}}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav" id="mainNav" aria-label="Navegación principal">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="Subzero inicio">
+        <div class="logo-mark" aria-hidden="true">
+          <svg width="20" height="22" viewBox="0 0 20 22" fill="none">
+            <path d="M3 7L1 21h18L17 7z" fill="white" fill-opacity=".9"/>
+            <ellipse cx="10" cy="7" rx="7" ry="3.5" fill="white"/>
+            <ellipse cx="10" cy="4" rx="5" ry="3" fill="#FFD6E8"/>
+          </svg>
+        </div>
+        Subzero
+      </a>
+      <div class="nav-links">
+        <a href="#catalogo"    class="nav-link">Catálogo</a>
+        <a href="#personaliza" class="nav-link">Personaliza</a>
+        <a href="#nosotros"    class="nav-link">Nosotros</a>
+      </div>
+      <div class="nav-right">
+        <button class="cart-btn" id="cartToggle" aria-label="Abrir carrito">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Carrito
+          <span class="cart-bubble" id="cartBubble" aria-live="polite">0</span>
+        </button>
+        <button class="ham" id="hamBtn" aria-label="Menú" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav" aria-hidden="true">
+  <button class="mobile-close" id="mobileClose" aria-label="Cerrar menú">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <a href="#catalogo"    class="nav-link" onclick="closeMobile()">🍧 Catálogo</a>
+  <a href="#personaliza" class="nav-link" onclick="closeMobile()">✨ Personaliza</a>
+  <a href="#nosotros"    class="nav-link" onclick="closeMobile()">💖 Nosotros</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="heroTitle">
+  <div class="hero-blob-1" aria-hidden="true"></div>
+  <div class="hero-blob-2" aria-hidden="true"></div>
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">
+          <span class="pill"><span class="pill-dot"></span>Raspados artesanales</span>
+          <span class="pill">Pedido en línea 🛒</span>
+        </div>
+        <h1 class="hero-title" id="heroTitle">
+          <span class="hl">El frío</span>
+          que sí querías
+          <span class="hl2">probar.</span>
+        </h1>
+        <p class="hero-body">Raspados hechos al momento con hielo artesanal, sabores naturales y los toppings que tú eliges. Ordena en minutos, recoge fresco.</p>
+        <div class="hero-ctas">
+          <a href="#catalogo" class="btn-pink">Ver menú completo 🍧</a>
+          <a href="#personaliza" class="btn-outline">Arma el tuyo →</a>
+        </div>
+        <div class="hero-stats">
+          <div><div class="stat-val">12+</div><div class="stat-lbl">Sabores únicos</div></div>
+          <div><div class="stat-val">100%</div><div class="stat-lbl">Artesanal</div></div>
+          <div><div class="stat-val">5★</div><div class="stat-lbl">Calificación</div></div>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="cup-wrap">
+          <svg class="cup-svg" viewBox="0 0 340 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="cupG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FFD6E8" stop-opacity=".7"/>
+                <stop offset="100%" stop-color="#FF6B9D" stop-opacity=".3"/>
+              </linearGradient>
+              <linearGradient id="iceG" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#FF2D78"/>
+                <stop offset="100%" stop-color="#E8186D"/>
+              </linearGradient>
+              <radialGradient id="topG" cx="50%" cy="40%">
+                <stop offset="0%" stop-color="#FF6B9D"/>
+                <stop offset="100%" stop-color="#E8186D"/>
+              </radialGradient>
+              <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <path d="M70 180 L40 390 Q40 405 58 405 L282 405 Q300 405 300 390 L270 180 Z" fill="url(#cupG)" stroke="#FFD6E8" stroke-width="1.5"/>
+            <path d="M90 200 L65 370" stroke="white" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+            <rect x="156" y="40" width="14" height="200" rx="7" fill="#E8186D" opacity=".85"/>
+            <rect x="158" y="40" width="4" height="200" rx="2" fill="white" opacity=".4"/>
+            <ellipse cx="170" cy="180" rx="100" ry="30" fill="white" opacity=".85" stroke="#FFD6E8" stroke-width="1"/>
+            <ellipse cx="170" cy="155" rx="98" ry="52" fill="#FFE8F2" opacity=".7"/>
+            <ellipse cx="170" cy="130" rx="90" ry="50" fill="#FFD6E8" opacity=".8"/>
+            <ellipse cx="170" cy="108" rx="80" ry="45" fill="url(#iceG)" opacity=".85" filter="url(#glow)"/>
+            <ellipse cx="170" cy="88"  rx="68" ry="38" fill="#FF4D92" opacity=".9"/>
+            <ellipse cx="170" cy="70"  rx="54" ry="30" fill="url(#topG)"/>
+            <ellipse cx="170" cy="56"  rx="38" ry="22" fill="#FF2D78"/>
+            <path d="M120 140 Q150 130 180 140 Q210 150 240 140" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".4" fill="none"/>
+            <path d="M130 115 Q160 105 190 115 Q215 122 235 115" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".35" fill="none"/>
+            <circle cx="138" cy="60" r="10" fill="#FFD54F" filter="url(#glow)"/>
+            <circle cx="198" cy="52" r="8"  fill="#F48FB1" filter="url(#glow)"/>
+            <circle cx="164" cy="44" r="9"  fill="#FFFFFF" opacity=".9"/>
+            <circle cx="213" cy="68" r="7"  fill="#A5D6A7"/>
+            <circle cx="124" cy="82" r="6"  fill="#FF8A65"/>
+            <circle cx="188" cy="76" r="8"  fill="#FFD54F"/>
+            <circle cx="148" cy="92" r="5"  fill="#4FC3F7"/>
+            <circle cx="222" cy="88" r="6"  fill="#CE93D8"/>
+            <path d="M158 62 Q165 80 155 100 Q148 115 162 125" stroke="white" stroke-width="3" stroke-linecap="round" fill="none" opacity=".8"/>
+            <path d="M188 58 Q195 75 188 95" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".7"/>
+          </svg>
+          <div class="fbadge fbadge-1">
+            <div class="fbadge-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>Pago seguro<span class="fbadge-sub">BAC Credomatic</span></div>
+          </div>
+          <div class="fbadge fbadge-2">
+            <div class="fbadge-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>Listo en minutos<span class="fbadge-sub">Tiempo real</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATALOG -->
+<section class="section catalog" id="catalogo" aria-labelledby="catTitle">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <div class="chip">🍧 Menú completo</div>
+      <h2 class="display" id="catTitle">Elige tu próximo favorito</h2>
+      <p class="lead">Raspados artesanales listos para ordenar. Cada uno hecho con los mejores ingredientes.</p>
+    </div>
+    <div class="card-grid" id="bentoGrid" role="list" aria-label="Catálogo de productos"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section features" aria-labelledby="featTitle">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <div class="chip">Por qué Subzero</div>
+      <h2 class="display" id="featTitle">Frío de verdad,<br>sabor sin límites.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat" data-reveal data-reveal-delay="1">
+        <div class="feat-icon">🧊</div>
+        <div class="feat-title">Hielo artesanal</div>
+        <div class="feat-desc">Agua purificada y triturada al momento para una textura suave y perfecta en cada mordida.</div>
+      </div>
+      <div class="feat" data-reveal data-reveal-delay="2">
+        <div class="feat-icon">🎨</div>
+        <div class="feat-title">100% personalizable</div>
+        <div class="feat-desc">Tamaño, sabores, gomitas y toppings. El raspado exactamente como lo imaginas.</div>
+      </div>
+      <div class="feat" data-reveal data-reveal-delay="3">
+        <div class="feat-icon">💳</div>
+        <div class="feat-title">Pago seguro BAC</div>
+        <div class="feat-desc">Procesamos con BAC Credomatic, la pasarela más confiable de Centroamérica.</div>
+      </div>
+      <div class="feat" data-reveal data-reveal-delay="1">
+        <div class="feat-icon">📧</div>
+        <div class="feat-title">Factura por correo</div>
+        <div class="feat-desc">Recibes tu PDF automáticamente al correo al confirmar el pago.</div>
+      </div>
+      <div class="feat" data-reveal data-reveal-delay="2">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title">Listo en minutos</div>
+        <div class="feat-desc">Tu pedido entra a cocina en tiempo real. Te avisamos cuando tu Subzero está listo.</div>
+      </div>
+      <div class="feat" data-reveal data-reveal-delay="3">
+        <div class="feat-icon">🍓</div>
+        <div class="feat-title">Sabores naturales</div>
+        <div class="feat-desc">Fruta fresca y concentrados naturales. Sin colorantes artificiales.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOMIZER -->
+<section class="section customizer" id="personaliza" aria-labelledby="custTitle">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div class="chip">✨ Personaliza</div>
+      <h2 class="display" id="custTitle">Crea tu Subzero perfecto</h2>
+      <p class="lead">Paso a paso, arma el raspado de tus sueños. El precio se actualiza en tiempo real.</p>
+    </div>
+    <div class="cust-wrap">
+      <div>
+        <div class="step-nav" role="tablist">
+          <button class="sn active" id="sn1" role="tab" aria-selected="true"  aria-controls="sp1" onclick="goStep(1)"><span class="sn-num">1</span><span>Tamaño</span></button>
+          <button class="sn"        id="sn2" role="tab" aria-selected="false" aria-controls="sp2" onclick="goStep(2)"><span class="sn-num">2</span><span>Sabores</span></button>
+          <button class="sn"        id="sn3" role="tab" aria-selected="false" aria-controls="sp3" onclick="goStep(3)"><span class="sn-num">3</span><span>Gomitas</span></button>
+          <button class="sn"        id="sn4" role="tab" aria-selected="false" aria-controls="sp4" onclick="goStep(4)"><span class="sn-num">4</span><span>Toppings</span></button>
+        </div>
+
+        <div class="sp active cust-panel" id="sp1" role="tabpanel" aria-labelledby="sn1">
+          <div class="sp-title">¿Qué tamaño quieres?</div>
+          <p class="sp-hint">El tamaño define el precio base.</p>
+          <div class="size-grid" role="radiogroup" aria-label="Tamaños">
+            <button class="sz" onclick="pickSize(this,'Pequeño',1500)" role="radio" aria-checked="false">
+              <div class="sz-icon"><svg width="28" height="36" viewBox="0 0 28 36" fill="none"><path d="M4 14L2 34h24L24 14z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="14" cy="14" rx="10" ry="6" fill="#FFB3D1" opacity=".8"/><ellipse cx="14" cy="10" rx="7" ry="5" fill="#E8186D"/></svg></div>
+              <div><div class="sz-label">Pequeño</div><div class="sz-price">₡1,500</div></div>
+            </button>
+            <button class="sz" onclick="pickSize(this,'Mediano',2000)" role="radio" aria-checked="false">
+              <div class="sz-icon"><svg width="34" height="42" viewBox="0 0 34 42" fill="none"><path d="M5 17L2 40h30L27 17z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="17" cy="17" rx="12" ry="7" fill="#FFB3D1" opacity=".8"/><ellipse cx="17" cy="12" rx="9" ry="6" fill="#E8186D"/></svg></div>
+              <div><div class="sz-label">Mediano</div><div class="sz-price">₡2,000</div></div>
+            </button>
+            <button class="sz" onclick="pickSize(this,'Grande',2500)" role="radio" aria-checked="false">
+              <div class="sz-icon"><svg width="40" height="50" viewBox="0 0 40 50" fill="none"><path d="M6 20L2 48h36L34 20z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="14" ry="8" fill="#FFB3D1" opacity=".8"/><ellipse cx="20" cy="14" rx="10" ry="7" fill="#E8186D"/></svg></div>
+              <div><div class="sz-label">Grande</div><div class="sz-price">₡2,500</div></div>
+            </button>
+          </div>
+          <div class="sp-actions">
+            <button class="btn-next" id="btnN1" onclick="goStep(2)" disabled>Siguiente — Sabores →</button>
+          </div>
+        </div>
+
+        <div class="sp cust-panel" id="sp2" role="tabpanel" aria-labelledby="sn2">
+          <div class="sp-title">¿Cuáles sabores?</div>
+          <p class="sp-hint">Elige hasta 3. Los marcados con + tienen costo adicional.</p>
+          <div class="opts" role="group" aria-label="Sabores">
+            <button class="opt" onclick="pickFlavor(this,'Fresa',0)"       aria-pressed="false"><span class="opt-sw" style="background:#F48FB1"></span>Fresa</button>
+            <button class="opt" onclick="pickFlavor(this,'Mango',0)"       aria-pressed="false"><span class="opt-sw" style="background:#FFCC80"></span>Mango</button>
+            <button class="opt" onclick="pickFlavor(this,'Limón',0)"       aria-pressed="false"><span class="opt-sw" style="background:#E6EE9C"></span>Limón</button>
+            <button class="opt" onclick="pickFlavor(this,'Tamarindo',0)"   aria-pressed="false"><span class="opt-sw" style="background:#BCAAA4"></span>Tamarindo</button>
+            <button class="opt" onclick="pickFlavor(this,'Maracuyá',200)"  aria-pressed="false"><span class="opt-sw" style="background:#FFD54F"></span>Maracuyá <span class="opt-p">+₡200</span></button>
+            <button class="opt" onclick="pickFlavor(this,'Guanábana',200)" aria-pressed="false"><span class="opt-sw" style="background:#A5D6A7"></span>Guanábana <span class="opt-p">+₡200</span></button>
+            <button class="opt" onclick="pickFlavor(this,'Jamaica',0)"     aria-pressed="false"><span class="opt-sw" style="background:#EF9A9A"></span>Jamaica</button>
+            <button class="opt" onclick="pickFlavor(this,'Coco',200)"      aria-pressed="false"><span class="opt-sw" style="background:#E0E0E0;border:1px solid #ccc"></span>Coco <span class="opt-p">+₡200</span></button>
+          </div>
+          <div class="sp-actions">
+            <button class="btn-back" onclick="goStep(1)">← Atrás</button>
+            <button class="btn-next" onclick="goStep(3)">Siguiente — Gomitas →</button>
+          </div>
+        </div>
+
+        <div class="sp cust-panel" id="sp3" role="tabpanel" aria-labelledby="sn3">
+          <div class="sp-title">¿Cuántas gomitas?</div>
+          <p class="sp-hint">Cada porción se cobra por separado. Puedes mezclar.</p>
+          <div id="gomList"></div>
+          <div class="sp-actions">
+            <button class="btn-back" onclick="goStep(2)">← Atrás</button>
+            <button class="btn-next" onclick="goStep(4)">Siguiente — Toppings →</button>
+          </div>
+        </div>
+
+        <div class="sp cust-panel" id="sp4" role="tabpanel" aria-labelledby="sn4">
+          <div class="sp-title">¿Qué toppings le ponemos?</div>
+          <p class="sp-hint">Los toppings hacen la diferencia.</p>
+          <div class="opts" role="group" aria-label="Toppings">
+            <button class="opt" onclick="pickTop(this,'Lechera',150)"       aria-pressed="false">🥛 Lechera <span class="opt-p">+₡150</span></button>
+            <button class="opt" onclick="pickTop(this,'Chamoy',100)"         aria-pressed="false">🫙 Chamoy <span class="opt-p">+₡100</span></button>
+            <button class="opt" onclick="pickTop(this,'Chocolate',150)"      aria-pressed="false">🍫 Chocolate <span class="opt-p">+₡150</span></button>
+            <button class="opt" onclick="pickTop(this,'Chile en polvo',100)" aria-pressed="false">🌶️ Chile <span class="opt-p">+₡100</span></button>
+            <button class="opt" onclick="pickTop(this,'Cajeta',200)"         aria-pressed="false">🍯 Cajeta <span class="opt-p">+₡200</span></button>
+            <button class="opt" onclick="pickTop(this,'Tamarindo líq.',150)" aria-pressed="false">🍋 Tamarindo líq. <span class="opt-p">+₡150</span></button>
+          </div>
+          <div class="sp-actions">
+            <button class="btn-back" onclick="goStep(3)">← Atrás</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="summary" aria-live="polite" aria-label="Resumen del raspado">
+        <div class="sum-title">🍧 Tu Subzero</div>
+        <div class="sum-preview" aria-hidden="true">
+          <svg viewBox="0 0 120 150" fill="none">
+            <path d="M20 55L10 140h100L110 55z" fill="#FFD6E8" opacity=".5" stroke="#FFB3D1" stroke-width="1"/>
+            <ellipse cx="60" cy="55" rx="40" ry="18" fill="white" opacity=".8"/>
+            <ellipse cx="60" cy="42" rx="37" ry="22" id="pd1" fill="#FFD6E8" opacity=".6"/>
+            <ellipse cx="60" cy="30" rx="28" ry="17" id="pd2" fill="#FF6B9D" opacity=".7"/>
+            <ellipse cx="60" cy="20" rx="19" ry="13" id="pd3" fill="#E8186D" opacity=".9"/>
+            <rect x="56" y="4" width="8" height="70" rx="4" fill="#E8186D" opacity=".7"/>
+          </svg>
+        </div>
+        <div class="sum-rows">
+          <div class="sum-row"><span>Tamaño</span><span id="slSize">—</span></div>
+          <div class="sum-row"><span>Sabores</span><span id="slFlavors">—</span></div>
+          <div class="sum-row"><span>Gomitas</span><span id="slGomitas">—</span></div>
+          <div class="sum-row"><span>Toppings</span><span id="slToppings">—</span></div>
+          <div class="sum-row total"><span>Total</span><span id="slTotal">₡0</span></div>
+        </div>
+        <button class="add-btn" id="addBtn" onclick="addCustom()" disabled>🛒 Agregar al carrito</button>
+        <p class="sum-note" id="sumNote">Selecciona un tamaño para comenzar</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section about" id="nosotros" aria-labelledby="aboutTitle">
+  <div class="container">
+    <div class="about-grid">
+      <div data-reveal>
+        <div class="chip">💖 Nuestra historia</div>
+        <h2 class="display" id="aboutTitle">Hechos con pasión<br>y mucho hielo.</h2>
+        <p class="lead">Subzero nació de una idea simple: llevar el sabor auténtico de los raspados a un formato moderno y accesible desde cualquier pantalla.</p>
+        <div class="how">
+          <div class="how-item">
+            <div class="how-n">01</div>
+            <div><div class="how-title">Elige y personaliza</div><div class="how-desc">Del catálogo o desde el personalizador. Tamaño, sabores, gomitas y toppings.</div></div>
+          </div>
+          <div class="how-item">
+            <div class="how-n">02</div>
+            <div><div class="how-title">Paga de forma segura</div><div class="how-desc">BAC Credomatic procesa tu pago. Factura PDF en tu correo al instante.</div></div>
+          </div>
+          <div class="how-item">
+            <div class="how-n">03</div>
+            <div><div class="how-title">Entra a cocina</div><div class="how-desc">Tu orden llega a nuestro panel en tiempo real y empezamos a preparar.</div></div>
+          </div>
+          <div class="how-item">
+            <div class="how-n">04</div>
+            <div><div class="how-title">Recoge y disfruta</div><div class="how-desc">Te avisamos cuando está listo. Frío, fresco y exactamente como lo pediste.</div></div>
+          </div>
+        </div>
+      </div>
+      <div data-reveal data-reveal-delay="2">
+        <div class="about-box">
+          <div class="kpi-grid">
+            <div class="kpi"><div class="kpi-val">12+</div><div class="kpi-lbl">Sabores únicos</div></div>
+            <div class="kpi"><div class="kpi-val">★5.0</div><div class="kpi-lbl">Calificación</div></div>
+            <div class="kpi"><div class="kpi-val">100%</div><div class="kpi-lbl">Artesanal</div></div>
+            <div class="kpi"><div class="kpi-val">&lt;10</div><div class="kpi-lbl">Min. espera</div></div>
+          </div>
+          <div style="padding:16px;background:var(--cream);border-radius:var(--r-md);border:2px solid var(--gray-2)">
+            <div style="font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-5);margin-bottom:12px">Stack tecnológico</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <span class="tech-tag">Firebase</span>
+              <span class="tech-tag">Firestore</span>
+              <span class="tech-tag">Cloud Functions</span>
+              <span class="tech-tag">BAC Credomatic</span>
+              <span class="tech-tag">SendGrid</span>
+              <span class="tech-tag">jsPDF</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <div class="logo-mark" style="width:30px;height:30px;border-radius:8px" aria-hidden="true">
+            <svg width="16" height="18" viewBox="0 0 20 22" fill="none"><path d="M3 7L1 21h18L17 7z" fill="white" fill-opacity=".9"/><ellipse cx="10" cy="7" rx="7" ry="3.5" fill="white"/><ellipse cx="10" cy="4" rx="5" ry="3" fill="#FFD6E8"/></svg>
+          </div>
+          Subzero
+        </div>
+        <p class="footer-tagline">Raspados artesanales hechos con amor, hielo fresco y los mejores sabores de la región.</p>
+      </div>
+      <div>
+        <div class="fc-title">Menú</div>
+        <nav class="fc-links">
+          <a href="#catalogo"    class="fc-link">Catálogo</a>
+          <a href="#personaliza" class="fc-link">Personaliza tu raspado</a>
+          <a href="#nosotros"    class="fc-link">Nuestra historia</a>
+        </nav>
+      </div>
+      <div>
+        <div class="fc-title">Contacto</div>
+        <div class="fc-links">
+          <span class="fc-link">WhatsApp</span>
+          <span class="fc-link">Instagram</span>
+          <span class="fc-link">Facebook</span>
+        </div>
+      </div>
+      <div>
+        <div class="fc-title">Legal</div>
+        <nav class="fc-links">
+          <a href="#" class="fc-link">Política de privacidad</a>
+          <a href="#" class="fc-link">Términos</a>
+          <a href="#" class="fc-link">Devoluciones</a>
+        </nav>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <span class="footer-copy">© 2026 Subzero. Todos los derechos reservados.</span>
+      <div class="footer-badges">
+        <div class="fbadge-item">💳 BAC Credomatic</div>
+        <div class="fbadge-item">🔒 SSL Seguro</div>
+        <div class="fbadge-item">🔥 Firebase</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay" aria-hidden="true"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Carrito" aria-hidden="true">
+  <div class="d-head">
+    <span class="d-title">Tu carrito 🛒</span>
+    <button class="d-close" id="drawerClose" aria-label="Cerrar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="d-body" id="drawerBody" aria-live="polite">
+    <div class="d-empty" id="drawerEmpty">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <p>Tu carrito está vacío</p>
+    </div>
+  </div>
+  <div class="d-foot" id="drawerFoot" style="display:none">
+    <div class="d-total"><span>Total</span><span id="drawerTotal">₡0</span></div>
+    <button class="pay-btn">💳 Pagar con BAC Credomatic</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <svg class="t-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+/* ── Confetti ── */
+(()=>{
+  const c=document.getElementById('confettiCanvas'),ctx=c.getContext('2d');
+  const resize=()=>{c.width=c.offsetWidth;c.height=c.offsetHeight};
+  resize();window.addEventListener('resize',resize,{passive:true});
+  const N=window.innerWidth<600?16:36;
+  const colors=['#E8186D','#FF6B9D','#FFD6E8','#FFD54F','#A5D6A7','#4FC3F7','#FF8A65','#CE93D8'];
+  const flakes=Array.from({length:N},()=>({
+    x:Math.random()*innerWidth,y:Math.random()*innerHeight,
+    r:Math.random()*3+1,sp:Math.random()*.4+.15,drift:Math.random()*.5-.25,
+    op:Math.random()*.25+.08,color:colors[Math.floor(Math.random()*colors.length)]
+  }));
+  function tick(){
+    ctx.clearRect(0,0,c.width,c.height);
+    flakes.forEach(f=>{
+      ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);
+      ctx.fillStyle=f.color;ctx.globalAlpha=f.op;ctx.fill();ctx.globalAlpha=1;
+      f.y+=f.sp;f.x+=f.drift;
+      if(f.y>c.height+4){f.y=-4;f.x=Math.random()*c.width}
+      if(f.x>c.width)f.x=0;if(f.x<0)f.x=c.width;
+    });
+    requestAnimationFrame(tick);
+  }
+  if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)tick();
+})();
+
+/* ── Navbar ── */
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>30),{passive:true});
+
+/* ── Mobile nav ── */
+const mobileNav=document.getElementById('mobileNav');
+document.getElementById('hamBtn').addEventListener('click',()=>{
+  mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+});
+function closeMobile(){
+  mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+document.getElementById('mobileClose').addEventListener('click',closeMobile);
+
+/* ── Catalog ── */
+const PRODS=[
+  {name:'Subzero Clásico', price:2500,desc:'El original. Fresa y mango con lechera.',      badge:'Popular',  c1:'#FCE4EC',c2:'#F8BBD0',dots:['#F48FB1','#FFCC80','#FFF9C4']},
+  {name:'Tropical Blast',  price:2800,desc:'Maracuyá, guanábana y coco tropical.',          badge:'Nuevo',    c1:'#FFFDE7',c2:'#FFF9C4',dots:['#FFD54F','#A5D6A7','#E0E0E0']},
+  {name:'Tamarindo Fuego', price:2300,desc:'Tamarindo, chamoy y chile. Para valientes.',    badge:null,       c1:'#FBE9E7',c2:'#FFCCBC',dots:['#BCAAA4','#EF9A9A','#FF8A65']},
+  {name:'Jamaica Bloom',   price:2200,desc:'Jamaica, limón y cajeta. Floral y fresco.',     badge:null,       c1:'#FCE4EC',c2:'#EDE7F6',dots:['#EF9A9A','#E6EE9C','#CE93D8']},
+  {name:'Limón Extremo',   price:2000,desc:'Puro ácido. Limón, tamarindo y chile.',         badge:null,       c1:'#F9FBE7',c2:'#F0F4C3',dots:['#E6EE9C','#FFF59D','#BCAAA4']},
+  {name:'Coco Paraíso',    price:2600,desc:'Coco, lechera y gomitas de colores.',           badge:'Favorito', c1:'#E0F7FA',c2:'#B2EBF2',dots:['#E0E0E0','#B2EBF2','#FFD54F']},
+];
+const miniCup=(c1,c2,d)=>`<svg viewBox="0 0 80 100" fill="none" style="width:100%;max-width:120px">
+  <path d="M12 38L6 94h68L68 38z" fill="${c1}" fill-opacity=".85" stroke="${c2}" stroke-width="1.5"/>
+  <rect x="36" y="8" width="8" height="70" rx="4" fill="#E8186D" opacity=".7"/>
+  <ellipse cx="40" cy="38" rx="28" ry="12" fill="white" opacity=".85"/>
+  <ellipse cx="40" cy="28" rx="26" ry="15" fill="${c2}" opacity=".8"/>
+  <ellipse cx="40" cy="18" rx="20" ry="12" fill="${d[0]}" opacity=".9"/>
+  <ellipse cx="40" cy="10" rx="14" ry="8" fill="${d[1]}"/>
+  <circle cx="28" cy="9" r="4" fill="${d[2]}" opacity=".9"/>
+  <circle cx="50" cy="6" r="3" fill="${d[0]}" opacity=".85"/>
+  <circle cx="40" cy="3" r="3.5" fill="${d[1]}" opacity=".9"/>
+</svg>`;
+document.getElementById('bentoGrid').innerHTML=PRODS.map((p,i)=>`
+  <article class="bc" role="listitem" aria-label="${p.name}" data-reveal style="transition-delay:${i*70}ms">
+    <div class="bc-img">
+      <div class="bc-bg" style="background:linear-gradient(145deg,${p.c1},${p.c2})"></div>
+      <div class="bc-cup">${miniCup(p.c1,p.c2,p.dots)}</div>
+      ${p.badge?`<div class="bc-badge">${p.badge}</div>`:''}
+      <div class="bc-dots">${p.dots.map(d=>`<span class="fdot" style="background:${d}"></span>`).join('')}</div>
+    </div>
+    <div class="bc-body">
+      <div class="bc-name">${p.name}</div>
+      <div class="bc-desc">${p.desc}</div>
+      <div class="bc-foot">
+        <div class="bc-price">₡${p.price.toLocaleString()} <sub>CRC</sub></div>
+        <button class="add-circle" onclick='addDirect(${JSON.stringify({name:p.name,price:p.price,meta:`${p.dots.length} sabores`})})' aria-label="Agregar ${p.name}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+    </div>
+  </article>`).join('');
+
+/* ── Customizer ── */
+const S={size:null,sizePrice:0,flavors:{},flavorExtra:0,gomitas:{},gomitaTotal:0,toppings:{},toppingTotal:0};
+const GOMS=[{name:'Gomitas de fresa',price:200},{name:'Gomitas agridulces',price:200},{name:'Gomitas enchiladas',price:250},{name:'Gusanos de azúcar',price:200}];
+document.getElementById('gomList').innerHTML=GOMS.map((g,i)=>`
+  <div class="ctr-item">
+    <div style="flex:1"><div class="ctr-name">${g.name}</div><div class="ctr-plbl">₡${g.price} c/u</div></div>
+    <div class="ctr-ctrl">
+      <button class="cb" onclick="adjGom('${g.name}',${g.price},-1)" aria-label="Quitar">−</button>
+      <span class="cv" id="gv${i}" aria-live="polite">0</span>
+      <button class="cb" onclick="adjGom('${g.name}',${g.price},1)"  aria-label="Agregar">+</button>
+    </div>
+  </div>`).join('');
+
+function goStep(n){
+  if(n>1&&!S.size)return;
+  document.querySelectorAll('.sp').forEach((p,i)=>p.classList.toggle('active',i===n-1));
+  document.querySelectorAll('.sn').forEach((b,i)=>{
+    b.classList.toggle('active',i===n-1);b.classList.toggle('done',i<n-1);
+    b.setAttribute('aria-selected',i===n-1?'true':'false');
+    const num=b.querySelector('.sn-num');
+    if(i<n-1)num.innerHTML='<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    else num.textContent=i+1;
+  });
+}
+function pickSize(btn,name,price){
+  document.querySelectorAll('.sz').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-checked','false')});
+  btn.classList.add('selected');btn.setAttribute('aria-checked','true');
+  S.size=name;S.sizePrice=price;document.getElementById('btnN1').disabled=false;updateSum();
+}
+function pickFlavor(btn,name,extra){
+  if(!S.flavors[name]){
+    if(Object.keys(S.flavors).length>=3){showToast('Máximo 3 sabores');return}
+    S.flavors[name]=extra;btn.classList.add('selected');btn.setAttribute('aria-pressed','true');
+  }else{delete S.flavors[name];btn.classList.remove('selected');btn.setAttribute('aria-pressed','false')}
+  S.flavorExtra=Object.values(S.flavors).reduce((a,b)=>a+b,0);updateSum();
+}
+function adjGom(name,price,d){
+  const cur=S.gomitas[name]||0,next=Math.max(0,cur+d);
+  if(next===0)delete S.gomitas[name];else S.gomitas[name]=next;
+  const idx=GOMS.findIndex(g=>g.name===name);
+  const el=document.getElementById('gv'+idx);if(el)el.textContent=next;
+  S.gomitaTotal=Object.entries(S.gomitas).reduce((sum,[n,qty])=>{const g=GOMS.find(g=>g.name===n);return sum+(g?g.price*qty:0)},0);
+  updateSum();
+}
+function pickTop(btn,name,price){
+  if(!S.toppings[name]){S.toppings[name]=price;btn.classList.add('selected');btn.setAttribute('aria-pressed','true')}
+  else{delete S.toppings[name];btn.classList.remove('selected');btn.setAttribute('aria-pressed','false')}
+  S.toppingTotal=Object.values(S.toppings).reduce((a,b)=>a+b,0);updateSum();
+}
+const CM={Fresa:'#F48FB1',Mango:'#FFCC80','Limón':'#E6EE9C',Tamarindo:'#BCAAA4','Maracuyá':'#FFD54F','Guanábana':'#A5D6A7',Jamaica:'#EF9A9A',Coco:'#E0E0E0'};
+function updateSum(){
+  const tot=S.sizePrice+S.flavorExtra+S.gomitaTotal+S.toppingTotal;
+  const fk=Object.keys(S.flavors),gk=Object.keys(S.gomitas),tk=Object.keys(S.toppings);
+  document.getElementById('slSize').textContent=S.size?`${S.size} — ₡${S.sizePrice.toLocaleString()}`:'—';
+  document.getElementById('slFlavors').textContent=fk.length?fk.join(', '):'—';
+  document.getElementById('slGomitas').textContent=gk.length?`+₡${S.gomitaTotal.toLocaleString()}`:'—';
+  document.getElementById('slToppings').textContent=tk.length?tk.join(', '):'—';
+  document.getElementById('slTotal').textContent=`₡${tot.toLocaleString()}`;
+  document.getElementById('addBtn').disabled=!S.size;
+  const note=document.getElementById('sumNote');
+  if(note)note.textContent=S.size?(fk.length?'':'Agrega al menos un sabor'):'Selecciona un tamaño para comenzar';
+  if(fk.length){const c=CM[fk[0]]||'#FF6B9D';['pd1','pd2'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.setAttribute('fill',i===0?c+'99':c)})}
+}
+function addCustom(){
+  if(!S.size)return;
+  const tot=S.sizePrice+S.flavorExtra+S.gomitaTotal+S.toppingTotal;
+  const meta=[S.size,Object.keys(S.flavors).length?`Sabores: ${Object.keys(S.flavors).join(', ')}`:'',Object.keys(S.toppings).length?`Toppings: ${Object.keys(S.toppings).join(', ')}`:''].filter(Boolean).join(' · ');
+  addDirect({name:'Subzero Personalizado',price:tot,meta});
+}
+
+/* ── Cart ── */
+let cart=[];
+function addDirect(item){cart.push({...item,id:Date.now()});renderCart();showToast(`¡${item.name} agregado! 🎉`)}
+function removeItem(id){cart=cart.filter(i=>i.id!==id);renderCart()}
+function renderCart(){
+  const n=cart.length,bubble=document.getElementById('cartBubble');
+  bubble.textContent=n;bubble.classList.toggle('show',n>0);
+  const body=document.getElementById('drawerBody'),foot=document.getElementById('drawerFoot'),empty=document.getElementById('drawerEmpty');
+  if(!n){body.innerHTML='';body.appendChild(empty);empty.style.display='flex';foot.style.display='none';return}
+  const tot=cart.reduce((s,i)=>s+i.price,0);
+  body.innerHTML=cart.map(item=>`
+    <div class="ci">
+      <div class="ci-img"><svg viewBox="0 0 32 40" fill="none"><path d="M4 14l-2 24h28l-2-24z" fill="#FFD6E8" opacity=".8"/><ellipse cx="16" cy="14" rx="12" ry="6" fill="white" opacity=".9"/><ellipse cx="16" cy="9" rx="10" ry="7" fill="#FF6B9D" opacity=".8"/><ellipse cx="16" cy="5" rx="7" ry="5" fill="#E8186D"/></svg></div>
+      <div style="flex:1"><div class="ci-name">${item.name}</div><div class="ci-meta">${item.meta||''}</div></div>
+      <div class="ci-price">₡${item.price.toLocaleString()}</div>
+      <button class="ci-rm" onclick="removeItem(${item.id})" aria-label="Eliminar"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
+    </div>`).join('');
+  document.getElementById('drawerTotal').textContent=`₡${tot.toLocaleString()}`;
+  foot.style.display='block';
+}
+
+/* ── Drawer ── */
+const ov=document.getElementById('overlay'),dr=document.getElementById('drawer');
+const openD=()=>{ov.classList.add('open');dr.classList.add('open');ov.setAttribute('aria-hidden','false');dr.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';document.getElementById('drawerClose').focus()};
+const closeD=()=>{ov.classList.remove('open');dr.classList.remove('open');ov.setAttribute('aria-hidden','true');dr.setAttribute('aria-hidden','true');document.body.style.overflow='';document.getElementById('cartToggle').focus()};
+document.getElementById('cartToggle').addEventListener('click',openD);
+document.getElementById('drawerClose').addEventListener('click',closeD);
+ov.addEventListener('click',closeD);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeD();closeMobile()}});
+
+/* ── Toast ── */
+let tt;
+function showToast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2600)}
+
+/* ── Scroll reveal ── */
+const ro=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('[data-reveal]').forEach(el=>ro.observe(el));
+</script>
+</body>
+</html>

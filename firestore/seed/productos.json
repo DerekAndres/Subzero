@@ -1,0 +1,93 @@
+[
+  {
+    "id": "subzero_clasico",
+    "nombre": "Subzero Clásico",
+    "descripcion": "El original. Hielo fino con sabor a fresa y mango, coronado con lechera.",
+    "precio_base": 2500,
+    "tipo": "prefabricado",
+    "sabores_incluidos": ["Fresa", "Mango"],
+    "toppings_incluidos": ["Lechera"],
+    "imagen": "/assets/img/clasico.jpg",
+    "activo": true,
+    "orden": 1,
+    "badge": "Popular"
+  },
+  {
+    "id": "tropical_blast",
+    "nombre": "Tropical Blast",
+    "descripcion": "Explosión de maracuyá, guanábana y coco.",
+    "precio_base": 2800,
+    "tipo": "prefabricado",
+    "sabores_incluidos": ["Maracuyá", "Guanábana", "Coco"],
+    "toppings_incluidos": [],
+    "imagen": "/assets/img/tropical.jpg",
+    "activo": true,
+    "orden": 2,
+    "badge": "Nuevo"
+  },
+  {
+    "id": "tamarindo_fuego",
+    "nombre": "Tamarindo Fuego",
+    "descripcion": "Tamarindo con chamoy, chile en polvo y gomitas enchiladas.",
+    "precio_base": 2300,
+    "tipo": "prefabricado",
+    "sabores_incluidos": ["Tamarindo"],
+    "toppings_incluidos": ["Chamoy", "Chile en polvo"],
+    "imagen": "/assets/img/tamarindo.jpg",
+    "activo": true,
+    "orden": 3,
+    "badge": null
+  },
+  {
+    "id": "jamaica_bloom",
+    "nombre": "Jamaica Bloom",
+    "descripcion": "Suave sabor a jamaica con limón y cajeta.",
+    "precio_base": 2200,
+    "tipo": "prefabricado",
+    "sabores_incluidos": ["Jamaica", "Limón"],
+    "toppings_incluidos": ["Cajeta"],
+    "imagen": "/assets/img/jamaica.jpg",
+    "activo": true,
+    "orden": 4,
+    "badge": null
+  },
+  {
+    "id": "limon_extremo",
+    "nombre": "Limón Extremo",
+    "descripcion": "Pura acidez. Limón y tamarindo líquido con borde de chile.",
+    "precio_base": 2000,
+    "tipo": "prefabricado",
+    "sabores_incluidos": ["Limón", "Tamarindo"],
+    "toppings_incluidos": ["Chile en polvo", "Tamarindo líquido"],
+    "imagen": "/assets/img/limon.jpg",
+    "activo": true,
+    "orden": 5,
+    "badge": null
+  },
+  {
+    "id": "coco_paraiso",
+    "nombre": "Coco Paraíso",
+    "descripcion": "Cremoso coco con piña, lechera y gomitas de colores.",
+    "precio_base": 2600,
+    "tipo": "prefabricado",
+    "sabores_incluidos": ["Coco"],
+    "toppings_incluidos": ["Lechera"],
+    "imagen": "/assets/img/coco.jpg",
+    "activo": true,
+    "orden": 6,
+    "badge": "Favorito"
+  },
+  {
+    "id": "personalizado",
+    "nombre": "Crea tu Subzero",
+    "descripcion": "Elige tamaño, sabores, gomitas y toppings. Arma el tuyo.",
+    "precio_base": 1500,
+    "tipo": "personalizado",
+    "sabores_incluidos": [],
+    "toppings_incluidos": [],
+    "imagen": "/assets/img/personalizado.jpg",
+    "activo": true,
+    "orden": 0,
+    "badge": null
+  }
+]

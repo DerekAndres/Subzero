@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Subzero - Diagramas de Flujo del Proyecto</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+    margin: 0;
+    padding: 40px 20px;
+    color: #1a237e;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 30px;
+    background: linear-gradient(135deg, #006064, #00838f);
+    color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+  header h1 {
+    font-size: 2.8em;
+    margin: 0;
+    letter-spacing: 3px;
+  }
+  header p {
+    margin: 10px 0 0;
+    font-size: 1.1em;
+    opacity: 0.95;
+  }
+  .diagrama {
+    background: white;
+    padding: 30px;
+    margin-bottom: 35px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border-left: 6px solid #00838f;
+  }
+  .diagrama h2 {
+    color: #006064;
+    margin-top: 0;
+    border-bottom: 2px solid #b2ebf2;
+    padding-bottom: 10px;
+    font-size: 1.6em;
+  }
+  .diagrama .descripcion {
+    color: #455a64;
+    margin-bottom: 20px;
+    font-size: 1.05em;
+    line-height: 1.6;
+  }
+  .mermaid {
+    text-align: center;
+    overflow-x: auto;
+    padding: 20px 0;
+  }
+  .nota {
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    padding: 12px 18px;
+    margin-top: 20px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    color: #5d4037;
+  }
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #006064;
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>SUBZERO</h1>
+    <p>Diagramas de Flujo del Proyecto - Stack: Firebase + BAC Credomatic</p>
+  </header>
+
+  <!-- 1. ARQUITECTURA GENERAL -->
+  <div class="diagrama">
+    <h2>1. Arquitectura General del Sistema (Firebase + BAC)</h2>
+    <p class="descripcion">Vista general de los componentes principales del sistema Subzero usando Firebase como backend y BAC Credomatic como pasarela de pago.</p>
+    <div class="mermaid">
+graph TB
+    subgraph Cliente["FRONTEND CLIENTE - Web"]
+        WEB[Pagina Web Subzero<br/>HTML + CSS + JavaScript<br/>Catalogo + Personalizador]
+    end
+    subgraph Admin["PANEL ADMINISTRADOR - Web"]
+        DASH[Dashboard de Cocina<br/>Pedidos en tiempo real]
+    end
+    subgraph Firebase["FIREBASE - Backend en la Nube"]
+        AUTH[Firebase Auth<br/>Login admin]
+        FS[(Firestore Database<br/>Pedidos, Productos, Clientes)]
+        FUNC[Cloud Functions<br/>Logica de negocio]
+        STOR[Firebase Storage<br/>Facturas PDF e imagenes]
+        HOST[Firebase Hosting<br/>Despliegue de la web]
+    end
+    subgraph Pagos["PASARELA DE PAGO"]
+        BAC[BAC Credomatic<br/>eCommerce Gateway]
+        CUENTA[Tu cuenta BAC<br/>Recibe el dinero]
+    end
+    subgraph Email["SERVICIO DE EMAIL"]
+        MAIL[SendGrid / EmailJS<br/>Envia factura al cliente]
+    end
+
+    WEB --> HOST
+    DASH --> HOST
+    WEB --> FS
+    DASH --> FS
+    DASH --> AUTH
+    WEB --> FUNC
+    FUNC --> FS
+    FUNC --> STOR
+    FUNC --> BAC
+    FUNC --> MAIL
+    BAC --> CUENTA
+
+    style WEB fill:#4dd0e1,stroke:#006064,color:#fff
+    style DASH fill:#26c6da,stroke:#006064,color:#fff
+    style AUTH fill:#ffa726,stroke:#e65100,color:#fff
+    style FS fill:#ff7043,stroke:#bf360c,color:#fff
+    style FUNC fill:#ffa726,stroke:#e65100,color:#fff
+    style STOR fill:#ffa726,stroke:#e65100,color:#fff
+    style HOST fill:#ffa726,stroke:#e65100,color:#fff
+    style BAC fill:#d32f2f,stroke:#7f0000,color:#fff
+    style CUENTA fill:#388e3c,stroke:#1b5e20,color:#fff
+    style MAIL fill:#ab47bc,stroke:#4a148c,color:#fff
+    </div>
+    <div class="nota"><strong>Nota:</strong> Firebase reemplaza al servidor tradicional. No necesitas API REST propia: el frontend se conecta directo a Firestore con seguridad por reglas, y las Cloud Functions manejan lo sensible (cobros, envio de correos, generacion de facturas).</div>
+  </div>
+
+  <!-- 1B. STACK TECNOLOGICO DETALLADO -->
+  <div class="diagrama">
+    <h2>1B. Stack Tecnologico Detallado</h2>
+    <p class="descripcion">Tecnologias especificas que se usaran en cada capa del proyecto.</p>
+    <div class="mermaid">
+graph LR
+    subgraph Frontend["FRONTEND"]
+        F1[HTML5 + CSS3]
+        F2[JavaScript / React]
+        F3[Tailwind CSS]
+    end
+    subgraph FirebaseStack["FIREBASE FREE TIER"]
+        FB1[Firestore<br/>Base de datos NoSQL]
+        FB2[Authentication<br/>Login del admin]
+        FB3[Cloud Functions<br/>Node.js serverless]
+        FB4[Storage<br/>PDFs e imagenes]
+        FB5[Hosting<br/>Web publicada]
+    end
+    subgraph Servicios["INTEGRACIONES"]
+        S1[BAC eCommerce<br/>Pagos con tarjeta]
+        S2[SendGrid<br/>Correos automaticos]
+        S3[jsPDF<br/>Generacion de facturas]
+    end
+
+    Frontend --> FirebaseStack
+    FirebaseStack --> Servicios
+
+    style F1 fill:#4dd0e1,stroke:#006064,color:#fff
+    style F2 fill:#4dd0e1,stroke:#006064,color:#fff
+    style F3 fill:#4dd0e1,stroke:#006064,color:#fff
+    style FB1 fill:#ffa726,stroke:#e65100,color:#fff
+    style FB2 fill:#ffa726,stroke:#e65100,color:#fff
+    style FB3 fill:#ffa726,stroke:#e65100,color:#fff
+    style FB4 fill:#ffa726,stroke:#e65100,color:#fff
+    style FB5 fill:#ffa726,stroke:#e65100,color:#fff
+    style S1 fill:#d32f2f,stroke:#7f0000,color:#fff
+    style S2 fill:#ab47bc,stroke:#4a148c,color:#fff
+    style S3 fill:#ab47bc,stroke:#4a148c,color:#fff
+    </div>
+  </div>
+
+  <!-- 2. FLUJO DEL CLIENTE -->
+  <div class="diagrama">
+    <h2>2. Flujo del Cliente - Proceso de Compra Completo</h2>
+    <p class="descripcion">Recorrido completo del cliente desde que entra a la pagina hasta que recibe su factura por correo electronico.</p>
+    <div class="mermaid">
+flowchart TD
+    A([Cliente entra a la web]) --> B[Pagina principal Subzero]
+    B --> C[Ver catalogo de productos]
+    C --> D{Que desea pedir?}
+    D -->|Producto pre-hecho| E[Seleccionar Subzero del menu]
+    D -->|Personalizar| F[Crea tu propio Subzero]
+    E --> G{Desea anadir extras?}
+    G -->|Si| H[Seleccionar extras<br/>gomitas, sabores, toppings]
+    G -->|No| I[Agregar al carrito]
+    H --> I
+    F --> J[Seleccionar base / tamano]
+    J --> K[Elegir sabores]
+    K --> L[Agregar gomitas]
+    L --> M[Agregar toppings]
+    M --> N[Ver precio actualizado en vivo]
+    N --> I
+    I --> O{Mas productos?}
+    O -->|Si| C
+    O -->|No| P[Ir al carrito]
+    P --> Q[Ingresar correo electronico]
+    Q --> R[Datos de entrega / recogida]
+    R --> S[Realizar pago]
+    S --> T{Pago exitoso?}
+    T -->|No| U[Mostrar error y reintentar]
+    U --> S
+    T -->|Si| V[Generar factura]
+    V --> W[Enviar factura al correo]
+    W --> X[Mostrar confirmacion al cliente]
+    X --> Y([Fin del proceso])
+
+    style A fill:#4dd0e1,stroke:#006064,color:#fff
+    style Y fill:#66bb6a,stroke:#1b5e20,color:#fff
+    style F fill:#ffb74d,stroke:#e65100,color:#fff
+    style V fill:#ab47bc,stroke:#4a148c,color:#fff
+    style W fill:#ab47bc,stroke:#4a148c,color:#fff
+    </div>
+  </div>
+
+  <!-- 3. FLUJO DE PERSONALIZACION -->
+  <div class="diagrama">
+    <h2>3. Flujo de Personalizacion - "Crea tu propio Subzero"</h2>
+    <p class="descripcion">Detalle del modulo donde el cliente arma su raspado paso a paso, viendo como cambia el precio en tiempo real.</p>
+    <div class="mermaid">
+flowchart LR
+    A([Iniciar personalizacion]) --> B[Paso 1: Tamano<br/>Pequeno / Mediano / Grande]
+    B --> P1[Precio base = $X]
+    P1 --> C[Paso 2: Sabores<br/>Elegir 1 o varios]
+    C --> P2[Precio + Sabores extras]
+    P2 --> D[Paso 3: Gomitas<br/>Elegir cantidad y tipos]
+    D --> P3[Precio + $ por cada gomita]
+    P3 --> E[Paso 4: Toppings<br/>lechera, chocolate, chamoy, etc.]
+    E --> P4[Precio + Toppings]
+    P4 --> F[Resumen del pedido<br/>Mostrar todos los items]
+    F --> G{Cliente confirma?}
+    G -->|No, modificar| B
+    G -->|Si| H[Agregar al carrito]
+    H --> I([Volver al menu o pagar])
+
+    style A fill:#4dd0e1,stroke:#006064,color:#fff
+    style I fill:#66bb6a,stroke:#1b5e20,color:#fff
+    style P1 fill:#fff59d,stroke:#f57f17
+    style P2 fill:#fff59d,stroke:#f57f17
+    style P3 fill:#fff59d,stroke:#f57f17
+    style P4 fill:#fff59d,stroke:#f57f17
+    </div>
+    <div class="nota"><strong>Nota:</strong> Cada seleccion debe actualizar el precio en tiempo real para que el cliente vea el total final antes de agregar al carrito.</div>
+  </div>
+
+  <!-- 4. FLUJO DE PAGO BAC + FACTURACION -->
+  <div class="diagrama">
+    <h2>4. Flujo de Pago con BAC Credomatic y Facturacion</h2>
+    <p class="descripcion">Proceso completo desde que el cliente pulsa "Pagar" hasta que el dinero llega a tu cuenta BAC y la factura llega al correo del cliente.</p>
+    <div class="mermaid">
+flowchart TD
+    A([Cliente pulsa PAGAR]) --> B[Frontend envia pedido a Cloud Function]
+    B --> C[Cloud Function crea sesion de pago<br/>en BAC eCommerce Gateway]
+    C --> D[Redirigir cliente al formulario seguro de BAC]
+    D --> E[Cliente ingresa tarjeta]
+    E --> F{BAC valida pago}
+    F -->|Rechazado| G[Mostrar error al cliente]
+    G --> A
+    F -->|Aprobado| H[BAC envia webhook a Cloud Function]
+    H --> I[Dinero acreditado<br/>en tu cuenta BAC comercio]
+    H --> J[Guardar pedido en Firestore<br/>estado: PENDIENTE]
+    J --> K[Generar factura PDF con jsPDF]
+    K --> L[Subir PDF a Firebase Storage]
+    L --> M[Enviar factura al correo via SendGrid]
+    M --> N{Correo enviado?}
+    N -->|No| O[Reintentar 3 veces]
+    O --> M
+    N -->|Si| P[Mostrar pantalla de confirmacion]
+    P --> Q[Firestore notifica al panel admin<br/>en tiempo real]
+    Q --> R([Fin])
+
+    style A fill:#4dd0e1,stroke:#006064,color:#fff
+    style R fill:#66bb6a,stroke:#1b5e20,color:#fff
+    style C fill:#d32f2f,stroke:#7f0000,color:#fff
+    style D fill:#d32f2f,stroke:#7f0000,color:#fff
+    style F fill:#d32f2f,stroke:#7f0000,color:#fff
+    style I fill:#388e3c,stroke:#1b5e20,color:#fff
+    style J fill:#ff7043,stroke:#bf360c,color:#fff
+    style K fill:#ab47bc,stroke:#4a148c,color:#fff
+    style L fill:#ffa726,stroke:#e65100,color:#fff
+    style M fill:#ab47bc,stroke:#4a148c,color:#fff
+    style Q fill:#ff7043,stroke:#bf360c,color:#fff
+    </div>
+    <div class="nota"><strong>Importante BAC:</strong> Necesitas solicitar una cuenta de comercio electronico con BAC Credomatic. Te entregaran credenciales (merchant ID + claves) que usaras en la Cloud Function para procesar los pagos. El dinero cae directo a tu cuenta bancaria BAC.</div>
+  </div>
+
+  <!-- 5. FLUJO DEL ADMINISTRADOR -->
+  <div class="diagrama">
+    <h2>5. Flujo del Administrador / Cocina (Quien prepara los raspados)</h2>
+    <p class="descripcion">Vista del panel para el equipo de Subzero: ver pedidos entrantes, prepararlos y marcarlos como listos.</p>
+    <div class="mermaid">
+flowchart TD
+    A([Admin abre el panel]) --> B[Iniciar sesion]
+    B --> C[Dashboard de pedidos]
+    C --> D[Ver lista de ordenes pendientes]
+    D --> E{Nuevo pedido?}
+    E -->|Si| F[Notificacion sonora + visual]
+    F --> G[Abrir detalles del pedido]
+    E -->|No| G
+    G --> H[Revisar items: sabores, gomitas, extras]
+    H --> I[Marcar como EN PREPARACION]
+    I --> J[Preparar el raspado fisicamente]
+    J --> K[Marcar como ORDEN LISTA]
+    K --> L[Sistema notifica al cliente<br/>email/SMS opcional]
+    L --> M{Pedido entregado?}
+    M -->|Si| N[Marcar como ENTREGADO]
+    M -->|No| O[Mantener en LISTO]
+    O --> M
+    N --> P[Pedido se archiva en historial]
+    P --> C
+
+    style A fill:#4dd0e1,stroke:#006064,color:#fff
+    style I fill:#ffb74d,stroke:#e65100,color:#fff
+    style K fill:#66bb6a,stroke:#1b5e20,color:#fff
+    style N fill:#9e9e9e,stroke:#424242,color:#fff
+    style F fill:#ef5350,stroke:#b71c1c,color:#fff
+    </div>
+  </div>
+
+  <!-- 6. ESTADOS DE UN PEDIDO -->
+  <div class="diagrama">
+    <h2>6. Ciclo de Vida / Estados de un Pedido</h2>
+    <p class="descripcion">Estados por los que pasa cada pedido desde que se crea hasta que se completa.</p>
+    <div class="mermaid">
+stateDiagram-v2
+    [*] --> PENDIENTE: Cliente paga
+    PENDIENTE --> EN_PREPARACION: Admin acepta
+    EN_PREPARACION --> LISTO: Raspado terminado
+    LISTO --> ENTREGADO: Cliente recoge / entrega
+    ENTREGADO --> [*]
+    PENDIENTE --> CANCELADO: Problema con pago
+    EN_PREPARACION --> CANCELADO: Sin ingredientes
+    CANCELADO --> [*]
+    </div>
+  </div>
+
+  <!-- 7. MODELO DE DATOS -->
+  <div class="diagrama">
+    <h2>7. Modelo de Datos (Entidades Principales)</h2>
+    <p class="descripcion">Estructura basica de la informacion que manejara la base de datos del sistema.</p>
+    <div class="mermaid">
+erDiagram
+    CLIENTE ||--o{ PEDIDO : realiza
+    PEDIDO ||--|{ ITEM_PEDIDO : contiene
+    ITEM_PEDIDO }o--|| PRODUCTO : referencia
+    ITEM_PEDIDO ||--o{ EXTRA : tiene
+    PRODUCTO ||--o{ EXTRA : permite
+    PEDIDO ||--|| FACTURA : genera
+
+    CLIENTE {
+        int id
+        string nombre
+        string email
+        string telefono
+    }
+    PEDIDO {
+        int id
+        int cliente_id
+        datetime fecha
+        string estado
+        decimal total
+    }
+    ITEM_PEDIDO {
+        int id
+        int pedido_id
+        int producto_id
+        int cantidad
+        decimal subtotal
+    }
+    PRODUCTO {
+        int id
+        string nombre
+        string tipo
+        decimal precio_base
+    }
+    EXTRA {
+        int id
+        string nombre
+        string categoria
+        decimal precio
+    }
+    FACTURA {
+        int id
+        int pedido_id
+        string numero
+        string pdf_url
+        datetime emitida
+    }
+    </div>
+  </div>
+
+  <!-- 8. FLUJO DE NOTIFICACIONES -->
+  <div class="diagrama">
+    <h2>8. Flujo de Comunicacion en Tiempo Real (Firebase + BAC)</h2>
+    <p class="descripcion">Interaccion detallada entre el cliente, la web, Firebase, BAC y el panel de cocina.</p>
+    <div class="mermaid">
+sequenceDiagram
+    participant C as Cliente
+    participant W as Web Subzero
+    participant FN as Cloud Function
+    participant BAC as BAC Credomatic
+    participant FS as Firestore
+    participant A as Panel Cocina
+    participant E as SendGrid Email
+
+    C->>W: Arma su pedido (personaliza)
+    W->>W: Calcula precio en vivo
+    C->>W: Ingresa email y pulsa pagar
+    W->>FN: Solicita procesar pago
+    FN->>BAC: Crea sesion de pago
+    BAC-->>C: Muestra formulario de tarjeta
+    C->>BAC: Ingresa datos de tarjeta
+    BAC->>FN: Webhook: pago aprobado
+    BAC->>BAC: Acredita dinero a cuenta BAC
+    FN->>FS: Guarda pedido (PENDIENTE)
+    FN->>FN: Genera factura PDF
+    FN->>E: Envia factura por correo
+    E->>C: Cliente recibe factura
+    FS-->>A: Notifica pedido en tiempo real
+    A->>FS: Marca EN PREPARACION
+    A->>A: Prepara el raspado
+    A->>FS: Marca ORDEN LISTA
+    FS-->>C: (opcional) Notifica al cliente
+    C->>A: Recoge su pedido
+    A->>FS: Marca ENTREGADO
+    </div>
+  </div>
+
+  <!-- 9. ESTRUCTURA EN FIRESTORE -->
+  <div class="diagrama">
+    <h2>9. Estructura de Datos en Firestore (NoSQL)</h2>
+    <p class="descripcion">Como se organizan las colecciones y documentos dentro de Firebase Firestore.</p>
+    <div class="mermaid">
+graph TD
+    ROOT[(Firestore Database)]
+    ROOT --> COL1[Coleccion: productos]
+    ROOT --> COL2[Coleccion: extras]
+    ROOT --> COL3[Coleccion: pedidos]
+    ROOT --> COL4[Coleccion: clientes]
+    ROOT --> COL5[Coleccion: admin_users]
+
+    COL1 --> P1[Doc: subzero_clasico<br/>nombre, precio, imagen, descripcion]
+    COL1 --> P2[Doc: subzero_tropical<br/>nombre, precio, imagen]
+    COL2 --> E1[Doc: gomitas<br/>tipo, precio_unitario]
+    COL2 --> E2[Doc: sabores<br/>nombre, precio]
+    COL2 --> E3[Doc: toppings<br/>nombre, precio]
+    COL3 --> O1[Doc: pedido_001<br/>cliente_email, items, total,<br/>estado, fecha, factura_url]
+    COL3 --> O2[Doc: pedido_002<br/>...]
+    COL4 --> C1[Doc: cliente_email<br/>nombre, telefono, historial]
+    COL5 --> A1[Doc: admin_uid<br/>nombre, rol]
+
+    style ROOT fill:#ff7043,stroke:#bf360c,color:#fff
+    style COL1 fill:#ffa726,stroke:#e65100,color:#fff
+    style COL2 fill:#ffa726,stroke:#e65100,color:#fff
+    style COL3 fill:#ffa726,stroke:#e65100,color:#fff
+    style COL4 fill:#ffa726,stroke:#e65100,color:#fff
+    style COL5 fill:#ffa726,stroke:#e65100,color:#fff
+    </div>
+    <div class="nota"><strong>Ventaja Firestore:</strong> La coleccion "pedidos" se actualiza en tiempo real. Cuando entra un nuevo documento, el panel de cocina lo recibe automaticamente sin recargar.</div>
+  </div>
+
+  <footer>
+    <p>Diagramas de flujo - Proyecto Subzero | Generado el 11 de mayo de 2026</p>
+  </footer>
+
+</div>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    flowchart: { curve: 'basis', padding: 20 },
+    themeVariables: {
+      primaryColor: '#b2ebf2',
+      primaryTextColor: '#006064',
+      primaryBorderColor: '#00838f',
+      lineColor: '#00838f',
+      fontSize: '14px'
+    }
+  });
+</script>
+
+</body>
+</html>
