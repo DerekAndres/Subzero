@@ -54,7 +54,6 @@ img,svg{display:block}
 }
 .hero::after{content:none}
 
-/* Ham button */
 .ham-btn{
   position:absolute;top:22px;left:22px;z-index:20;
   width:44px;height:44px;border-radius:50%;
@@ -65,7 +64,6 @@ img,svg{display:block}
 .ham-btn:hover{transform:scale(1.08);box-shadow:var(--sh-pink-lg)}
 .ham-btn svg{width:18px;height:18px}
 
-/* Cart button */
 .hero-cart{
   position:absolute;top:22px;right:22px;z-index:20;
   display:flex;align-items:center;gap:8px;
@@ -84,7 +82,6 @@ img,svg{display:block}
 }
 .cart-bubble.show{transform:scale(1)}
 
-/* Logo */
 .hero-logo{
   position:relative;z-index:10;
   display:flex;align-items:center;gap:10px;
@@ -98,7 +95,6 @@ img,svg{display:block}
   box-shadow:var(--sh-pink);
 }
 
-/* Hero headline */
 .hero-content{position:relative;z-index:10;text-align:center;padding-inline:20px}
 .hero-eyebrow{
   display:inline-flex;align-items:center;gap:6px;
@@ -116,13 +112,8 @@ img,svg{display:block}
   line-height:.9;letter-spacing:-1px;
   color:var(--ink);margin-bottom:8px;
 }
-.hero-h1 .line-pink{
-  color:var(--pink);
-  display:block;
-}
-.hero-h1 .line-white{
-  color:var(--ink);display:block;
-}
+.hero-h1 .line-pink{color:var(--pink);display:block;}
+.hero-h1 .line-white{color:var(--ink);display:block;}
 .hero-sub{
   font-size:clamp(14px,2vw,18px);color:var(--gray);
   font-weight:700;letter-spacing:3px;text-transform:uppercase;
@@ -138,7 +129,6 @@ img,svg{display:block}
 }
 .hero-cta:hover{background:var(--pink-l);transform:translateY(-2px);box-shadow:var(--sh-pink-lg)}
 
-/* Hero stats row */
 .hero-stats{
   position:absolute;bottom:clamp(20px,4vh,40px);left:50%;transform:translateX(-50%);
   z-index:10;display:flex;gap:clamp(24px,4vw,56px);
@@ -210,6 +200,7 @@ img,svg{display:block}
   transition:all 200ms var(--ease-sp);flex-shrink:0;
 }
 .add-btn-sm:hover{transform:rotate(90deg) scale(1.1);background:var(--pink-l)}
+.catalog-loading{text-align:center;padding:60px;color:var(--gray);font-family:'Fredoka One',sans-serif;font-size:18px}
 
 /* ── CUSTOMIZER ── */
 .customizer{background:var(--cream);padding-block:clamp(56px,8vw,100px)}
@@ -413,6 +404,62 @@ img,svg{display:block}
 [data-reveal-delay="2"]{transition-delay:160ms}
 [data-reveal-delay="3"]{transition-delay:240ms}
 
+/* ── CHECKOUT MODAL ── */
+.co-overlay{
+  position:fixed;inset:0;background:rgba(28,13,20,.65);z-index:110;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;pointer-events:none;transition:opacity 250ms;backdrop-filter:blur(4px);
+}
+.co-overlay.open{opacity:1;pointer-events:all}
+.co-modal{
+  background:var(--white);border-radius:28px;padding:32px;
+  width:100%;max-width:420px;
+  transform:translateY(20px);transition:transform 250ms var(--ease-out);
+}
+.co-overlay.open .co-modal{transform:translateY(0)}
+.co-title{font-family:'Fredoka One',sans-serif;font-size:24px;color:var(--ink);margin-bottom:6px}
+.co-lead{font-size:13px;color:var(--gray);font-weight:600;margin-bottom:24px}
+.co-field{margin-bottom:16px}
+.co-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);margin-bottom:6px;display:block}
+.co-input{
+  width:100%;padding:12px 16px;border-radius:14px;
+  border:2px solid var(--gray-2);font-size:14px;font-weight:700;
+  font-family:'Nunito',sans-serif;color:var(--ink);
+  transition:border-color 200ms;background:var(--cream);
+}
+.co-input:focus{outline:none;border-color:var(--pink);background:var(--white)}
+.co-summary{
+  background:var(--pink-pale);border:2px solid var(--pink-dim);
+  border-radius:16px;padding:14px 16px;margin-bottom:20px;
+}
+.co-summary-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--pink);margin-bottom:8px}
+.co-summary-items{font-size:12px;color:var(--gray);line-height:1.7;font-weight:600}
+.co-total{font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--pink);margin-top:6px}
+.co-actions{display:flex;gap:10px;margin-top:4px}
+.co-btn-cancel{
+  flex:1;padding:13px;border-radius:var(--r-full);font-size:13px;font-weight:800;
+  background:var(--cream);color:var(--gray);border:2px solid var(--gray-2);
+  cursor:pointer;transition:all 180ms;
+}
+.co-btn-cancel:hover{background:var(--gray-2)}
+.co-btn-confirm{
+  flex:2;padding:13px;border-radius:var(--r-full);font-size:13px;font-weight:900;
+  background:var(--pink);color:var(--white);border:none;
+  cursor:pointer;transition:all 180ms var(--ease-out);box-shadow:var(--sh-pink);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.co-btn-confirm:hover:not(:disabled){background:var(--pink-l);transform:translateY(-1px)}
+.co-btn-confirm:disabled{opacity:.5;cursor:not-allowed}
+.co-error{font-size:12px;color:var(--danger);font-weight:700;margin-bottom:12px;display:none}
+.co-error.show{display:block}
+
+/* ── ORDER SUCCESS ── */
+.co-success{text-align:center;display:none}
+.co-success.show{display:block}
+.co-success-icon{font-size:56px;margin-bottom:12px}
+.co-success-title{font-family:'Fredoka One',sans-serif;font-size:22px;color:var(--ink);margin-bottom:8px}
+.co-success-msg{font-size:13px;color:var(--gray);font-weight:600;line-height:1.6}
+
 /* ── RESPONSIVE ── */
 @media(max-width:960px){
   .prod-grid{grid-template-columns:repeat(2,1fr)}
@@ -443,8 +490,6 @@ img,svg{display:block}
 
 <!-- HERO -->
 <section class="hero">
-
-  <!-- Controls top -->
   <button class="ham-btn" id="hamBtn" aria-label="Menú" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round">
       <line x1="3" y1="6"  x2="21" y2="6"/>
@@ -459,7 +504,6 @@ img,svg{display:block}
     <span class="cart-bubble" id="cartBubble">0</span>
   </button>
 
-  <!-- Logo centered -->
   <div class="hero-logo">
     <div class="logo-cup">
       <svg width="22" height="24" viewBox="0 0 22 26" fill="none">
@@ -472,7 +516,6 @@ img,svg{display:block}
     Subzero
   </div>
 
-  <!-- Main headline -->
   <div class="hero-content">
     <div class="hero-eyebrow">
       <span class="live-dot"></span>
@@ -486,7 +529,6 @@ img,svg{display:block}
     <a href="#catalogo" class="hero-cta">Ver el menú completo</a>
   </div>
 
-  <!-- Stats bottom -->
   <div class="hero-stats">
     <div class="hs"><div class="hs-val">12+</div><div class="hs-lbl">Sabores</div></div>
     <div class="hs"><div class="hs-val">100%</div><div class="hs-lbl">Artesanal</div></div>
@@ -498,18 +540,15 @@ img,svg{display:block}
 <!-- MARQUEE -->
 <div class="marquee-wrap" aria-hidden="true">
   <div class="marquee-track">
-    <!-- doubled for seamless loop -->
     <span class="marquee-item">RASPADOS ARTESANALES <span class="marquee-sep">•</span></span>
     <span class="marquee-item">SUBZERO <span class="marquee-sep">•</span></span>
     <span class="marquee-item">FRÍO DE VERDAD <span class="marquee-sep">•</span></span>
     <span class="marquee-item">SABORES ÚNICOS <span class="marquee-sep">•</span></span>
-    <span class="marquee-item">PAGA CON BAC <span class="marquee-sep">•</span></span>
     <span class="marquee-item">ORDENA EN LÍNEA <span class="marquee-sep">•</span></span>
     <span class="marquee-item">RASPADOS ARTESANALES <span class="marquee-sep">•</span></span>
     <span class="marquee-item">SUBZERO <span class="marquee-sep">•</span></span>
     <span class="marquee-item">FRÍO DE VERDAD <span class="marquee-sep">•</span></span>
     <span class="marquee-item">SABORES ÚNICOS <span class="marquee-sep">•</span></span>
-    <span class="marquee-item">PAGA CON BAC <span class="marquee-sep">•</span></span>
     <span class="marquee-item">ORDENA EN LÍNEA <span class="marquee-sep">•</span></span>
   </div>
 </div>
@@ -522,7 +561,9 @@ img,svg{display:block}
       <h2 class="sec-title" id="catTitle">Elige tu próximo favorito</h2>
       <p class="sec-lead">Raspados artesanales listos para ordenar con los mejores ingredientes.</p>
     </div>
-    <div class="prod-grid" id="prodGrid" role="list"></div>
+    <div class="prod-grid" id="prodGrid" role="list">
+      <div class="catalog-loading" style="grid-column:1/-1">Cargando menú... 🍧</div>
+    </div>
   </div>
 </section>
 
@@ -536,8 +577,8 @@ img,svg{display:block}
     <div class="feat-grid">
       <div class="feat" data-reveal data-reveal-delay="1"><div class="feat-icon">🧊</div><div class="feat-title">Hielo artesanal</div><div class="feat-desc">Agua purificada y triturada al momento para una textura suave y perfecta.</div></div>
       <div class="feat" data-reveal data-reveal-delay="2"><div class="feat-icon">🎨</div><div class="feat-title">100% personalizable</div><div class="feat-desc">Tamaño, sabores, gomitas y toppings exactamente como lo imaginas.</div></div>
-      <div class="feat" data-reveal data-reveal-delay="3"><div class="feat-icon">💳</div><div class="feat-title">Pago seguro BAC</div><div class="feat-desc">Procesamos con BAC Credomatic, la pasarela más confiable de Centroamérica.</div></div>
-      <div class="feat" data-reveal data-reveal-delay="1"><div class="feat-icon">📧</div><div class="feat-title">Factura por correo</div><div class="feat-desc">PDF automático en tu correo al confirmar el pago.</div></div>
+      <div class="feat" data-reveal data-reveal-delay="3"><div class="feat-icon">💳</div><div class="feat-title">Pago seguro</div><div class="feat-desc">Paga de forma rápida y segura. Tu pedido entra a cocina inmediatamente.</div></div>
+      <div class="feat" data-reveal data-reveal-delay="1"><div class="feat-icon">📧</div><div class="feat-title">Confirmación por correo</div><div class="feat-desc">Recibirás la confirmación de tu pedido en tu correo electrónico.</div></div>
       <div class="feat" data-reveal data-reveal-delay="2"><div class="feat-icon">⚡</div><div class="feat-title">Listo en minutos</div><div class="feat-desc">Tu pedido entra a cocina en tiempo real. Te avisamos cuando esté.</div></div>
       <div class="feat" data-reveal data-reveal-delay="3"><div class="feat-icon">🍓</div><div class="feat-title">Sabores naturales</div><div class="feat-desc">Fruta fresca y concentrados naturales. Sin colorantes artificiales.</div></div>
     </div>
@@ -555,44 +596,28 @@ img,svg{display:block}
     <div class="cust-wrap">
       <div>
         <div class="step-nav" role="tablist">
-          <button class="sn active" id="sn1" role="tab" aria-selected="true"  aria-controls="sp1" onclick="goStep(1)"><span class="sn-num">1</span><span>Tamaño</span></button>
-          <button class="sn"        id="sn2" role="tab" aria-selected="false" aria-controls="sp2" onclick="goStep(2)"><span class="sn-num">2</span><span>Sabores</span></button>
-          <button class="sn"        id="sn3" role="tab" aria-selected="false" aria-controls="sp3" onclick="goStep(3)"><span class="sn-num">3</span><span>Gomitas</span></button>
-          <button class="sn"        id="sn4" role="tab" aria-selected="false" aria-controls="sp4" onclick="goStep(4)"><span class="sn-num">4</span><span>Toppings</span></button>
+          <button class="sn active" id="sn1" role="tab" aria-selected="true"  onclick="goStep(1)"><span class="sn-num">1</span><span>Tamaño</span></button>
+          <button class="sn"        id="sn2" role="tab" aria-selected="false" onclick="goStep(2)"><span class="sn-num">2</span><span>Sabores</span></button>
+          <button class="sn"        id="sn3" role="tab" aria-selected="false" onclick="goStep(3)"><span class="sn-num">3</span><span>Gomitas</span></button>
+          <button class="sn"        id="sn4" role="tab" aria-selected="false" onclick="goStep(4)"><span class="sn-num">4</span><span>Toppings</span></button>
         </div>
 
-        <div class="sp active cust-panel" id="sp1" role="tabpanel">
+        <!-- Step 1: Tamaño -->
+        <div class="sp active cust-panel" id="sp1">
           <div class="sp-title">¿Qué tamaño?</div>
           <p class="sp-hint">El tamaño define el precio base.</p>
-          <div class="size-grid" role="radiogroup">
-            <button class="sz" onclick="pickSize(this,'Pequeño',1500)" role="radio" aria-checked="false">
-              <div class="sz-icon"><svg width="26" height="34" viewBox="0 0 28 36" fill="none"><path d="M4 14L2 34h24L24 14z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="14" cy="14" rx="10" ry="6" fill="#FFB3D1" opacity=".8"/><ellipse cx="14" cy="10" rx="7" ry="5" fill="#E8186D"/></svg></div>
-              <div><div class="sz-label">Pequeño</div><div class="sz-price">₡1,500</div></div>
-            </button>
-            <button class="sz" onclick="pickSize(this,'Mediano',2000)" role="radio" aria-checked="false">
-              <div class="sz-icon"><svg width="32" height="40" viewBox="0 0 34 42" fill="none"><path d="M5 17L2 40h30L27 17z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="17" cy="17" rx="12" ry="7" fill="#FFB3D1" opacity=".8"/><ellipse cx="17" cy="12" rx="9" ry="6" fill="#E8186D"/></svg></div>
-              <div><div class="sz-label">Mediano</div><div class="sz-price">₡2,000</div></div>
-            </button>
-            <button class="sz" onclick="pickSize(this,'Grande',2500)" role="radio" aria-checked="false">
-              <div class="sz-icon"><svg width="38" height="48" viewBox="0 0 40 50" fill="none"><path d="M6 20L2 48h36L34 20z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="14" ry="8" fill="#FFB3D1" opacity=".8"/><ellipse cx="20" cy="14" rx="10" ry="7" fill="#E8186D"/></svg></div>
-              <div><div class="sz-label">Grande</div><div class="sz-price">₡2,500</div></div>
-            </button>
+          <div class="size-grid" id="sizeGrid" role="radiogroup">
+            <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--gray)">Cargando tamaños...</div>
           </div>
           <div class="sp-actions"><button class="btn-next" id="btnN1" onclick="goStep(2)" disabled>Siguiente — Sabores →</button></div>
         </div>
 
-        <div class="sp cust-panel" id="sp2" role="tabpanel">
+        <!-- Step 2: Sabores -->
+        <div class="sp cust-panel" id="sp2">
           <div class="sp-title">¿Cuáles sabores?</div>
           <p class="sp-hint">Elige hasta 3. Los marcados con + tienen costo adicional.</p>
-          <div class="opts" role="group">
-            <button class="opt" onclick="pickFlavor(this,'Fresa',0)"       aria-pressed="false"><span class="opt-sw" style="background:#F48FB1"></span>Fresa</button>
-            <button class="opt" onclick="pickFlavor(this,'Mango',0)"       aria-pressed="false"><span class="opt-sw" style="background:#FFCC80"></span>Mango</button>
-            <button class="opt" onclick="pickFlavor(this,'Limón',0)"       aria-pressed="false"><span class="opt-sw" style="background:#E6EE9C"></span>Limón</button>
-            <button class="opt" onclick="pickFlavor(this,'Tamarindo',0)"   aria-pressed="false"><span class="opt-sw" style="background:#BCAAA4"></span>Tamarindo</button>
-            <button class="opt" onclick="pickFlavor(this,'Maracuyá',200)"  aria-pressed="false"><span class="opt-sw" style="background:#FFD54F"></span>Maracuyá <span class="opt-p">+₡200</span></button>
-            <button class="opt" onclick="pickFlavor(this,'Guanábana',200)" aria-pressed="false"><span class="opt-sw" style="background:#A5D6A7"></span>Guanábana <span class="opt-p">+₡200</span></button>
-            <button class="opt" onclick="pickFlavor(this,'Jamaica',0)"     aria-pressed="false"><span class="opt-sw" style="background:#EF9A9A"></span>Jamaica</button>
-            <button class="opt" onclick="pickFlavor(this,'Coco',200)"      aria-pressed="false"><span class="opt-sw" style="background:#E0E0E0;border:1px solid #ccc"></span>Coco <span class="opt-p">+₡200</span></button>
+          <div class="opts" id="flavorOpts" role="group">
+            <div style="color:var(--gray);font-size:13px">Cargando sabores...</div>
           </div>
           <div class="sp-actions">
             <button class="btn-back" onclick="goStep(1)">← Atrás</button>
@@ -600,26 +625,25 @@ img,svg{display:block}
           </div>
         </div>
 
-        <div class="sp cust-panel" id="sp3" role="tabpanel">
+        <!-- Step 3: Gomitas -->
+        <div class="sp cust-panel" id="sp3">
           <div class="sp-title">¿Cuántas gomitas?</div>
           <p class="sp-hint">Cada porción se cobra por separado.</p>
-          <div id="gomList"></div>
+          <div id="gomList">
+            <div style="color:var(--gray);font-size:13px;padding:20px 0">Cargando gomitas...</div>
+          </div>
           <div class="sp-actions">
             <button class="btn-back" onclick="goStep(2)">← Atrás</button>
             <button class="btn-next" onclick="goStep(4)">Siguiente — Toppings →</button>
           </div>
         </div>
 
-        <div class="sp cust-panel" id="sp4" role="tabpanel">
+        <!-- Step 4: Toppings -->
+        <div class="sp cust-panel" id="sp4">
           <div class="sp-title">¿Qué toppings?</div>
           <p class="sp-hint">Los toppings hacen la diferencia.</p>
-          <div class="opts" role="group">
-            <button class="opt" onclick="pickTop(this,'Lechera',150)"       aria-pressed="false">🥛 Lechera <span class="opt-p">+₡150</span></button>
-            <button class="opt" onclick="pickTop(this,'Chamoy',100)"         aria-pressed="false">🫙 Chamoy <span class="opt-p">+₡100</span></button>
-            <button class="opt" onclick="pickTop(this,'Chocolate',150)"      aria-pressed="false">🍫 Chocolate <span class="opt-p">+₡150</span></button>
-            <button class="opt" onclick="pickTop(this,'Chile en polvo',100)" aria-pressed="false">🌶️ Chile <span class="opt-p">+₡100</span></button>
-            <button class="opt" onclick="pickTop(this,'Cajeta',200)"         aria-pressed="false">🍯 Cajeta <span class="opt-p">+₡200</span></button>
-            <button class="opt" onclick="pickTop(this,'Tamarindo líq.',150)" aria-pressed="false">🍋 Tamarindo líq. <span class="opt-p">+₡150</span></button>
+          <div class="opts" id="toppingOpts" role="group">
+            <div style="color:var(--gray);font-size:13px">Cargando toppings...</div>
           </div>
           <div class="sp-actions"><button class="btn-back" onclick="goStep(3)">← Atrás</button></div>
         </div>
@@ -642,7 +666,7 @@ img,svg{display:block}
           <div class="sum-row"><span>Sabores</span><span id="slFlavors">—</span></div>
           <div class="sum-row"><span>Gomitas</span><span id="slGomitas">—</span></div>
           <div class="sum-row"><span>Toppings</span><span id="slToppings">—</span></div>
-          <div class="sum-row total"><span>Total</span><span id="slTotal">₡0</span></div>
+          <div class="sum-row total"><span>Total</span><span id="slTotal">Lps.0</span></div>
         </div>
         <button class="sum-add" id="addBtn" onclick="addCustom()" disabled>🛒 Agregar al carrito</button>
         <p class="sum-note" id="sumNote">Selecciona un tamaño para comenzar</p>
@@ -661,7 +685,7 @@ img,svg{display:block}
         <p class="sec-lead" style="margin-inline:0">Subzero nació de una idea simple: llevar el sabor auténtico de los raspados a un formato moderno y accesible desde cualquier pantalla.</p>
         <div class="how">
           <div class="how-item"><div class="how-n">01</div><div><div class="how-title">Elige y personaliza</div><div class="how-desc">Del catálogo o desde el personalizador. Tamaño, sabores, gomitas y toppings.</div></div></div>
-          <div class="how-item"><div class="how-n">02</div><div><div class="how-title">Paga de forma segura</div><div class="how-desc">BAC Credomatic procesa tu pago. Factura PDF en tu correo al instante.</div></div></div>
+          <div class="how-item"><div class="how-n">02</div><div><div class="how-title">Ingresa tus datos</div><div class="how-desc">Solo necesitamos tu nombre y correo para enviarte la confirmación.</div></div></div>
           <div class="how-item"><div class="how-n">03</div><div><div class="how-title">Entra a cocina</div><div class="how-desc">Tu orden llega a nuestro panel en tiempo real y empezamos a preparar.</div></div></div>
           <div class="how-item"><div class="how-n">04</div><div><div class="how-title">Recoge y disfruta</div><div class="how-desc">Te avisamos cuando está listo. Frío, fresco y exactamente como lo pediste.</div></div></div>
         </div>
@@ -675,13 +699,11 @@ img,svg{display:block}
             <div class="kpi"><div class="kpi-val">&lt;10</div><div class="kpi-lbl">Min. espera</div></div>
           </div>
           <div style="padding:14px;background:var(--cream);border-radius:16px;border:2px solid var(--gray-2)">
-            <div style="font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-bottom:10px">Stack tecnológico</div>
+            <div style="font-size:10px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray);margin-bottom:10px">Tecnología</div>
             <div style="display:flex;flex-wrap:wrap;gap:6px">
               <span style="padding:4px 10px;border-radius:var(--r-full);background:var(--pink-pale);border:1.5px solid var(--pink-dim);font-size:11px;font-weight:700;color:var(--pink)">Firebase</span>
               <span style="padding:4px 10px;border-radius:var(--r-full);background:var(--pink-pale);border:1.5px solid var(--pink-dim);font-size:11px;font-weight:700;color:var(--pink)">Firestore</span>
-              <span style="padding:4px 10px;border-radius:var(--r-full);background:var(--pink-pale);border:1.5px solid var(--pink-dim);font-size:11px;font-weight:700;color:var(--pink)">Cloud Functions</span>
-              <span style="padding:4px 10px;border-radius:var(--r-full);background:var(--pink-pale);border:1.5px solid var(--pink-dim);font-size:11px;font-weight:700;color:var(--pink)">BAC Credomatic</span>
-              <span style="padding:4px 10px;border-radius:var(--r-full);background:var(--pink-pale);border:1.5px solid var(--pink-dim);font-size:11px;font-weight:700;color:var(--pink)">SendGrid</span>
+              <span style="padding:4px 10px;border-radius:var(--r-full);background:var(--pink-pale);border:1.5px solid var(--pink-dim);font-size:11px;font-weight:700;color:var(--pink)">Tiempo Real</span>
             </div>
           </div>
         </div>
@@ -705,11 +727,11 @@ img,svg{display:block}
       </div>
       <div><div class="fc-title">Menú</div><nav class="fc-links"><a href="#catalogo" class="fc-link">Catálogo</a><a href="#personaliza" class="fc-link">Personaliza</a><a href="#nosotros" class="fc-link">Nuestra historia</a></nav></div>
       <div><div class="fc-title">Contacto</div><div class="fc-links"><span class="fc-link">WhatsApp</span><span class="fc-link">Instagram</span><span class="fc-link">Facebook</span></div></div>
-      <div><div class="fc-title">Legal</div><nav class="fc-links"><a href="#" class="fc-link">Privacidad</a><a href="#" class="fc-link">Términos</a><a href="#" class="fc-link">Devoluciones</a></nav></div>
+      <div><div class="fc-title">Legal</div><nav class="fc-links"><a href="#" class="fc-link">Privacidad</a><a href="#" class="fc-link">Términos</a></nav></div>
     </div>
     <div class="footer-bar">
       <span class="footer-copy">© 2026 Subzero. Todos los derechos reservados.</span>
-      <div class="footer-badges"><div class="fb-item">💳 BAC Credomatic</div><div class="fb-item">🔒 SSL</div><div class="fb-item">🔥 Firebase</div></div>
+      <div class="footer-badges"><div class="fb-item">🔒 Seguro</div><div class="fb-item">🔥 Firebase</div></div>
     </div>
   </div>
 </footer>
@@ -738,31 +760,80 @@ img,svg{display:block}
     </div>
   </div>
   <div class="d-foot" id="drawerFoot" style="display:none">
-    <div class="d-total"><span>Total</span><span id="drawerTotal">₡0</span></div>
-    <button class="pay-btn">💳 Pagar con BAC Credomatic</button>
+    <div class="d-total"><span>Total</span><span id="drawerTotal">Lps.0</span></div>
+    <button class="pay-btn" id="payBtn">🛒 Confirmar pedido</button>
+  </div>
+</div>
+
+<!-- ══ CHECKOUT MODAL ══ -->
+<div class="co-overlay" id="checkoutModal">
+  <div class="co-modal">
+    <!-- Form view -->
+    <div id="coForm">
+      <div class="co-title">Confirmar pedido 🍧</div>
+      <p class="co-lead">Ingresa tus datos para enviar tu pedido a cocina.</p>
+
+      <div id="coSummaryBox" class="co-summary">
+        <div class="co-summary-title">Tu pedido</div>
+        <div class="co-summary-items" id="coSummaryItems"></div>
+        <div class="co-total" id="coSummaryTotal">Lps.0</div>
+      </div>
+
+      <div class="co-field">
+        <label class="co-label" for="chkNombre">Nombre completo</label>
+        <input class="co-input" id="chkNombre" type="text" placeholder="Tu nombre" autocomplete="name">
+      </div>
+      <div class="co-field">
+        <label class="co-label" for="chkEmail">Correo electrónico</label>
+        <input class="co-input" id="chkEmail" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
+      </div>
+
+      <div class="co-error" id="coError"></div>
+
+      <div class="co-actions">
+        <button class="co-btn-cancel" onclick="closeCheckout()">Cancelar</button>
+        <button class="co-btn-confirm" id="coConfirmBtn" onclick="confirmarPedido()">
+          Enviar pedido →
+        </button>
+      </div>
+    </div>
+
+    <!-- Success view -->
+    <div class="co-success" id="coSuccess">
+      <div class="co-success-icon">🎉</div>
+      <div class="co-success-title">¡Pedido enviado a cocina!</div>
+      <p class="co-success-msg">Tu raspado está en preparación. Te enviaremos una confirmación a tu correo cuando esté listo. ¡Gracias por elegir Subzero!</p>
+      <button class="co-btn-confirm" onclick="closeCheckout()" style="margin-top:24px;width:100%">Cerrar</button>
+    </div>
   </div>
 </div>
 
 <!-- Toast -->
 <div class="toast" id="toast" role="alert"><svg class="t-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span></div>
 
-<script>
-/* ── Mobile nav ── */
-const mobileNav=document.getElementById('mobileNav');
-document.getElementById('hamBtn').addEventListener('click',()=>{mobileNav.classList.add('open');mobileNav.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'});
-function closeMob(){mobileNav.classList.remove('open');mobileNav.setAttribute('aria-hidden','true');document.body.style.overflow=''}
-document.getElementById('mobClose').addEventListener('click',closeMob);
+<!-- ══════════════════════════════════════════════════════
+     SCRIPT — todo conectado a Firestore
+══════════════════════════════════════════════════════ -->
+<script type="module">
+import { db } from "./assets/js/firebase-config.js";
+import {
+  collection, query, where, orderBy, onSnapshot,
+  addDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* ── Products ── */
-const PRODS=[
-  {name:'Subzero Clásico', price:2500,desc:'El original. Fresa y mango con lechera.',    badge:'Popular',  c1:'#FCE4EC',c2:'#F8BBD0',dots:['#F48FB1','#FFCC80','#FFF9C4']},
-  {name:'Tropical Blast',  price:2800,desc:'Maracuyá, guanábana y coco tropical.',        badge:'Nuevo',    c1:'#FFFDE7',c2:'#FFF9C4',dots:['#FFD54F','#A5D6A7','#E0E0E0']},
-  {name:'Tamarindo Fuego', price:2300,desc:'Tamarindo, chamoy y chile. Para valientes.',  badge:null,       c1:'#FBE9E7',c2:'#FFCCBC',dots:['#BCAAA4','#EF9A9A','#FF8A65']},
-  {name:'Jamaica Bloom',   price:2200,desc:'Jamaica, limón y cajeta. Floral y fresco.',   badge:null,       c1:'#FCE4EC',c2:'#EDE7F6',dots:['#EF9A9A','#E6EE9C','#CE93D8']},
-  {name:'Limón Extremo',   price:2000,desc:'Puro ácido. Limón, tamarindo y chile.',       badge:null,       c1:'#F9FBE7',c2:'#F0F4C3',dots:['#E6EE9C','#FFF59D','#BCAAA4']},
-  {name:'Coco Paraíso',    price:2600,desc:'Coco, lechera y gomitas de colores.',         badge:'Favorito', c1:'#E0F7FA',c2:'#B2EBF2',dots:['#E0E0E0','#B2EBF2','#FFD54F']},
+// ── Paletas de color para productos ──────────────────────────────
+const PALETTES = [
+  { c1:'#FCE4EC', c2:'#F8BBD0', dots:['#F48FB1','#FFCC80','#FFF9C4'] },
+  { c1:'#FFFDE7', c2:'#FFF9C4', dots:['#FFD54F','#A5D6A7','#E0E0E0'] },
+  { c1:'#FBE9E7', c2:'#FFCCBC', dots:['#BCAAA4','#EF9A9A','#FF8A65'] },
+  { c1:'#FCE4EC', c2:'#EDE7F6', dots:['#EF9A9A','#E6EE9C','#CE93D8'] },
+  { c1:'#F9FBE7', c2:'#F0F4C3', dots:['#E6EE9C','#FFF59D','#BCAAA4'] },
+  { c1:'#E0F7FA', c2:'#B2EBF2', dots:['#E0E0E0','#B2EBF2','#FFD54F'] },
+  { c1:'#E8F5E9', c2:'#C8E6C9', dots:['#A5D6A7','#FFD54F','#EF9A9A'] },
+  { c1:'#EDE7F6', c2:'#D1C4E9', dots:['#CE93D8','#F48FB1','#A5D6A7'] },
 ];
-const cup=(c1,c2,d)=>`<svg viewBox="0 0 80 100" fill="none" style="width:90px;max-width:100%">
+
+const cupSVG = (c1, c2, d) => `<svg viewBox="0 0 80 100" fill="none" style="width:90px;max-width:100%">
   <path d="M12 38L6 94h68L68 38z" fill="${c1}" fill-opacity=".9" stroke="${c2}" stroke-width="1.5"/>
   <rect x="36" y="8" width="8" height="70" rx="4" fill="#E8186D" opacity=".65"/>
   <ellipse cx="40" cy="38" rx="28" ry="12" fill="white" opacity=".85"/>
@@ -772,132 +843,451 @@ const cup=(c1,c2,d)=>`<svg viewBox="0 0 80 100" fill="none" style="width:90px;ma
   <circle cx="28" cy="9" r="4" fill="${d[2]}" opacity=".9"/>
   <circle cx="50" cy="6" r="3" fill="${d[0]}" opacity=".85"/>
 </svg>`;
-document.getElementById('prodGrid').innerHTML=PRODS.map((p,i)=>`
-  <article class="pc" role="listitem" data-reveal style="transition-delay:${i*60}ms">
-    <div class="pc-img">
-      <div class="pc-bg" style="background:linear-gradient(145deg,${p.c1},${p.c2})"></div>
-      <div class="pc-cup">${cup(p.c1,p.c2,p.dots)}</div>
-      ${p.badge?`<div class="pc-badge">${p.badge}</div>`:''}
-    </div>
-    <div class="pc-body">
-      <div class="pc-name">${p.name}</div>
-      <div class="pc-desc">${p.desc}</div>
-      <div class="pc-foot">
-        <div class="pc-price">₡${p.price.toLocaleString()} <sub>CRC</sub></div>
-        <button class="add-btn-sm" onclick='addDirect(${JSON.stringify({name:p.name,price:p.price,meta:`${p.dots.length} sabores`})})' aria-label="Agregar ${p.name}">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        </button>
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════════════════
+//  PRODUCTOS — catálogo dinámico desde Firestore
+// ══════════════════════════════════════════════════════
+const prodMap = {};
+
+onSnapshot(
+  query(collection(db,'productos'), orderBy('orden')),
+  snap => {
+    const prods = snap.docs.map(d => ({ id:d.id, ...d.data() })).filter(p => p.activo !== false);
+    const grid  = document.getElementById('prodGrid');
+
+    if (!prods.length) {
+      grid.innerHTML = `<div class="catalog-loading" style="grid-column:1/-1">Sin productos disponibles por ahora 🍧</div>`;
+      return;
+    }
+
+    prods.forEach(p => { prodMap[p.id] = p; });
+
+    grid.innerHTML = prods.map((p, i) => {
+      const pal  = PALETTES[i % PALETTES.length];
+      const c1   = p.c1   || pal.c1;
+      const c2   = p.c2   || pal.c2;
+      const dots = p.dots || pal.dots;
+      return `
+        <article class="pc" role="listitem" data-reveal style="transition-delay:${i*60}ms">
+          <div class="pc-img">
+            ${p.imagen
+              ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
+              : `<div class="pc-bg" style="background:linear-gradient(145deg,${c1},${c2})"></div>
+                 <div class="pc-cup">${cupSVG(c1,c2,dots)}</div>`
+            }
+            ${p.badge ? `<div class="pc-badge">${esc(p.badge)}</div>` : ''}
+          </div>
+          <div class="pc-body">
+            <div class="pc-name">${esc(p.nombre)}</div>
+            <div class="pc-desc">${esc(p.descripcion||'')}</div>
+            <div class="pc-foot">
+              <div class="pc-price">Lps.${(p.precio_base||0).toLocaleString()} <sub>HNL</sub></div>
+              <button class="add-btn-sm" onclick="window.addDirectById('${p.id}')" aria-label="Agregar ${esc(p.nombre)}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+        </article>`;
+    }).join('');
+
+    document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
+  }
+);
+
+window.addDirectById = (id) => {
+  const p = prodMap[id];
+  if (!p) return;
+  addToCart({ name: p.nombre, price: p.precio_base || 0, meta: p.descripcion || '' });
+};
+
+// ══════════════════════════════════════════════════════
+//  EXTRAS — carga dinámica desde Firestore
+// ══════════════════════════════════════════════════════
+const extras = { tamaños:[], sabores:[], gomitas:[], toppings:[] };
+
+['tamaños','sabores','gomitas','toppings'].forEach(cat => {
+  onSnapshot(
+    query(collection(db,'extras'), where('categoria','==',cat)),
+    snap => {
+      extras[cat] = snap.docs.map(d => ({ id:d.id, ...d.data() })).filter(e => e.activo !== false);
+      if (cat === 'tamaños')  renderSizes();
+      if (cat === 'sabores')  renderFlavors();
+      if (cat === 'gomitas')  renderGomitas();
+      if (cat === 'toppings') renderToppings();
+    }
+  );
+});
+
+// ── Estado del personalizador ──────────────────────────
+const S = {
+  size:null, sizePrice:0,
+  flavors:{}, flavorExtra:0,
+  gomitas:{}, gomitaTotal:0,
+  toppings:{}, toppingTotal:0,
+};
+
+function renderSizes() {
+  const container = document.getElementById('sizeGrid');
+  if (!extras.tamaños.length) {
+    container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--gray)">Sin tamaños configurados aún.</div>`;
+    return;
+  }
+  const sizes = [...extras.tamaños].sort((a,b) => (a.precio||0) - (b.precio||0));
+  const svgSizes = [
+    `<svg width="26" height="34" viewBox="0 0 28 36" fill="none"><path d="M4 14L2 34h24L24 14z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="14" cy="14" rx="10" ry="6" fill="#FFB3D1" opacity=".8"/><ellipse cx="14" cy="10" rx="7" ry="5" fill="#E8186D"/></svg>`,
+    `<svg width="32" height="40" viewBox="0 0 34 42" fill="none"><path d="M5 17L2 40h30L27 17z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="17" cy="17" rx="12" ry="7" fill="#FFB3D1" opacity=".8"/><ellipse cx="17" cy="12" rx="9" ry="6" fill="#E8186D"/></svg>`,
+    `<svg width="38" height="48" viewBox="0 0 40 50" fill="none"><path d="M6 20L2 48h36L34 20z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="14" ry="8" fill="#FFB3D1" opacity=".8"/><ellipse cx="20" cy="14" rx="10" ry="7" fill="#E8186D"/></svg>`,
+  ];
+  container.innerHTML = sizes.map((s, i) => `
+    <button class="sz" onclick="window.pickSize(this,'${esc(s.nombre)}',${s.precio||0})" role="radio" aria-checked="false">
+      <div class="sz-icon">${svgSizes[Math.min(i, 2)]}</div>
+      <div>
+        <div class="sz-label">${esc(s.nombre)}</div>
+        <div class="sz-price">Lps.${(s.precio||0).toLocaleString()}</div>
       </div>
-    </div>
-  </article>`).join('');
-
-/* ── Customizer ── */
-const S={size:null,sizePrice:0,flavors:{},flavorExtra:0,gomitas:{},gomitaTotal:0,toppings:{},toppingTotal:0};
-const GOMS=[{name:'Gomitas de fresa',price:200},{name:'Gomitas agridulces',price:200},{name:'Gomitas enchiladas',price:250},{name:'Gusanos de azúcar',price:200}];
-document.getElementById('gomList').innerHTML=GOMS.map((g,i)=>`
-  <div class="ctr-item">
-    <div style="flex:1"><div class="ctr-name">${g.name}</div><div class="ctr-plbl">₡${g.price} c/u</div></div>
-    <div class="ctr-ctrl">
-      <button class="cb" onclick="adjGom('${g.name}',${g.price},-1)">−</button>
-      <span class="cv" id="gv${i}">0</span>
-      <button class="cb" onclick="adjGom('${g.name}',${g.price},1)">+</button>
-    </div>
-  </div>`).join('');
-
-function goStep(n){
-  if(n>1&&!S.size)return;
-  document.querySelectorAll('.sp').forEach((p,i)=>p.classList.toggle('active',i===n-1));
-  document.querySelectorAll('.sn').forEach((b,i)=>{
-    b.classList.toggle('active',i===n-1);b.classList.toggle('done',i<n-1);
-    b.setAttribute('aria-selected',i===n-1?'true':'false');
-    const num=b.querySelector('.sn-num');
-    if(i<n-1)num.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
-    else num.textContent=i+1;
-  });
-}
-function pickSize(btn,name,price){
-  document.querySelectorAll('.sz').forEach(b=>{b.classList.remove('selected');b.setAttribute('aria-checked','false')});
-  btn.classList.add('selected');btn.setAttribute('aria-checked','true');
-  S.size=name;S.sizePrice=price;document.getElementById('btnN1').disabled=false;updateSum();
-}
-function pickFlavor(btn,name,extra){
-  if(!S.flavors[name]){
-    if(Object.keys(S.flavors).length>=3){showToast('Máximo 3 sabores');return}
-    S.flavors[name]=extra;btn.classList.add('selected');btn.setAttribute('aria-pressed','true');
-  }else{delete S.flavors[name];btn.classList.remove('selected');btn.setAttribute('aria-pressed','false')}
-  S.flavorExtra=Object.values(S.flavors).reduce((a,b)=>a+b,0);updateSum();
-}
-function adjGom(name,price,d){
-  const cur=S.gomitas[name]||0,next=Math.max(0,cur+d);
-  if(next===0)delete S.gomitas[name];else S.gomitas[name]=next;
-  const idx=GOMS.findIndex(g=>g.name===name);
-  const el=document.getElementById('gv'+idx);if(el)el.textContent=next;
-  S.gomitaTotal=Object.entries(S.gomitas).reduce((s,[n,q])=>{const g=GOMS.find(g=>g.name===n);return s+(g?g.price*q:0)},0);
-  updateSum();
-}
-function pickTop(btn,name,price){
-  if(!S.toppings[name]){S.toppings[name]=price;btn.classList.add('selected');btn.setAttribute('aria-pressed','true')}
-  else{delete S.toppings[name];btn.classList.remove('selected');btn.setAttribute('aria-pressed','false')}
-  S.toppingTotal=Object.values(S.toppings).reduce((a,b)=>a+b,0);updateSum();
-}
-const CM={Fresa:'#F48FB1',Mango:'#FFCC80','Limón':'#E6EE9C',Tamarindo:'#BCAAA4','Maracuyá':'#FFD54F','Guanábana':'#A5D6A7',Jamaica:'#EF9A9A',Coco:'#E0E0E0'};
-function updateSum(){
-  const tot=S.sizePrice+S.flavorExtra+S.gomitaTotal+S.toppingTotal;
-  const fk=Object.keys(S.flavors),gk=Object.keys(S.gomitas),tk=Object.keys(S.toppings);
-  document.getElementById('slSize').textContent=S.size?`${S.size} — ₡${S.sizePrice.toLocaleString()}`:'—';
-  document.getElementById('slFlavors').textContent=fk.length?fk.join(', '):'—';
-  document.getElementById('slGomitas').textContent=gk.length?`+₡${S.gomitaTotal.toLocaleString()}`:'—';
-  document.getElementById('slToppings').textContent=tk.length?tk.join(', '):'—';
-  document.getElementById('slTotal').textContent=`₡${tot.toLocaleString()}`;
-  document.getElementById('addBtn').disabled=!S.size;
-  const note=document.getElementById('sumNote');
-  if(note)note.textContent=S.size?(fk.length?'':'Agrega al menos un sabor'):'Selecciona un tamaño para comenzar';
-  if(fk.length){const c=CM[fk[0]]||'#FF6B9D';['pd1','pd2'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.setAttribute('fill',i===0?c+'99':c)})}
-}
-function addCustom(){
-  if(!S.size)return;
-  const tot=S.sizePrice+S.flavorExtra+S.gomitaTotal+S.toppingTotal;
-  const meta=[S.size,fk.length?`Sabores: ${Object.keys(S.flavors).join(', ')}`:'',Object.keys(S.toppings).length?`Toppings: ${Object.keys(S.toppings).join(', ')}`:''].filter(Boolean).join(' · ');
-  addDirect({name:'Subzero Personalizado',price:tot,meta});
+    </button>`).join('');
 }
 
-/* ── Cart ── */
-let cart=[];
-function addDirect(item){cart.push({...item,id:Date.now()});renderCart();showToast(`¡${item.name} agregado! 🎉`)}
-function removeItem(id){cart=cart.filter(i=>i.id!==id);renderCart()}
-function renderCart(){
-  const n=cart.length,bubble=document.getElementById('cartBubble');
-  bubble.textContent=n;bubble.classList.toggle('show',n>0);
-  const body=document.getElementById('drawerBody'),foot=document.getElementById('drawerFoot'),empty=document.getElementById('drawerEmpty');
-  if(!n){body.innerHTML='';body.appendChild(empty);empty.style.display='flex';foot.style.display='none';return}
-  const tot=cart.reduce((s,i)=>s+i.price,0);
-  body.innerHTML=cart.map(item=>`
-    <div class="ci">
-      <div class="ci-img"><svg viewBox="0 0 32 40" fill="none" style="width:28px"><path d="M4 14l-2 24h28l-2-24z" fill="#FFD6E8" opacity=".8"/><ellipse cx="16" cy="14" rx="12" ry="6" fill="white" opacity=".9"/><ellipse cx="16" cy="9" rx="10" ry="7" fill="#FF6B9D" opacity=".8"/><ellipse cx="16" cy="5" rx="7" ry="5" fill="#E8186D"/></svg></div>
-      <div style="flex:1"><div class="ci-name">${item.name}</div><div class="ci-meta">${item.meta||''}</div></div>
-      <div class="ci-price">₡${item.price.toLocaleString()}</div>
-      <button class="ci-rm" onclick="removeItem(${item.id})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
+function renderFlavors() {
+  const container = document.getElementById('flavorOpts');
+  if (!extras.sabores.length) {
+    container.innerHTML = `<div style="color:var(--gray);font-size:13px">Sin sabores configurados aún.</div>`;
+    return;
+  }
+  container.innerHTML = extras.sabores.map(f => {
+    const color = f.color || f.c1 || '#F48FB1';
+    const precio = f.precio || 0;
+    return `
+      <button class="opt" onclick="window.pickFlavor(this,'${esc(f.nombre)}',${precio},'${color}')" aria-pressed="false">
+        <span class="opt-sw" style="background:${color}"></span>
+        ${esc(f.nombre)}
+        ${precio > 0 ? `<span class="opt-p">+Lps.${precio.toLocaleString()}</span>` : ''}
+      </button>`;
+  }).join('');
+}
+
+function renderGomitas() {
+  const container = document.getElementById('gomList');
+  if (!extras.gomitas.length) {
+    container.innerHTML = `<div style="color:var(--gray);font-size:13px;padding:20px 0">Sin gomitas configuradas aún.</div>`;
+    return;
+  }
+  container.innerHTML = extras.gomitas.map((g, i) => `
+    <div class="ctr-item">
+      <div style="flex:1">
+        <div class="ctr-name">${g.icon ? g.icon + ' ' : ''}${esc(g.nombre)}</div>
+        <div class="ctr-plbl">Lps.${(g.precio||0).toLocaleString()} c/u</div>
+      </div>
+      <div class="ctr-ctrl">
+        <button class="cb" onclick="window.adjGom('${esc(g.nombre)}',${g.precio||0},-1)">−</button>
+        <span class="cv" id="gv${i}">0</span>
+        <button class="cb" onclick="window.adjGom('${esc(g.nombre)}',${g.precio||0},1)">+</button>
+      </div>
     </div>`).join('');
-  document.getElementById('drawerTotal').textContent=`₡${tot.toLocaleString()}`;
-  foot.style.display='block';
 }
 
-/* ── Drawer ── */
-const ov=document.getElementById('overlay'),dr=document.getElementById('drawer');
-const openD=()=>{ov.classList.add('open');dr.classList.add('open');document.body.style.overflow='hidden';document.getElementById('drawerClose').focus()};
-const closeD=()=>{ov.classList.remove('open');dr.classList.remove('open');document.body.style.overflow=''};
-document.getElementById('cartToggle').addEventListener('click',openD);
-document.getElementById('drawerClose').addEventListener('click',closeD);
-ov.addEventListener('click',closeD);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeD();closeMob()}});
+function renderToppings() {
+  const container = document.getElementById('toppingOpts');
+  if (!extras.toppings.length) {
+    container.innerHTML = `<div style="color:var(--gray);font-size:13px">Sin toppings configurados aún.</div>`;
+    return;
+  }
+  container.innerHTML = extras.toppings.map(t => {
+    const precio = t.precio || 0;
+    return `
+      <button class="opt" onclick="window.pickTop(this,'${esc(t.nombre)}',${precio})" aria-pressed="false">
+        ${t.icon ? t.icon + ' ' : ''}
+        ${esc(t.nombre)}
+        ${precio > 0 ? `<span class="opt-p">+Lps.${precio.toLocaleString()}</span>` : ''}
+      </button>`;
+  }).join('');
+}
 
-/* ── Toast ── */
-let tt;
-function showToast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2500)}
+// ── Funciones del personalizador ───────────────────────
+window.pickSize = (btn, name, price) => {
+  document.querySelectorAll('.sz').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-checked','false'); });
+  btn.classList.add('selected'); btn.setAttribute('aria-checked','true');
+  S.size = name; S.sizePrice = price;
+  document.getElementById('btnN1').disabled = false;
+  updateSum();
+};
 
-/* ── Scroll reveal ── */
-const ro=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}})},{threshold:.1});
-document.querySelectorAll('[data-reveal]').forEach(el=>ro.observe(el));
+window.pickFlavor = (btn, name, extra, color) => {
+  if (!S.flavors[name]) {
+    if (Object.keys(S.flavors).length >= 3) { showToast('Máximo 3 sabores'); return; }
+    S.flavors[name] = { price: extra, color };
+    btn.classList.add('selected'); btn.setAttribute('aria-pressed','true');
+  } else {
+    delete S.flavors[name];
+    btn.classList.remove('selected'); btn.setAttribute('aria-pressed','false');
+  }
+  S.flavorExtra = Object.values(S.flavors).reduce((a,f) => a + f.price, 0);
+  updateSum();
+};
+
+window.adjGom = (name, price, d) => {
+  const cur  = S.gomitas[name] || 0;
+  const next = Math.max(0, cur + d);
+  if (next === 0) delete S.gomitas[name]; else S.gomitas[name] = { qty: next, price };
+  const idx = extras.gomitas.findIndex(g => g.nombre === name);
+  const el  = document.getElementById('gv' + idx);
+  if (el) el.textContent = next;
+  S.gomitaTotal = Object.values(S.gomitas).reduce((s, g) => s + g.price * g.qty, 0);
+  updateSum();
+};
+
+window.pickTop = (btn, name, price) => {
+  if (!S.toppings[name]) {
+    S.toppings[name] = price;
+    btn.classList.add('selected'); btn.setAttribute('aria-pressed','true');
+  } else {
+    delete S.toppings[name];
+    btn.classList.remove('selected'); btn.setAttribute('aria-pressed','false');
+  }
+  S.toppingTotal = Object.values(S.toppings).reduce((a,b) => a+b, 0);
+  updateSum();
+};
+
+function updateSum() {
+  const tot     = S.sizePrice + S.flavorExtra + S.gomitaTotal + S.toppingTotal;
+  const flavors = Object.keys(S.flavors);
+  const gomKeys = Object.keys(S.gomitas);
+  const topKeys = Object.keys(S.toppings);
+
+  document.getElementById('slSize').textContent    = S.size ? `${S.size} — Lps.${S.sizePrice.toLocaleString()}` : '—';
+  document.getElementById('slFlavors').textContent = flavors.length ? flavors.join(', ') : '—';
+  document.getElementById('slGomitas').textContent = gomKeys.length ? `+Lps.${S.gomitaTotal.toLocaleString()}` : '—';
+  document.getElementById('slToppings').textContent= topKeys.length ? topKeys.join(', ') : '—';
+  document.getElementById('slTotal').textContent   = `Lps.${tot.toLocaleString()}`;
+  document.getElementById('addBtn').disabled       = !S.size;
+  const note = document.getElementById('sumNote');
+  if (note) note.textContent = S.size ? (flavors.length ? '' : 'Agrega al menos un sabor') : 'Selecciona un tamaño para comenzar';
+
+  if (flavors.length) {
+    const c = S.flavors[flavors[0]]?.color || '#FF6B9D';
+    ['pd1','pd2'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) el.setAttribute('fill', i === 0 ? c + '99' : c);
+    });
+  }
+}
+
+window.addCustom = () => {
+  if (!S.size) return;
+  const tot     = S.sizePrice + S.flavorExtra + S.gomitaTotal + S.toppingTotal;
+  const flavors = Object.keys(S.flavors);
+  const gomKeys = Object.keys(S.gomitas);
+  const topKeys = Object.keys(S.toppings);
+  const meta    = [
+    S.size,
+    flavors.length ? `Sabores: ${flavors.join(', ')}` : '',
+    gomKeys.length ? `Gomitas: ${gomKeys.join(', ')}` : '',
+    topKeys.length ? `Toppings: ${topKeys.join(', ')}` : '',
+  ].filter(Boolean).join(' · ');
+  addToCart({ name: 'Subzero Personalizado', price: tot, meta });
+};
+
+// ── Stepper ────────────────────────────────────────────
+window.goStep = (n) => {
+  if (n > 1 && !S.size) return;
+  document.querySelectorAll('.sp').forEach((p, i) => p.classList.toggle('active', i === n-1));
+  document.querySelectorAll('.sn').forEach((b, i) => {
+    b.classList.toggle('active', i === n-1);
+    b.classList.toggle('done',   i < n-1);
+    b.setAttribute('aria-selected', i === n-1 ? 'true' : 'false');
+    const num = b.querySelector('.sn-num');
+    if (i < n-1) num.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    else num.textContent = i+1;
+  });
+};
+
+// ══════════════════════════════════════════════════════
+//  CARRITO
+// ══════════════════════════════════════════════════════
+let cart = [];
+
+function addToCart(item) {
+  cart.push({ ...item, id: Date.now() });
+  renderCart();
+  showToast(`¡${item.name} agregado! 🎉`);
+}
+
+window.removeItem = (id) => { cart = cart.filter(i => i.id !== id); renderCart(); };
+
+function renderCart() {
+  const n      = cart.length;
+  const bubble = document.getElementById('cartBubble');
+  bubble.textContent = n;
+  bubble.classList.toggle('show', n > 0);
+
+  const body  = document.getElementById('drawerBody');
+  const foot  = document.getElementById('drawerFoot');
+  const empty = document.getElementById('drawerEmpty');
+
+  if (!n) {
+    body.innerHTML = '';
+    body.appendChild(empty);
+    empty.style.display = 'flex';
+    foot.style.display  = 'none';
+    return;
+  }
+
+  const tot = cart.reduce((s,i) => s + i.price, 0);
+  body.innerHTML = cart.map(item => `
+    <div class="ci">
+      <div class="ci-img">
+        <svg viewBox="0 0 32 40" fill="none" style="width:28px">
+          <path d="M4 14l-2 24h28l-2-24z" fill="#FFD6E8" opacity=".8"/>
+          <ellipse cx="16" cy="14" rx="12" ry="6" fill="white" opacity=".9"/>
+          <ellipse cx="16" cy="9" rx="10" ry="7" fill="#FF6B9D" opacity=".8"/>
+          <ellipse cx="16" cy="5" rx="7" ry="5" fill="#E8186D"/>
+        </svg>
+      </div>
+      <div style="flex:1">
+        <div class="ci-name">${esc(item.name)}</div>
+        <div class="ci-meta">${esc(item.meta||'')}</div>
+      </div>
+      <div class="ci-price">Lps.${item.price.toLocaleString()}</div>
+      <button class="ci-rm" onclick="window.removeItem(${item.id})">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6"/>
+        </svg>
+      </button>
+    </div>`).join('');
+  document.getElementById('drawerTotal').textContent = `Lps.${tot.toLocaleString()}`;
+  foot.style.display = 'block';
+}
+
+// ══════════════════════════════════════════════════════
+//  CHECKOUT — guarda pedido en Firestore
+// ══════════════════════════════════════════════════════
+window.openCheckout = () => {
+  if (!cart.length) { showToast('Tu carrito está vacío'); return; }
+
+  // Actualiza resumen en modal
+  const tot = cart.reduce((s,i) => s + i.price, 0);
+  document.getElementById('coSummaryItems').innerHTML = cart.map(i =>
+    `• ${esc(i.name)}${i.meta ? ` (${esc(i.meta)})` : ''} — Lps.${i.price.toLocaleString()}`
+  ).join('<br>');
+  document.getElementById('coSummaryTotal').textContent = `Lps.${tot.toLocaleString()}`;
+
+  // Reset form
+  document.getElementById('chkNombre').value = '';
+  document.getElementById('chkEmail').value  = '';
+  document.getElementById('coError').classList.remove('show');
+  document.getElementById('coForm').style.display = 'block';
+  document.getElementById('coSuccess').classList.remove('show');
+
+  document.getElementById('checkoutModal').classList.add('open');
+  document.getElementById('chkNombre').focus();
+};
+
+window.closeCheckout = () => {
+  document.getElementById('checkoutModal').classList.remove('open');
+};
+
+window.confirmarPedido = async () => {
+  const nombre = document.getElementById('chkNombre').value.trim();
+  const email  = document.getElementById('chkEmail').value.trim();
+  const errEl  = document.getElementById('coError');
+  const btn    = document.getElementById('coConfirmBtn');
+
+  if (!nombre) { errEl.textContent = 'Por favor escribe tu nombre.'; errEl.classList.add('show'); return; }
+  if (!email || !email.includes('@')) { errEl.textContent = 'Por favor escribe un correo válido.'; errEl.classList.add('show'); return; }
+  errEl.classList.remove('show');
+
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  try {
+    const tot = cart.reduce((s,i) => s + i.price, 0);
+    await addDoc(collection(db,'pedidos'), {
+      estado:        'PENDIENTE',
+      fecha:         serverTimestamp(),
+      clienteNombre: nombre,
+      clienteEmail:  email,
+      items:         cart.map(i => ({ nombre: i.name, precio: i.price, meta: i.meta || '' })),
+      total:         tot,
+    });
+
+    // Limpiar carrito
+    cart = [];
+    renderCart();
+    closeDrawer();
+
+    // Mostrar éxito
+    document.getElementById('coForm').style.display = 'none';
+    document.getElementById('coSuccess').classList.add('show');
+
+  } catch (err) {
+    errEl.textContent = 'Error al enviar: ' + err.message;
+    errEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Enviar pedido →';
+  }
+};
+
+// ══════════════════════════════════════════════════════
+//  DRAWER
+// ══════════════════════════════════════════════════════
+const ov = document.getElementById('overlay');
+const dr = document.getElementById('drawer');
+
+const openDrawer  = () => { ov.classList.add('open'); dr.classList.add('open'); document.body.style.overflow='hidden'; };
+const closeDrawer = () => { ov.classList.remove('open'); dr.classList.remove('open'); document.body.style.overflow=''; };
+
+document.getElementById('cartToggle').addEventListener('click', openDrawer);
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+document.getElementById('payBtn').addEventListener('click', () => { closeDrawer(); window.openCheckout(); });
+ov.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDrawer(); closeMob(); window.closeCheckout(); } });
+
+// ── Checkout overlay click outside ────────────────────
+document.getElementById('checkoutModal').addEventListener('click', e => {
+  if (e.target.id === 'checkoutModal') window.closeCheckout();
+});
+
+// ══════════════════════════════════════════════════════
+//  MOBILE NAV
+// ══════════════════════════════════════════════════════
+const mobileNav = document.getElementById('mobileNav');
+document.getElementById('hamBtn').addEventListener('click', () => {
+  mobileNav.classList.add('open');
+  mobileNav.setAttribute('aria-hidden','false');
+  document.body.style.overflow = 'hidden';
+});
+window.closeMob = () => {
+  mobileNav.classList.remove('open');
+  mobileNav.setAttribute('aria-hidden','true');
+  document.body.style.overflow = '';
+};
+document.getElementById('mobClose').addEventListener('click', window.closeMob);
+
+// ══════════════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════════════
+let toastTimer;
+window.showToast = (msg) => {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+};
+
+// ══════════════════════════════════════════════════════
+//  SCROLL REVEAL
+// ══════════════════════════════════════════════════════
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
+}, { threshold: .1 });
+document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
 </script>
 </body>
 </html>

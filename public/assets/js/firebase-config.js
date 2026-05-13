@@ -1,25 +1,19 @@
-// Reemplaza estos valores con los de tu proyecto Firebase
-// Consola Firebase → Configuración del proyecto → Tus apps → SDK de configuración
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore }  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth }       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getStorage }    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-import { getFunctions }  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth }        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFunctions }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
 
 const firebaseConfig = {
-  apiKey:            "REEMPLAZAR",
-  authDomain:        "subzero-raspados.firebaseapp.com",
-  projectId:         "subzero-raspados",
-  storageBucket:     "subzero-raspados.appspot.com",
-  messagingSenderId: "REEMPLAZAR",
-  appId:             "REEMPLAZAR"
+  apiKey:            "AIzaSyAj1eqG_xXas4D_qnzTz0bg4nNab3Hw1FE",
+  authDomain:        "subzero-2d5eb.firebaseapp.com",
+  projectId:         "subzero-2d5eb",
+  storageBucket:     "subzero-2d5eb.firebasestorage.app",
+  messagingSenderId: "176425253179",
+  appId:             "1:176425253179:web:5993e10e84268d66d15f1e",
 };
 
-const app       = initializeApp(firebaseConfig);
-const db        = getFirestore(app);
-const auth      = getAuth(app);
-const storage   = getStorage(app);
-const functions = getFunctions(app, "us-central1");
+const app = initializeApp(firebaseConfig);
 
-export { app, db, auth, storage, functions };
+export const db        = getFirestore(app);
+export const auth      = getAuth(app);
+export const functions = getFunctions(app, 'us-central1');

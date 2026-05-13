@@ -3,46 +3,31 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ─── Productos — lectura pública, escritura solo admin ─────────
+    // Productos — lectura pública, escritura solo usuarios autenticados
     match /productos/{docId} {
       allow read:  if true;
-      allow write: if request.auth != null && isAdmin();
+      allow write: if request.auth != null;
     }
 
-    // ─── Extras (sabores, gomitas, toppings) — igual que productos ─
+    // Extras — lectura pública, escritura solo usuarios autenticados
     match /extras/{docId} {
       allow read:  if true;
-      allow write: if request.auth != null && isAdmin();
+      allow write: if request.auth != null;
     }
 
-    // ─── Pedidos ────────────────────────────────────────────────────
+    // Pedidos — clientes crean sin login, admin lee y actualiza
     match /pedidos/{pedidoId} {
-      // El cliente puede crear su propio pedido (sin auth)
       allow create: if request.resource.data.keys().hasAll(["items","total","clienteEmail","estado"])
-                    && request.resource.data.estado == "INICIANDO";
-
-      // Lectura solo del propio pedido (por email) o admin
-      allow read:   if request.auth != null && isAdmin()
-                    || (request.auth == null && resource.data.clienteEmail == request.query.filters.clienteEmail);
-
-      // Actualización solo desde Cloud Functions (service account) o admin autenticado
-      allow update: if request.auth != null && isAdmin();
+                    && request.resource.data.estado == "PENDIENTE";
+      allow read:   if request.auth != null;
+      allow update: if request.auth != null;
       allow delete: if false;
     }
 
-    // ─── Clientes ───────────────────────────────────────────────────
-    match /clientes/{email} {
-      allow read, write: if request.auth != null && isAdmin();
-    }
-
-    // ─── Admin users ─────────────────────────────────────────────────
+    // Admin users — solo lectura del propio documento
     match /admin_users/{uid} {
       allow read:  if request.auth != null && request.auth.uid == uid;
-      allow write: if false; // solo via consola Firebase
-    }
-
-    function isAdmin() {
-      return exists(/databases/$(database)/documents/admin_users/$(request.auth.uid));
+      allow write: if false;
     }
   }
 }
