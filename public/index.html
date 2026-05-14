@@ -484,9 +484,126 @@ img,svg{display:block}
   .hero-stats{flex-wrap:wrap;justify-content:center;border-radius:16px}
 }
 @media(prefers-reduced-motion:reduce){*,::before,::after{animation-duration:1ms!important;transition-duration:1ms!important}}
+
+/* ── TOP NAV ── */
+.topnav{
+  position:fixed;top:0;left:0;right:0;z-index:90;height:62px;
+  background:rgba(250,244,237,.96);backdrop-filter:blur(16px);
+  border-bottom:1.5px solid var(--gray-2);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(16px,4vw,48px);
+  transform:translateY(-100%);transition:transform 320ms var(--ease-out);
+}
+.topnav.show{transform:none}
+.tn-logo{font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--pink);display:flex;align-items:center;gap:8px;text-decoration:none}
+.tn-links{display:flex;align-items:center;gap:4px}
+.tn-link{padding:7px 15px;border-radius:var(--r-full);font-size:13px;font-weight:800;color:var(--gray);text-decoration:none;transition:all 160ms;border:none;background:none;cursor:pointer;font-family:'Nunito',sans-serif}
+.tn-link:hover{color:var(--pink);background:var(--pink-pale)}
+.tn-link.hl{background:var(--pink);color:var(--white);box-shadow:0 2px 12px rgba(232,24,109,.28)}
+.tn-link.hl:hover{background:var(--pink-l)}
+.tn-cart{background:var(--pink);color:var(--white);border:none;border-radius:var(--r-full);padding:9px 18px;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 2px 14px rgba(232,24,109,.3);transition:all 180ms;font-family:'Nunito',sans-serif;position:relative}
+.tn-cart:hover{background:var(--pink-l)}
+@media(max-width:640px){.tn-links{display:none}}
+
+/* ── PRODUCT MODAL ── */
+.pm-overlay{
+  position:fixed;inset:0;background:rgba(28,13,20,.6);z-index:120;
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 280ms;backdrop-filter:blur(6px);
+}
+@media(min-width:640px){.pm-overlay{align-items:center;padding:20px}}
+.pm-overlay.open{opacity:1;pointer-events:all}
+.pm-modal{
+  background:var(--white);border-radius:28px 28px 0 0;
+  width:100%;max-height:92vh;overflow-y:auto;
+  transform:translateY(60px);transition:transform 340ms var(--ease-out);
+}
+@media(min-width:640px){
+  .pm-modal{border-radius:28px;max-width:520px;max-height:88vh;transform:translateY(24px) scale(.97)}
+}
+.pm-overlay.open .pm-modal{transform:none}
+
+.pm-close{
+  position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
+  border:1.5px solid var(--gray-2);background:rgba(250,244,237,.9);color:var(--gray);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 160ms;z-index:2;backdrop-filter:blur(4px);
+}
+.pm-close:hover{background:var(--pink-pale);border-color:var(--pink);color:var(--pink)}
+.pm-visual{
+  width:100%;aspect-ratio:5/3;background:var(--pink-pale);
+  border-radius:28px 28px 0 0;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;position:relative;flex-shrink:0;
+}
+@media(min-width:640px){.pm-visual{border-radius:28px 28px 0 0}}
+.pm-visual svg{width:130px}
+.pm-visual img{width:100%;height:100%;object-fit:cover}
+
+.pm-body{padding:18px 22px 0}
+.pm-badge-pill{
+  background:var(--pink);color:var(--white);font-size:9px;font-weight:900;
+  letter-spacing:.5px;text-transform:uppercase;padding:3px 10px;
+  border-radius:var(--r-full);display:none;margin-bottom:8px;
+}
+.pm-badge-pill.show{display:inline-flex}
+.pm-name{font-family:'Fredoka One',sans-serif;font-size:26px;color:var(--ink);margin-bottom:5px;line-height:1.1}
+.pm-desc{font-size:13px;color:var(--gray);font-weight:600;line-height:1.55;margin-bottom:8px}
+.pm-base-price{font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--pink)}
+
+.pm-section{padding:18px 22px 0}
+.pm-sec-title{font-family:'Fredoka One',sans-serif;font-size:17px;color:var(--ink);margin-bottom:3px}
+.pm-sec-hint{font-size:12px;color:var(--gray);font-weight:600;margin-bottom:12px}
+.pm-chips{display:flex;flex-wrap:wrap;gap:8px}
+.pm-chip{
+  display:flex;align-items:center;gap:7px;padding:9px 15px;border-radius:var(--r-full);
+  background:var(--cream);border:2px solid var(--gray-2);font-size:13px;font-weight:700;
+  color:var(--ink);cursor:pointer;transition:all 180ms;font-family:'Nunito',sans-serif;
+}
+.pm-chip:hover{border-color:var(--pink-dim);background:var(--pink-pale)}
+.pm-chip.selected{border-color:var(--pink);background:var(--pink-pale);color:var(--pink)}
+.pm-chip-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:1px solid rgba(0,0,0,.1)}
+.pm-chip-price{font-size:10px;color:var(--gray);font-weight:700}
+.pm-chip.selected .pm-chip-price{color:var(--pink)}
+.pm-empty-hint{font-size:13px;color:var(--gray);font-weight:600;padding:8px 0}
+
+.pm-footer{
+  position:sticky;bottom:0;background:var(--white);
+  border-top:2px solid var(--gray-2);padding:14px 22px 20px;
+  margin-top:20px;display:flex;align-items:center;gap:14px;
+}
+.pm-total-wrap{flex:1}
+.pm-total-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);display:block;margin-bottom:1px}
+.pm-total-val{font-family:'Fredoka One',sans-serif;font-size:26px;color:var(--pink);line-height:1}
+.pm-add{
+  background:var(--pink);color:var(--white);border:none;border-radius:var(--r-full);
+  padding:13px 22px;font-size:13px;font-weight:900;cursor:pointer;font-family:'Nunito',sans-serif;
+  transition:all 220ms var(--ease-out);box-shadow:var(--sh-pink);
+  display:flex;align-items:center;gap:7px;white-space:nowrap;
+}
+.pm-add:hover{background:var(--pink-l);transform:translateY(-1px);box-shadow:var(--sh-pink-lg)}
 </style>
 </head>
 <body>
+
+<!-- TOP NAV (aparece al hacer scroll) -->
+<nav class="topnav" id="topnav" aria-label="Navegación principal">
+  <a href="#" class="tn-logo">
+    <div class="logo-cup" style="width:30px;height:30px;border-radius:8px">
+      <svg width="16" height="18" viewBox="0 0 22 26" fill="none"><path d="M3 8L1 24h20L19 8z" fill="white" fill-opacity=".9"/><ellipse cx="11" cy="8" rx="8" ry="4" fill="white"/><ellipse cx="11" cy="5" rx="6" ry="3.5" fill="#FFD6E8"/></svg>
+    </div>
+    Subzero
+  </a>
+  <div class="tn-links">
+    <a href="#catalogo"    class="tn-link hl">🍧 Catálogo</a>
+    <a href="#personaliza" class="tn-link">✨ Personaliza</a>
+    <a href="#nosotros"    class="tn-link">Nosotros</a>
+  </div>
+  <button class="tn-cart" id="tnCartBtn" aria-label="Carrito">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    Carrito
+    <span class="cart-bubble" id="tnCartBubble">0</span>
+  </button>
+</nav>
 
 <!-- HERO -->
 <section class="hero">
@@ -808,6 +925,51 @@ img,svg{display:block}
   </div>
 </div>
 
+<!-- ══ PRODUCT MODAL ══ -->
+<div class="pm-overlay" id="pmOverlay" onclick="closePMOutside(event)">
+  <div class="pm-modal" role="dialog" aria-modal="true" aria-labelledby="pmName">
+
+    <button class="pm-close" onclick="closeProdModal()" aria-label="Cerrar">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="pm-visual" id="pmVisual"></div>
+
+    <div class="pm-body">
+      <div class="pm-badge-pill" id="pmBadge"></div>
+      <div class="pm-name"  id="pmName"></div>
+      <div class="pm-desc"  id="pmDesc"></div>
+      <div class="pm-base-price" id="pmBasePrice"></div>
+    </div>
+
+    <!-- Sabores extras -->
+    <div class="pm-section" id="pmSaboresSection">
+      <div class="pm-sec-title">Sabores adicionales</div>
+      <div class="pm-sec-hint">Selecciona los que quieras</div>
+      <div class="pm-chips" id="pmSaboresChips"></div>
+    </div>
+
+    <!-- Toppings -->
+    <div class="pm-section" id="pmToppingsSection">
+      <div class="pm-sec-title">Toppings</div>
+      <div class="pm-sec-hint">Elige los que quieras</div>
+      <div class="pm-chips" id="pmToppingsChips"></div>
+    </div>
+
+    <div class="pm-footer">
+      <div class="pm-total-wrap">
+        <span class="pm-total-label">Total</span>
+        <span class="pm-total-val" id="pmTotal">Lps.0</span>
+      </div>
+      <button class="pm-add" onclick="addFromModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Agregar al carrito
+      </button>
+    </div>
+
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast" role="alert"><svg class="t-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg"></span></div>
 
@@ -871,8 +1033,9 @@ onSnapshot(
       const c1   = p.c1   || pal.c1;
       const c2   = p.c2   || pal.c2;
       const dots = p.dots || pal.dots;
+      const isCustom = p.tipo === 'personalizado';
       return `
-        <article class="pc" role="listitem" data-reveal style="transition-delay:${i*60}ms">
+        <article class="pc" role="listitem" data-reveal style="transition-delay:${i*60}ms" onclick="openProdModal('${p.id}')" tabindex="0" onkeydown="if(event.key==='Enter')openProdModal('${p.id}')">
           <div class="pc-img">
             ${p.imagen
               ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">`
@@ -880,13 +1043,14 @@ onSnapshot(
                  <div class="pc-cup">${cupSVG(c1,c2,dots)}</div>`
             }
             ${p.badge ? `<div class="pc-badge">${esc(p.badge)}</div>` : ''}
+            ${isCustom ? `<div class="pc-badge" style="top:auto;bottom:12px;left:12px;background:var(--ink)">✨ Personalizable</div>` : ''}
           </div>
           <div class="pc-body">
             <div class="pc-name">${esc(p.nombre)}</div>
             <div class="pc-desc">${esc(p.descripcion||'')}</div>
             <div class="pc-foot">
               <div class="pc-price">Lps.${(p.precio_base||0).toLocaleString()} <sub>HNL</sub></div>
-              <button class="add-btn-sm" onclick="window.addDirectById('${p.id}')" aria-label="Agregar ${esc(p.nombre)}">
+              <button class="add-btn-sm" onclick="event.stopPropagation();openProdModal('${p.id}')" aria-label="Ver ${esc(p.nombre)}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
             </div>
@@ -1246,7 +1410,7 @@ document.getElementById('cartToggle').addEventListener('click', openDrawer);
 document.getElementById('drawerClose').addEventListener('click', closeDrawer);
 document.getElementById('payBtn').addEventListener('click', () => { closeDrawer(); window.openCheckout(); });
 ov.addEventListener('click', closeDrawer);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeDrawer(); closeMob(); window.closeCheckout(); } });
+// Escape key handled in product modal section below
 
 // ── Checkout overlay click outside ────────────────────
 document.getElementById('checkoutModal').addEventListener('click', e => {
@@ -1282,12 +1446,161 @@ window.showToast = (msg) => {
 };
 
 // ══════════════════════════════════════════════════════
-//  SCROLL REVEAL
+//  SCROLL REVEAL + TOPNAV
 // ══════════════════════════════════════════════════════
 const ro = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); } });
 }, { threshold: .1 });
 document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
+
+// Topnav aparece cuando el hero sale del viewport
+const heroEl  = document.querySelector('.hero');
+const topnavEl = document.getElementById('topnav');
+new IntersectionObserver(([e]) => {
+  topnavEl.classList.toggle('show', !e.isIntersecting);
+}, { threshold: 0 }).observe(heroEl);
+
+// Topnav cart button abre el drawer
+document.getElementById('tnCartBtn').addEventListener('click', openDrawer);
+
+// Sync topnav cart bubble with main bubble
+const _origRenderCart = renderCart;
+// Override renderCart to also update topnav bubble
+function renderCart() {
+  _origRenderCart.call(this);
+  const n = cart.length;
+  const tnB = document.getElementById('tnCartBubble');
+  if (tnB) { tnB.textContent = n; tnB.classList.toggle('show', n > 0); }
+}
+
+// ══════════════════════════════════════════════════════
+//  PRODUCT MODAL
+// ══════════════════════════════════════════════════════
+let pmProduct    = null;
+let pmSelSabores  = {};   // { name: { price, color } }
+let pmSelToppings = {};   // { name: price }
+
+window.openProdModal = (id) => {
+  const p = prodMap[id];
+  if (!p) return;
+
+  // Producto personalizable → scroll al configurador
+  if (p.tipo === 'personalizado') {
+    document.getElementById('personaliza').scrollIntoView({ behavior:'smooth', block:'start' });
+    return;
+  }
+
+  pmProduct     = p;
+  pmSelSabores  = {};
+  pmSelToppings = {};
+
+  // Visual
+  const idx  = Object.values(prodMap).findIndex(x => x.id === id);
+  const pal  = PALETTES[idx % PALETTES.length];
+  const c1   = p.c1   || pal.c1;
+  const c2   = p.c2   || pal.c2;
+  const dots = p.dots || pal.dots;
+  const vis  = document.getElementById('pmVisual');
+  vis.innerHTML = p.imagen
+    ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}">`
+    : cupSVG(c1, c2, dots);
+
+  // Info
+  const badge = document.getElementById('pmBadge');
+  badge.textContent = p.badge || '';
+  badge.classList.toggle('show', !!p.badge);
+  document.getElementById('pmName').textContent      = p.nombre;
+  document.getElementById('pmDesc').textContent      = p.descripcion || '';
+  document.getElementById('pmBasePrice').textContent = `desde Lps.${(p.precio_base||0).toLocaleString()}`;
+
+  // Chips
+  _renderPMSabores();
+  _renderPMToppings();
+  _updatePMTotal();
+
+  document.getElementById('pmOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeProdModal = () => {
+  document.getElementById('pmOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  pmProduct = null;
+};
+
+window.closePMOutside = (e) => { if (e.target.id === 'pmOverlay') closeProdModal(); };
+
+function _renderPMSabores() {
+  const chips = document.getElementById('pmSaboresChips');
+  const sec   = document.getElementById('pmSaboresSection');
+  const list  = extras.sabores;
+  if (!list.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  chips.innerHTML = list.map(f => {
+    const color  = f.color || f.c1 || '#F48FB1';
+    const precio = f.precio || 0;
+    return `<button class="pm-chip" onclick="togglePMSabor('${esc(f.nombre)}',${precio},'${color}',this)">
+      <span class="pm-chip-dot" style="background:${color}"></span>
+      ${esc(f.nombre)}
+      ${precio > 0 ? `<span class="pm-chip-price">+Lps.${precio.toLocaleString()}</span>` : ''}
+    </button>`;
+  }).join('');
+}
+
+function _renderPMToppings() {
+  const chips = document.getElementById('pmToppingsChips');
+  const sec   = document.getElementById('pmToppingsSection');
+  const list  = extras.toppings;
+  if (!list.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  chips.innerHTML = list.map(t => {
+    const precio = t.precio || 0;
+    return `<button class="pm-chip" onclick="togglePMTopping('${esc(t.nombre)}',${precio},this)">
+      ${t.icon ? `${t.icon} ` : ''}${esc(t.nombre)}
+      ${precio > 0 ? `<span class="pm-chip-price">+Lps.${precio.toLocaleString()}</span>` : ''}
+    </button>`;
+  }).join('');
+}
+
+function _updatePMTotal() {
+  if (!pmProduct) return;
+  const xSabores  = Object.values(pmSelSabores).reduce((s, f) => s + f.price, 0);
+  const xToppings = Object.values(pmSelToppings).reduce((s, p) => s + p, 0);
+  const total = (pmProduct.precio_base || 0) + xSabores + xToppings;
+  document.getElementById('pmTotal').textContent = `Lps.${total.toLocaleString()}`;
+}
+
+window.togglePMSabor = (name, price, color, btn) => {
+  if (pmSelSabores[name]) { delete pmSelSabores[name]; btn.classList.remove('selected'); }
+  else { pmSelSabores[name] = { price, color }; btn.classList.add('selected'); }
+  _updatePMTotal();
+};
+
+window.togglePMTopping = (name, price, btn) => {
+  if (pmSelToppings[name]) { delete pmSelToppings[name]; btn.classList.remove('selected'); }
+  else { pmSelToppings[name] = price; btn.classList.add('selected'); }
+  _updatePMTotal();
+};
+
+window.addFromModal = () => {
+  if (!pmProduct) return;
+  const xSabores  = Object.values(pmSelSabores).reduce((s, f) => s + f.price, 0);
+  const xToppings = Object.values(pmSelToppings).reduce((s, p) => s + p, 0);
+  const total  = (pmProduct.precio_base || 0) + xSabores + xToppings;
+  const saNames  = Object.keys(pmSelSabores);
+  const topNames = Object.keys(pmSelToppings);
+  const meta = [
+    saNames.length  ? `Sabores: ${saNames.join(', ')}`  : '',
+    topNames.length ? `Toppings: ${topNames.join(', ')}` : '',
+  ].filter(Boolean).join(' · ');
+  addToCart({ name: pmProduct.nombre, price: total, meta });
+  closeProdModal();
+};
+
+// Escape key closes product modal too
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeProdModal(); closeDrawer(); closeMob(); window.closeCheckout(); }
+});
 </script>
 </body>
 </html>
