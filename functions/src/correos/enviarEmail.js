@@ -48,7 +48,7 @@ async function enviarConReintentos(pedidoId, pedido, intento = 1) {
               <span>Pedido</span><strong>#${pedidoId.slice(-6).toUpperCase()}</strong>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#475569;margin-bottom:8px;">
-              <span>Total</span><strong style="color:#00ACC1;">₡${(pedido.total||0).toLocaleString()}</strong>
+              <span>Total</span><strong style="color:#00ACC1;">Lps.${(pedido.total||0).toLocaleString()}</strong>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#475569;">
               <span>Estado</span><strong style="color:#F59E0B;">En preparación</strong>

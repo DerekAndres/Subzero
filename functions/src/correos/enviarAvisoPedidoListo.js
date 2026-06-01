@@ -61,7 +61,7 @@ exports.enviarAvisoPedidoListo = functions.firestore
             <div style="background:#FFF0F6;border-radius:12px;padding:16px;margin-bottom:24px;text-align:left;">
               <p style="margin:0 0 6px;font-size:13px;color:#475569;">
                 <strong>Total:</strong>
-                <span style="color:#E8186D;font-weight:700;">₡${(despues.total || 0).toLocaleString()}</span>
+                <span style="color:#E8186D;font-weight:700;">Lps.${(despues.total || 0).toLocaleString()}</span>
               </p>
               <p style="margin:0;font-size:13px;color:#475569;">
                 <strong>Método de pago:</strong> ${despues.metodoPago || ""}

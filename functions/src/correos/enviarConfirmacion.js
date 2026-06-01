@@ -102,7 +102,7 @@ async function enviarEmail(pedidoId, pedido, tipo) {
           <div style="background:white;border:1px solid #EDE0D5;border-radius:12px;padding:18px;margin-bottom:20px;">
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#8A6070;margin-bottom:8px;">
               <span>Total</span>
-              <strong style="color:#E8186D;">₡${(pedido.total || 0).toLocaleString()}</strong>
+              <strong style="color:#E8186D;">Lps.${(pedido.total || 0).toLocaleString()}</strong>
             </div>
             <div style="display:flex;justify-content:space-between;font-size:13px;color:#8A6070;">
               <span>Método de pago</span>
