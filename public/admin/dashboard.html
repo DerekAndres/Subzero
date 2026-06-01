@@ -124,8 +124,17 @@
   .modal-title{font-size:17px;font-weight:800;color:var(--s900)}
   .modal-close{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--s200);background:var(--s100);color:var(--s600);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 160ms;flex-shrink:0}
   .modal-close:hover{background:#FEE2E2;border-color:#FECACA;color:#991B1B}
-  .img-preview{width:100%;height:120px;border-radius:10px;border:1.5px dashed var(--s200);object-fit:cover;display:none;margin-bottom:6px}
+  .img-preview{width:100%;height:140px;border-radius:10px;border:1.5px dashed var(--s200);object-fit:cover;display:none;margin-bottom:8px}
   .img-preview.show{display:block}
+  .upload-area{border:2px dashed var(--s200);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 200ms;background:var(--s100);position:relative}
+  .upload-area:hover,.upload-area.drag{border-color:var(--ice);background:var(--ice-bg)}
+  .upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+  .upload-icon{font-size:28px;margin-bottom:6px}
+  .upload-label{font-size:13px;font-weight:600;color:var(--s600)}
+  .upload-hint{font-size:11px;color:var(--s400);margin-top:2px}
+  .upload-progress{height:4px;background:var(--s200);border-radius:99px;margin-top:10px;overflow:hidden;display:none}
+  .upload-progress-bar{height:100%;background:var(--ice);border-radius:99px;width:0%;transition:width 300ms}
+  .upload-progress.show{display:block}
   .form-group{margin-bottom:16px}
   .form-label{font-size:12px;font-weight:600;color:var(--s600);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.5px}
   .form-input{width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--s200);font-size:14px;color:var(--s900);font-family:'Inter',sans-serif;transition:border 200ms;background:var(--white)}
@@ -312,9 +321,18 @@
         <input class="form-input" id="f-badge" type="text" placeholder="Ej: Popular, Nuevo…">
       </div>
       <div class="form-group">
-        <label class="form-label">URL de imagen (opcional)</label>
+        <label class="form-label">Imagen del producto</label>
         <img class="img-preview" id="imgPreview" alt="Preview">
-        <input class="form-input" id="f-imagen" type="url" placeholder="https://… (pega el link de la imagen)" oninput="previewImg(this.value)">
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="f-imagen-file" accept="image/png,image/jpeg,image/webp,image/gif" onchange="uploadProductImage(this)">
+          <div class="upload-icon">📷</div>
+          <div class="upload-label" id="uploadLabel">Haz clic o arrastra una imagen aquí</div>
+          <div class="upload-hint">PNG, JPG, WEBP · Máx. 5 MB</div>
+          <div class="upload-progress" id="uploadProgress">
+            <div class="upload-progress-bar" id="uploadProgressBar"></div>
+          </div>
+        </div>
+        <input class="form-input" id="f-imagen" type="url" placeholder="URL de imagen (se llena automáticamente al subir)" oninput="previewImg(this.value)" style="margin-top:8px;font-size:12px;color:var(--s400)">
       </div>
     </div>
 
@@ -361,13 +379,16 @@
 <div class="toast" id="toast"></div>
 
 <script type="module">
-import { auth, db } from "../assets/js/firebase-config.js";
+import { auth, db, storage } from "../assets/js/firebase-config.js";
 import {
   onAuthStateChanged, signOut
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import {
   collection, query, where, orderBy, onSnapshot, Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {
+  ref as storageRef, uploadBytesResumable, getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 // ══════════════════════════════════════════
 //  FIRESTORE REST API — bypasses WebSocket
@@ -696,6 +717,10 @@ window.openModal = (mode, data) => {
   document.getElementById("f-orden").value = "";
   const prev = document.getElementById("imgPreview");
   prev.classList.remove("show"); prev.src = "";
+  document.getElementById("uploadLabel").textContent = "Haz clic o arrastra una imagen aquí";
+  document.getElementById("uploadProgress").classList.remove("show");
+  document.getElementById("uploadProgressBar").style.width = "0%";
+  document.getElementById("f-imagen-file").value = "";
   document.getElementById("f-color").value = "#00BCD4";
   document.getElementById("colorPreview").style.background = "#00BCD4";
 
@@ -870,6 +895,58 @@ window.showSection = id => {
     document.getElementById(`nav-${k}`).classList.toggle("active", k===id);
   });
   document.getElementById("pageTitle").textContent = sections[id];
+};
+
+// ══════════════════════════════════════════
+//  SUBIDA DE IMAGEN A FIREBASE STORAGE
+// ══════════════════════════════════════════
+window.uploadProductImage = async (input) => {
+  const file = input.files[0];
+  if (!file) return;
+
+  if (file.size > 5 * 1024 * 1024) {
+    showToast("La imagen supera los 5 MB.");
+    input.value = "";
+    return;
+  }
+
+  const label    = document.getElementById("uploadLabel");
+  const progress = document.getElementById("uploadProgress");
+  const bar      = document.getElementById("uploadProgressBar");
+  const preview  = document.getElementById("imgPreview");
+  const urlInput = document.getElementById("f-imagen");
+
+  label.textContent = "Subiendo...";
+  progress.classList.add("show");
+  bar.style.width = "0%";
+
+  const ext      = file.name.split('.').pop();
+  const fileName = `${Date.now()}.${ext}`;
+  const fileRef  = storageRef(storage, `productos/${fileName}`);
+  const task     = uploadBytesResumable(fileRef, file, { contentType: file.type });
+
+  task.on('state_changed',
+    (snap) => {
+      const pct = Math.round((snap.bytesTransferred / snap.totalBytes) * 100);
+      bar.style.width = pct + "%";
+    },
+    (err) => {
+      console.error("Upload error:", err);
+      showToast("Error al subir la imagen: " + err.message);
+      label.textContent = "Haz clic o arrastra una imagen aquí";
+      progress.classList.remove("show");
+      input.value = "";
+    },
+    async () => {
+      const url = await getDownloadURL(task.snapshot.ref);
+      urlInput.value   = url;
+      preview.src      = url;
+      preview.classList.add("show");
+      bar.style.width  = "100%";
+      label.textContent = "✓ " + file.name;
+      showToast("Imagen subida correctamente ✓");
+    }
+  );
 };
 
 // ══════════════════════════════════════════

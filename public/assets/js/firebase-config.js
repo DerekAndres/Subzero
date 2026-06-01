@@ -2,6 +2,7 @@ import { initializeApp }  from "https://www.gstatic.com/firebasejs/10.12.0/fireb
 import { getFirestore }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth }        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFunctions }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js";
+import { getStorage }     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey:            "AIzaSyAj1eqG_xXas4D_qnzTz0bg4nNab3Hw1FE",
@@ -17,3 +18,4 @@ const app = initializeApp(firebaseConfig);
 export const db        = getFirestore(app);
 export const auth      = getAuth(app);
 export const functions = getFunctions(app, 'us-central1');
+export const storage   = getStorage(app);
