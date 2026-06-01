@@ -1038,10 +1038,17 @@ img,svg{display:block}
       </div>
 
       <!-- Toppings -->
-      <div class="cb-sec" style="padding-bottom:20px">
+      <div class="cb-sec">
         <div class="cb-sec-title">🍯 Toppings</div>
         <div class="cb-included-note">✓ 2 incluidos (ej. chocolate, dulce de leche) — el 3ro+ tiene costo</div>
         <div class="opts" id="cbToppingOpts"></div>
+      </div>
+
+      <!-- Extras (frutas) -->
+      <div class="cb-sec" id="cbExtrasSection" style="padding-bottom:20px;display:none">
+        <div class="cb-sec-title">🍓 Extras</div>
+        <div class="cb-sec-hint">Frutas y complementos — todos tienen costo adicional.</div>
+        <div class="opts" id="cbExtrasOpts"></div>
       </div>
 
     </div>
@@ -2099,6 +2106,7 @@ const CB = {
   flavors: {},   // { nombre: { price, color } }
   gomitas: {},   // { nombre: { qty, price } }
   toppings: [],  // [{ nombre, price }] — primeros 2 incluidos
+  extras:   [],  // [{ nombre, price }] — todos con costo
 };
 
 function cbCalcTotal() {
@@ -2110,7 +2118,8 @@ function cbCalcTotal() {
     ? Math.min(...Object.values(CB.gomitas).map(g => g.price))
     : 0;
   const toppingCost   = CB.toppings.slice(2).reduce((s, t) => s + t.price, 0);
-  return CB.sizePrice + extraFlavors + Math.max(0, gomitaCost - freeGomita) + toppingCost;
+  const extrasCost    = CB.extras.reduce((s, e) => s + e.price, 0);
+  return CB.sizePrice + extraFlavors + Math.max(0, gomitaCost - freeGomita) + toppingCost + extrasCost;
 }
 
 function cbUpdateTotal() {
@@ -2177,10 +2186,36 @@ function cbRenderToppings() {
   }).join('') || `<div style="color:var(--gray);font-size:13px">Sin toppings configurados.</div>`;
 }
 
+function cbRenderExtras() {
+  const sec  = document.getElementById('cbExtrasSection');
+  const list = extras.extras;
+  if (!list.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  document.getElementById('cbExtrasOpts').innerHTML = list.map(e => {
+    const precio = e.precio || 0;
+    return `<button class="opt" onclick="window.cbToggleExtra('${esc(e.nombre)}',${precio},this)" aria-pressed="false">
+      ${e.icon?e.icon+' ':''}${esc(e.nombre)}
+      ${precio > 0 ? `<span class="opt-p">+Lps.${precio.toLocaleString()}</span>` : ''}
+    </button>`;
+  }).join('');
+}
+
+window.cbToggleExtra = (nombre, price, btn) => {
+  const idx = CB.extras.findIndex(e => e.nombre === nombre);
+  if (idx >= 0) {
+    CB.extras.splice(idx, 1);
+    btn.classList.remove('selected'); btn.setAttribute('aria-pressed','false');
+  } else {
+    CB.extras.push({ nombre, price });
+    btn.classList.add('selected'); btn.setAttribute('aria-pressed','true');
+  }
+  cbUpdateTotal();
+};
+
 window.openCustomBuilder = () => {
   CB.size = null; CB.sizePrice = 0;
-  CB.flavors = {}; CB.gomitas = {}; CB.toppings = [];
-  cbRenderSizes(); cbRenderFlavors(); cbRenderGomitas(); cbRenderToppings();
+  CB.flavors = {}; CB.gomitas = {}; CB.toppings = []; CB.extras = [];
+  cbRenderSizes(); cbRenderFlavors(); cbRenderGomitas(); cbRenderToppings(); cbRenderExtras();
   cbUpdateTotal();
   document.getElementById('cbOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2260,11 +2295,13 @@ function cbBuildItem() {
   const flavorNms = Object.keys(CB.flavors);
   const gomNms    = Object.entries(CB.gomitas).map(([n,g]) => `${n} x${g.qty}`);
   const topNms    = CB.toppings.map(t => t.nombre);
+  const extNms    = CB.extras.map(e => e.nombre);
   const meta = [
     CB.size,
     flavorNms.length ? `Sabores: ${flavorNms.join(', ')}` : '',
     gomNms.length    ? `Gomitas: ${gomNms.join(', ')}`    : '',
     topNms.length    ? `Toppings: ${topNms.join(', ')}`   : '',
+    extNms.length    ? `Extras: ${extNms.join(', ')}`     : '',
   ].filter(Boolean).join(' · ');
   return { name: 'Subzero Personalizado', price: tot, meta };
 }
