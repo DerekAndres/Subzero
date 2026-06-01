@@ -359,6 +359,7 @@
           <button class="tab-btn"        onclick="filtrarExtras('sabores',this)">Sabores</button>
           <button class="tab-btn"        onclick="filtrarExtras('gomitas',this)">Gomitas</button>
           <button class="tab-btn"        onclick="filtrarExtras('toppings',this)">Toppings</button>
+          <button class="tab-btn"        onclick="filtrarExtras('extras',this)">Extras</button>
         </div>
         <div class="items-grid" id="extrasGrid">
           <div class="empty-state">Cargando...</div>
@@ -774,7 +775,7 @@ function renderExtras() {
   const grid = document.getElementById("extrasGrid");
   const filtered = extras.filter(e => e.categoria === categoriaActiva);
   document.getElementById("extrasTitle").textContent = {
-    "tamaños":"Tamaños","sabores":"Sabores","gomitas":"Gomitas","toppings":"Toppings"
+    "tamaños":"Tamaños","sabores":"Sabores","gomitas":"Gomitas","toppings":"Toppings","extras":"Extras"
   }[categoriaActiva] || "Extras";
 
   if (!filtered.length) {
@@ -843,7 +844,7 @@ window.openModal = (mode, data) => {
   // Campos visibles según modo
   const isProducto = mode === "producto";
   const isSabor    = !isProducto && categoriaActiva === "sabores";
-  const isTopping  = !isProducto && categoriaActiva === "toppings";
+  const isTopping  = !isProducto && (categoriaActiva === "toppings" || categoriaActiva === "extras");
 
   document.getElementById("grp-producto-fields").style.display = isProducto ? "block" : "none";
   document.getElementById("grp-orden").style.display            = isProducto ? "flex"  : "none";
@@ -893,6 +894,7 @@ function _buildExtrasPicker(selectedIds) {
     { key:"sabores",  label:"Sabores"  },
     { key:"gomitas",  label:"Gomitas"  },
     { key:"toppings", label:"Toppings" },
+    { key:"extras",   label:"Extras"   },
   ];
   const html = cats.map(({ key, label }) => {
     const items = extras.filter(e => e.categoria === key && e.activo !== false);
@@ -956,7 +958,7 @@ window.handleSave = async () => {
         const color = document.getElementById("f-color").value;
         data.color = color; data.c1 = color;
       }
-      if (categoriaActiva === "toppings") {
+      if (categoriaActiva === "toppings" || categoriaActiva === "extras") {
         data.icon = document.getElementById("f-icon").value.trim();
       }
       if (editingId) {

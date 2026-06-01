@@ -728,7 +728,6 @@ img,svg{display:block}
   </a>
   <div class="tn-links">
     <a href="#catalogo"    class="tn-link hl">🍧 Catálogo</a>
-    <a href="#personaliza" class="tn-link">✨ Personaliza</a>
     <a href="#nosotros"    class="tn-link">Nosotros</a>
   </div>
   <button class="tn-cart" id="tnCartBtn" aria-label="Carrito">
@@ -827,95 +826,6 @@ img,svg{display:block}
   </div>
 </section>
 
-<!-- CUSTOMIZER -->
-<section class="customizer" id="personaliza" aria-labelledby="custTitle">
-  <div class="container">
-    <div class="sec-head" data-reveal>
-      <div class="sec-chip">✨ Personaliza</div>
-      <h2 class="sec-title" id="custTitle">Crea tu Subzero perfecto</h2>
-      <p class="sec-lead">Paso a paso, arma el raspado de tus sueños.</p>
-    </div>
-    <div class="cust-wrap">
-      <div>
-        <div class="step-nav" role="tablist">
-          <button class="sn active" id="sn1" role="tab" aria-selected="true"  onclick="goStep(1)"><span class="sn-num">1</span><span>Tamaño</span></button>
-          <button class="sn"        id="sn2" role="tab" aria-selected="false" onclick="goStep(2)"><span class="sn-num">2</span><span>Sabores</span></button>
-          <button class="sn"        id="sn3" role="tab" aria-selected="false" onclick="goStep(3)"><span class="sn-num">3</span><span>Gomitas</span></button>
-          <button class="sn"        id="sn4" role="tab" aria-selected="false" onclick="goStep(4)"><span class="sn-num">4</span><span>Toppings</span></button>
-        </div>
-
-        <!-- Step 1: Tamaño -->
-        <div class="sp active cust-panel" id="sp1">
-          <div class="sp-title">¿Qué tamaño?</div>
-          <p class="sp-hint">El tamaño define el precio base.</p>
-          <div class="size-grid" id="sizeGrid" role="radiogroup">
-            <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--gray)">Cargando tamaños...</div>
-          </div>
-          <div class="sp-actions"><button class="btn-next" id="btnN1" onclick="goStep(2)" disabled>Siguiente — Sabores →</button></div>
-        </div>
-
-        <!-- Step 2: Sabores -->
-        <div class="sp cust-panel" id="sp2">
-          <div class="sp-title">¿Cuáles sabores?</div>
-          <p class="sp-hint">Elige hasta 3. Los marcados con + tienen costo adicional.</p>
-          <div class="opts" id="flavorOpts" role="group">
-            <div style="color:var(--gray);font-size:13px">Cargando sabores...</div>
-          </div>
-          <div class="sp-actions">
-            <button class="btn-back" onclick="goStep(1)">← Atrás</button>
-            <button class="btn-next" onclick="goStep(3)">Siguiente — Gomitas →</button>
-          </div>
-        </div>
-
-        <!-- Step 3: Gomitas -->
-        <div class="sp cust-panel" id="sp3">
-          <div class="sp-title">¿Cuántas gomitas?</div>
-          <p class="sp-hint">Cada porción se cobra por separado.</p>
-          <div id="gomList">
-            <div style="color:var(--gray);font-size:13px;padding:20px 0">Cargando gomitas...</div>
-          </div>
-          <div class="sp-actions">
-            <button class="btn-back" onclick="goStep(2)">← Atrás</button>
-            <button class="btn-next" onclick="goStep(4)">Siguiente — Toppings →</button>
-          </div>
-        </div>
-
-        <!-- Step 4: Toppings -->
-        <div class="sp cust-panel" id="sp4">
-          <div class="sp-title">¿Qué toppings?</div>
-          <p class="sp-hint">Los toppings hacen la diferencia.</p>
-          <div class="opts" id="toppingOpts" role="group">
-            <div style="color:var(--gray);font-size:13px">Cargando toppings...</div>
-          </div>
-          <div class="sp-actions"><button class="btn-back" onclick="goStep(3)">← Atrás</button></div>
-        </div>
-      </div>
-
-      <aside class="summary" aria-live="polite">
-        <div class="sum-title">🍧 Tu Subzero</div>
-        <div class="sum-preview">
-          <svg viewBox="0 0 120 150" fill="none">
-            <path d="M20 55L10 140h100L110 55z" fill="#FFD6E8" opacity=".5" stroke="#FFB3D1" stroke-width="1"/>
-            <ellipse cx="60" cy="55" rx="40" ry="18" fill="white" opacity=".8"/>
-            <ellipse cx="60" cy="42" rx="37" ry="22" id="pd1" fill="#FFD6E8" opacity=".6"/>
-            <ellipse cx="60" cy="30" rx="28" ry="17" id="pd2" fill="#FF6B9D" opacity=".7"/>
-            <ellipse cx="60" cy="20" rx="19" ry="13" id="pd3" fill="#E8186D" opacity=".9"/>
-            <rect x="56" y="4" width="8" height="70" rx="4" fill="#E8186D" opacity=".7"/>
-          </svg>
-        </div>
-        <div class="sum-rows">
-          <div class="sum-row"><span>Tamaño</span><span id="slSize">—</span></div>
-          <div class="sum-row"><span>Sabores</span><span id="slFlavors">—</span></div>
-          <div class="sum-row"><span>Gomitas</span><span id="slGomitas">—</span></div>
-          <div class="sum-row"><span>Toppings</span><span id="slToppings">—</span></div>
-          <div class="sum-row total"><span>Total</span><span id="slTotal">Lps.0</span></div>
-        </div>
-        <button class="sum-add" id="addBtn" onclick="addCustom()" disabled>🛒 Agregar al carrito</button>
-        <p class="sum-note" id="sumNote">Selecciona un tamaño para comenzar</p>
-      </aside>
-    </div>
-  </div>
-</section>
 
 <!-- ABOUT -->
 <section class="about" id="nosotros" aria-labelledby="aboutTitle">
@@ -964,7 +874,7 @@ img,svg{display:block}
         </div>
         <p class="footer-tag">Raspados artesanales hechos con amor, hielo fresco y los mejores sabores de la región.</p>
       </div>
-      <div><div class="fc-title">Menú</div><nav class="fc-links"><a href="#catalogo" class="fc-link">Catálogo</a><a href="#personaliza" class="fc-link">Personaliza</a><a href="#nosotros" class="fc-link">Nuestra historia</a></nav></div>
+      <div><div class="fc-title">Menú</div><nav class="fc-links"><a href="#catalogo" class="fc-link">Catálogo</a><a href="#nosotros" class="fc-link">Nuestra historia</a></nav></div>
       <div><div class="fc-title">Contacto</div><div class="fc-links"><span class="fc-link">WhatsApp</span><span class="fc-link">Instagram</span><span class="fc-link">Facebook</span></div></div>
       <div><div class="fc-title">Legal</div><nav class="fc-links"><a href="#" class="fc-link">Privacidad</a><a href="#" class="fc-link">Términos</a></nav></div>
     </div>
@@ -981,7 +891,6 @@ img,svg{display:block}
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
   </button>
   <a href="#catalogo"    onclick="closeMob()">🍧 Catálogo</a>
-  <a href="#personaliza" onclick="closeMob()">✨ Personaliza</a>
   <a href="#nosotros"    onclick="closeMob()">💖 Nosotros</a>
   <a href="/admin/login.html" class="mob-admin-btn" onclick="closeMob()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
@@ -1254,25 +1163,32 @@ img,svg{display:block}
       <div class="pm-base-price" id="pmBasePrice"></div>
     </div>
 
-    <!-- Sabores extras -->
+    <!-- Sabores -->
     <div class="pm-section" id="pmSaboresSection">
-      <div class="pm-sec-title">Sabores adicionales</div>
-      <div class="pm-sec-hint">Selecciona los que quieras</div>
+      <div class="pm-sec-title">Sabores <span style="font-size:11px;font-weight:400;color:#16a34a">✓ 2 incluidos</span></div>
+      <div class="pm-sec-hint">El 3er sabor en adelante tiene costo extra</div>
       <div class="pm-chips" id="pmSaboresChips"></div>
     </div>
 
     <!-- Gomitas -->
     <div class="pm-section" id="pmGomitasSection">
-      <div class="pm-sec-title">Gomitas</div>
-      <div class="pm-sec-hint">Elige las que quieras</div>
+      <div class="pm-sec-title">Gomitas <span style="font-size:11px;font-weight:400;color:#16a34a">✓ 2 incluidas</span></div>
+      <div class="pm-sec-hint">La 3ra gomita en adelante tiene costo extra</div>
       <div class="pm-chips" id="pmGomitasChips"></div>
     </div>
 
     <!-- Toppings -->
     <div class="pm-section" id="pmToppingsSection">
-      <div class="pm-sec-title">Toppings</div>
-      <div class="pm-sec-hint">Elige los que quieras</div>
+      <div class="pm-sec-title">Toppings <span style="font-size:11px;font-weight:400;color:#16a34a">✓ 2 incluidos</span></div>
+      <div class="pm-sec-hint">El 3er topping en adelante tiene costo extra</div>
       <div class="pm-chips" id="pmToppingsChips"></div>
+    </div>
+
+    <!-- Extras (frutas) -->
+    <div class="pm-section" id="pmExtrasSection">
+      <div class="pm-sec-title">Extras <span style="font-size:11px;font-weight:400;color:#8A6070">no incluidos</span></div>
+      <div class="pm-sec-hint">Frutas y complementos — todos tienen costo adicional</div>
+      <div class="pm-chips" id="pmExtrasChips"></div>
     </div>
 
     <div class="pm-footer">
@@ -1398,9 +1314,9 @@ window.addDirectById = (id) => {
 // ══════════════════════════════════════════════════════
 //  EXTRAS — carga dinámica desde Firestore
 // ══════════════════════════════════════════════════════
-const extras = { tamaños:[], sabores:[], gomitas:[], toppings:[] };
+const extras = { tamaños:[], sabores:[], gomitas:[], toppings:[], extras:[] };
 
-['tamaños','sabores','gomitas','toppings'].forEach(cat => {
+['tamaños','sabores','gomitas','toppings','extras'].forEach(cat => {
   onSnapshot(
     query(collection(db,'extras'), where('categoria','==',cat)),
     snap => {
@@ -1945,9 +1861,10 @@ document.getElementById('tnCartBtn').addEventListener('click', openDrawer);
 //  PRODUCT MODAL
 // ══════════════════════════════════════════════════════
 let pmProduct    = null;
-let pmSelSabores  = {};   // { name: { price, color } }
-let pmSelGomitas  = {};   // { name: price }
-let pmSelToppings = {};   // { name: price }
+let pmSelSabores  = [];   // [{ name, precio, color }] — primeros 2 incluidos
+let pmSelGomitas  = [];   // [{ name, precio }]        — primeras 2 incluidas
+let pmSelToppings = [];   // [{ name, precio }]        — primeros 2 incluidos
+let pmSelExtras   = [];   // [{ name, precio }]        — siempre con costo
 
 window.openProdModal = (id) => {
   const p = prodMap[id];
@@ -1960,9 +1877,10 @@ window.openProdModal = (id) => {
   }
 
   pmProduct     = p;
-  pmSelSabores  = {};
-  pmSelGomitas  = {};
-  pmSelToppings = {};
+  pmSelSabores  = [];
+  pmSelGomitas  = [];
+  pmSelToppings = [];
+  pmSelExtras   = [];
 
   // Visual
   const idx  = Object.values(prodMap).findIndex(x => x.id === id);
@@ -1987,6 +1905,7 @@ window.openProdModal = (id) => {
   _renderPMSabores();
   _renderPMGomitas();
   _renderPMToppings();
+  _renderPMExtras();
   _updatePMTotal();
 
   document.getElementById('pmOverlay').classList.add('open');
@@ -2054,46 +1973,80 @@ function _renderPMToppings() {
   }).join('');
 }
 
+function _renderPMExtras() {
+  const chips = document.getElementById('pmExtrasChips');
+  const sec   = document.getElementById('pmExtrasSection');
+  const list  = _pmFilterExtras(extras.extras);
+  if (!list.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  chips.innerHTML = list.map(t => {
+    const precio = t.precio || 0;
+    return `<button class="pm-chip" onclick="togglePMExtra('${esc(t.nombre)}',${precio},this)">
+      ${t.icon ? `${t.icon} ` : ''}${esc(t.nombre)}
+      ${precio > 0 ? `<span class="pm-chip-price">+Lps.${precio.toLocaleString()}</span>` : ''}
+    </button>`;
+  }).join('');
+}
+
+// Primeros `included` elementos son gratuitos; el resto paga su precio
+function _calcExtraCost(items, included) {
+  return items.slice(included).reduce((s, i) => s + (i.precio || 0), 0);
+}
+
 function _updatePMTotal() {
   if (!pmProduct) return;
-  const xSabores  = Object.values(pmSelSabores).reduce((s, f) => s + f.price, 0);
-  const xGomitas  = Object.values(pmSelGomitas).reduce((s, p) => s + p, 0);
-  const xToppings = Object.values(pmSelToppings).reduce((s, p) => s + p, 0);
-  const total = (pmProduct.precio_base || 0) + xSabores + xGomitas + xToppings;
+  const xSabores  = _calcExtraCost(pmSelSabores, 2);
+  const xGomitas  = _calcExtraCost(pmSelGomitas, 2);
+  const xToppings = _calcExtraCost(pmSelToppings, 2);
+  const xExtras   = pmSelExtras.reduce((s, e) => s + (e.precio || 0), 0);
+  const total = (pmProduct.precio_base || 0) + xSabores + xGomitas + xToppings + xExtras;
   document.getElementById('pmTotal').textContent = `Lps.${total.toLocaleString()}`;
 }
 
-window.togglePMSabor = (name, price, color, btn) => {
-  if (pmSelSabores[name]) { delete pmSelSabores[name]; btn.classList.remove('selected'); }
-  else { pmSelSabores[name] = { price, color }; btn.classList.add('selected'); }
+window.togglePMSabor = (name, precio, color, btn) => {
+  const idx = pmSelSabores.findIndex(s => s.name === name);
+  if (idx >= 0) { pmSelSabores.splice(idx, 1); btn.classList.remove('selected'); }
+  else { pmSelSabores.push({ name, precio, color }); btn.classList.add('selected'); }
   _updatePMTotal();
 };
 
-window.togglePMGomita = (name, price, btn) => {
-  if (pmSelGomitas[name]) { delete pmSelGomitas[name]; btn.classList.remove('selected'); }
-  else { pmSelGomitas[name] = price; btn.classList.add('selected'); }
+window.togglePMGomita = (name, precio, btn) => {
+  const idx = pmSelGomitas.findIndex(g => g.name === name);
+  if (idx >= 0) { pmSelGomitas.splice(idx, 1); btn.classList.remove('selected'); }
+  else { pmSelGomitas.push({ name, precio }); btn.classList.add('selected'); }
   _updatePMTotal();
 };
 
-window.togglePMTopping = (name, price, btn) => {
-  if (pmSelToppings[name]) { delete pmSelToppings[name]; btn.classList.remove('selected'); }
-  else { pmSelToppings[name] = price; btn.classList.add('selected'); }
+window.togglePMTopping = (name, precio, btn) => {
+  const idx = pmSelToppings.findIndex(t => t.name === name);
+  if (idx >= 0) { pmSelToppings.splice(idx, 1); btn.classList.remove('selected'); }
+  else { pmSelToppings.push({ name, precio }); btn.classList.add('selected'); }
+  _updatePMTotal();
+};
+
+window.togglePMExtra = (name, precio, btn) => {
+  const idx = pmSelExtras.findIndex(e => e.name === name);
+  if (idx >= 0) { pmSelExtras.splice(idx, 1); btn.classList.remove('selected'); }
+  else { pmSelExtras.push({ name, precio }); btn.classList.add('selected'); }
   _updatePMTotal();
 };
 
 window.addFromModal = () => {
   if (!pmProduct) return;
-  const xSabores  = Object.values(pmSelSabores).reduce((s, f) => s + f.price, 0);
-  const xGomitas  = Object.values(pmSelGomitas).reduce((s, p) => s + p, 0);
-  const xToppings = Object.values(pmSelToppings).reduce((s, p) => s + p, 0);
-  const total  = (pmProduct.precio_base || 0) + xSabores + xGomitas + xToppings;
-  const saNames  = Object.keys(pmSelSabores);
-  const gomNames = Object.keys(pmSelGomitas);
-  const topNames = Object.keys(pmSelToppings);
+  const xSabores  = _calcExtraCost(pmSelSabores, 2);
+  const xGomitas  = _calcExtraCost(pmSelGomitas, 2);
+  const xToppings = _calcExtraCost(pmSelToppings, 2);
+  const xExtras   = pmSelExtras.reduce((s, e) => s + (e.precio || 0), 0);
+  const total     = (pmProduct.precio_base || 0) + xSabores + xGomitas + xToppings + xExtras;
+  const saNames   = pmSelSabores.map(s => s.name);
+  const gomNames  = pmSelGomitas.map(g => g.name);
+  const topNames  = pmSelToppings.map(t => t.name);
+  const extNames  = pmSelExtras.map(e => e.name);
   const meta = [
-    saNames.length  ? `Sabores: ${saNames.join(', ')}`  : '',
-    gomNames.length ? `Gomitas: ${gomNames.join(', ')}` : '',
+    saNames.length  ? `Sabores: ${saNames.join(', ')}`   : '',
+    gomNames.length ? `Gomitas: ${gomNames.join(', ')}`   : '',
     topNames.length ? `Toppings: ${topNames.join(', ')}` : '',
+    extNames.length ? `Extras: ${extNames.join(', ')}`   : '',
   ].filter(Boolean).join(' · ');
   addToCart({ name: pmProduct.nombre, price: total, meta });
   closeProdModal();
