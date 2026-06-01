@@ -596,16 +596,16 @@ img,svg{display:block}
 /* ── FAB FLOTANTE ── */
 .fab{
   position:fixed;bottom:28px;right:24px;z-index:89;
-  background:var(--ink);color:var(--white);border:none;
-  border-radius:var(--r-full);padding:14px 22px;
-  font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;
-  cursor:pointer;display:flex;align-items:center;gap:8px;
-  box-shadow:0 8px 32px rgba(28,13,20,.30);
+  background:var(--pink);color:var(--white);border:none;
+  border-radius:var(--r-full);padding:16px 26px;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;letter-spacing:.5px;
+  cursor:pointer;display:flex;align-items:center;gap:9px;
+  box-shadow:0 8px 28px rgba(232,24,109,.40);
   transition:all 220ms var(--ease-out);
   animation:fabIn 500ms var(--ease-sp) forwards;
 }
-.fab:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(28,13,20,.4)}
-@keyframes fabIn{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.fab:hover{background:var(--pink-l);transform:translateY(-3px);box-shadow:0 14px 44px rgba(232,24,109,.55)}
+@keyframes fabIn{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
 
 /* ── CUSTOM BUILDER POPUP ── */
 .cb-overlay{
@@ -767,7 +767,10 @@ img,svg{display:block}
       <span class="line-white">ARTESANALES</span>
     </h1>
     <p class="hero-sub">del mundo</p>
-    <a href="#catalogo" class="hero-cta">Ver el menú completo</a>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <a href="#catalogo" class="hero-cta">Ver el menú completo</a>
+      <button onclick="window.openCustomBuilder()" class="hero-cta" style="background:transparent;border:2px solid rgba(255,255,255,.7);color:white;box-shadow:none;">✨ Crear mi Subzero</button>
+    </div>
   </div>
 
   <div class="hero-stats">
@@ -2105,7 +2108,7 @@ const CB = {
   size: null, sizePrice: 0,
   flavors: {},   // { nombre: { price, color } }
   gomitas: {},   // { nombre: { qty, price } }
-  toppings: [],  // [{ nombre, price }] — primeros 2 incluidos
+  toppings: {},  // { nombre: { qty, price } } — primeras 2 unidades incluidas
   extras:   [],  // [{ nombre, price }] — todos con costo
 };
 
@@ -2117,7 +2120,11 @@ function cbCalcTotal() {
   const freeGomita    = gomitaUnits > 0
     ? Math.min(...Object.values(CB.gomitas).map(g => g.price))
     : 0;
-  const toppingCost   = CB.toppings.slice(2).reduce((s, t) => s + t.price, 0);
+  const topVals       = Object.values(CB.toppings);
+  const totalTopUnits = topVals.reduce((s, t) => s + t.qty, 0);
+  const totalTopRaw   = topVals.reduce((s, t) => s + t.qty * t.price, 0);
+  const minTopPrice   = topVals.length ? Math.min(...topVals.map(t => t.price)) : 0;
+  const toppingCost   = Math.max(0, totalTopRaw - Math.min(totalTopUnits, 2) * minTopPrice);
   const extrasCost    = CB.extras.reduce((s, e) => s + e.price, 0);
   return CB.sizePrice + extraFlavors + Math.max(0, gomitaCost - freeGomita) + toppingCost + extrasCost;
 }
@@ -2177,12 +2184,19 @@ function cbRenderGomitas() {
 }
 
 function cbRenderToppings() {
-  document.getElementById('cbToppingOpts').innerHTML = extras.toppings.map(t => {
+  document.getElementById('cbToppingOpts').innerHTML = extras.toppings.map((t, i) => {
     const precio = t.precio || 0;
-    return `<button class="opt" onclick="window.cbToggleTopping('${esc(t.nombre)}',${precio},this)" aria-pressed="false">
-      ${t.icon?t.icon+' ':''}${esc(t.nombre)}
-      ${precio > 0 ? `<span class="opt-p">+Lps.${precio.toLocaleString()}</span>` : ''}
-    </button>`;
+    return `<div class="ctr-item">
+      <div style="flex:1">
+        <div class="ctr-name">${t.icon?t.icon+' ':''}${esc(t.nombre)}</div>
+        <div class="ctr-price">Lps.${precio.toLocaleString()} c/u</div>
+      </div>
+      <div class="ctr-ctrl">
+        <button class="cb" onclick="window.cbAdjTopping('${esc(t.nombre)}',${precio},-1)">−</button>
+        <span class="cv" id="cbTv${i}">0</span>
+        <button class="cb" onclick="window.cbAdjTopping('${esc(t.nombre)}',${precio},1)">+</button>
+      </div>
+    </div>`;
   }).join('') || `<div style="color:var(--gray);font-size:13px">Sin toppings configurados.</div>`;
 }
 
@@ -2214,7 +2228,7 @@ window.cbToggleExtra = (nombre, price, btn) => {
 
 window.openCustomBuilder = () => {
   CB.size = null; CB.sizePrice = 0;
-  CB.flavors = {}; CB.gomitas = {}; CB.toppings = []; CB.extras = [];
+  CB.flavors = {}; CB.gomitas = {}; CB.toppings = {}; CB.extras = [];
   cbRenderSizes(); cbRenderFlavors(); cbRenderGomitas(); cbRenderToppings(); cbRenderExtras();
   cbUpdateTotal();
   document.getElementById('cbOverlay').classList.add('open');
@@ -2278,15 +2292,14 @@ window.cbAdjGomita = (nombre, price, d) => {
   cbUpdateTotal();
 };
 
-window.cbToggleTopping = (nombre, price, btn) => {
-  const idx = CB.toppings.findIndex(t => t.nombre === nombre);
-  if (idx >= 0) {
-    CB.toppings.splice(idx, 1);
-    btn.classList.remove('selected'); btn.setAttribute('aria-pressed','false');
-  } else {
-    CB.toppings.push({ nombre, price });
-    btn.classList.add('selected'); btn.setAttribute('aria-pressed','true');
-  }
+window.cbAdjTopping = (nombre, price, d) => {
+  const cur  = CB.toppings[nombre] ? CB.toppings[nombre].qty : 0;
+  const next = Math.max(0, cur + d);
+  if (next === 0) delete CB.toppings[nombre];
+  else CB.toppings[nombre] = { qty: next, price };
+  const idx = extras.toppings.findIndex(t => t.nombre === nombre);
+  const el  = document.getElementById('cbTv' + idx);
+  if (el) el.textContent = next;
   cbUpdateTotal();
 };
 
@@ -2294,7 +2307,7 @@ function cbBuildItem() {
   const tot      = cbCalcTotal();
   const flavorNms = Object.keys(CB.flavors);
   const gomNms    = Object.entries(CB.gomitas).map(([n,g]) => `${n} x${g.qty}`);
-  const topNms    = CB.toppings.map(t => t.nombre);
+  const topNms    = Object.entries(CB.toppings).map(([n, t]) => t.qty > 1 ? `${n} x${t.qty}` : n);
   const extNms    = CB.extras.map(e => e.nombre);
   const meta = [
     CB.size,
