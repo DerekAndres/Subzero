@@ -772,7 +772,7 @@ img,svg{display:block}
     <p class="hero-sub">del mundo</p>
     <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:8px">
       <a href="#catalogo" class="hero-cta">🍧 Ver el menú</a>
-      <button onclick="window.openCustomBuilder()" class="hero-cta secondary">✨ Crear mi Subzero</button>
+      <button onclick="window.openCustomBuilder()" class="hero-cta" style="background:var(--ink);border-color:var(--ink);box-shadow:0 8px 24px rgba(28,13,20,.3)">✨ Crear mi Subzero</button>
     </div>
   </div>
 
@@ -957,6 +957,9 @@ img,svg{display:block}
         <div class="t-row"><span>SINPE Móvil</span><strong>8888-8888</strong></div>
         <div class="t-row"><span>BAC Cta. corriente</span><strong>00-000-000000-0</strong></div>
         <div class="t-row"><span>A nombre de</span><strong>Subzero Raspados S.A.</strong></div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid #BBF7D0;font-size:11px;color:#065F46;line-height:1.5">
+          💬 Acércate a la mesa para más información sobre los números de cuenta, o cuando tu Subzero esté listo puedes venir a recogerlo.
+        </div>
       </div>
 
       <div class="co-error" id="coError"></div>
@@ -1101,6 +1104,9 @@ img,svg{display:block}
         <div class="t-row"><span>SINPE Móvil</span><strong>8888-8888</strong></div>
         <div class="t-row"><span>BAC Cta. corriente</span><strong>00-000-000000-0</strong></div>
         <div class="t-row"><span>A nombre de</span><strong>Subzero Raspados S.A.</strong></div>
+        <div style="margin-top:8px;padding-top:8px;border-top:1px solid #BBF7D0;font-size:11px;color:#065F46;line-height:1.5">
+          💬 Acércate a la mesa para más información sobre los números de cuenta, o cuando tu Subzero esté listo puedes venir a recogerlo.
+        </div>
       </div>
 
       <div class="co-error" id="qoError"></div>
@@ -2106,7 +2112,7 @@ const CB = {
   flavors: {},   // { nombre: { price, color } }
   gomitas: {},   // { nombre: { qty, price } }
   toppings: {},  // { nombre: { qty, price } } — primeras 2 unidades incluidas
-  extras:   [],  // [{ nombre, price }] — todos con costo
+  extras:   {},  // { nombre: { qty, price } } — todos con costo
 };
 
 function cbCalcTotal() {
@@ -2122,7 +2128,7 @@ function cbCalcTotal() {
   const totalTopRaw   = topVals.reduce((s, t) => s + t.qty * t.price, 0);
   const minTopPrice   = topVals.length ? Math.min(...topVals.map(t => t.price)) : 0;
   const toppingCost   = Math.max(0, totalTopRaw - Math.min(totalTopUnits, 2) * minTopPrice);
-  const extrasCost    = CB.extras.reduce((s, e) => s + e.price, 0);
+  const extrasCost    = Object.values(CB.extras).reduce((s, e) => s + e.qty * e.price, 0);
   return CB.sizePrice + extraFlavors + Math.max(0, gomitaCost - freeGomita) + toppingCost + extrasCost;
 }
 
@@ -2202,30 +2208,36 @@ function cbRenderExtras() {
   const list = extras.extras;
   if (!list.length) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
-  document.getElementById('cbExtrasOpts').innerHTML = list.map(e => {
+  document.getElementById('cbExtrasOpts').innerHTML = list.map((e, i) => {
     const precio = e.precio || 0;
-    return `<button class="opt" onclick="window.cbToggleExtra('${esc(e.nombre)}',${precio},this)" aria-pressed="false">
-      ${e.icon?e.icon+' ':''}${esc(e.nombre)}
-      ${precio > 0 ? `<span class="opt-p">+Lps.${precio.toLocaleString()}</span>` : ''}
-    </button>`;
+    return `<div class="ctr-item">
+      <div style="flex:1">
+        <div class="ctr-name">${e.icon?e.icon+' ':''}${esc(e.nombre)}</div>
+        <div class="ctr-price">Lps.${precio.toLocaleString()} c/u</div>
+      </div>
+      <div class="ctr-ctrl">
+        <button class="cb" onclick="window.cbAdjExtra('${esc(e.nombre)}',${precio},-1)">−</button>
+        <span class="cv" id="cbEv${i}">0</span>
+        <button class="cb" onclick="window.cbAdjExtra('${esc(e.nombre)}',${precio},1)">+</button>
+      </div>
+    </div>`;
   }).join('');
 }
 
-window.cbToggleExtra = (nombre, price, btn) => {
-  const idx = CB.extras.findIndex(e => e.nombre === nombre);
-  if (idx >= 0) {
-    CB.extras.splice(idx, 1);
-    btn.classList.remove('selected'); btn.setAttribute('aria-pressed','false');
-  } else {
-    CB.extras.push({ nombre, price });
-    btn.classList.add('selected'); btn.setAttribute('aria-pressed','true');
-  }
+window.cbAdjExtra = (nombre, price, d) => {
+  const cur  = CB.extras[nombre] ? CB.extras[nombre].qty : 0;
+  const next = Math.max(0, cur + d);
+  if (next === 0) delete CB.extras[nombre];
+  else CB.extras[nombre] = { qty: next, price };
+  const idx = extras.extras.findIndex(e => e.nombre === nombre);
+  const el  = document.getElementById('cbEv' + idx);
+  if (el) el.textContent = next;
   cbUpdateTotal();
 };
 
 window.openCustomBuilder = () => {
   CB.size = null; CB.sizePrice = 0;
-  CB.flavors = {}; CB.gomitas = {}; CB.toppings = {}; CB.extras = [];
+  CB.flavors = {}; CB.gomitas = {}; CB.toppings = {}; CB.extras = {};
   cbRenderSizes(); cbRenderFlavors(); cbRenderGomitas(); cbRenderToppings(); cbRenderExtras();
   cbUpdateTotal();
   document.getElementById('cbOverlay').classList.add('open');
@@ -2305,7 +2317,7 @@ function cbBuildItem() {
   const flavorNms = Object.keys(CB.flavors);
   const gomNms    = Object.entries(CB.gomitas).map(([n,g]) => `${n} x${g.qty}`);
   const topNms    = Object.entries(CB.toppings).map(([n, t]) => t.qty > 1 ? `${n} x${t.qty}` : n);
-  const extNms    = CB.extras.map(e => e.nombre);
+  const extNms    = Object.entries(CB.extras).map(([n, e]) => e.qty > 1 ? `${n} x${e.qty}` : n);
   const meta = [
     CB.size,
     flavorNms.length ? `Sabores: ${flavorNms.join(', ')}` : '',
