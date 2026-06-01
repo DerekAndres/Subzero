@@ -3,7 +3,7 @@ const { crearSesionPago, webhookBAC }              = require("./src/pagos/bac");
 const { crearPedidoDirecto }                       = require("./src/pagos/directo");
 const { onPedidoCreado }                           = require("./src/facturas/generarPDF");
 const { enviarFacturaPorCorreo }                   = require("./src/correos/enviarEmail");
-const { onNuevoPedidoEfectivo, onTransferenciaConfirmada } = require("./src/correos/enviarConfirmacion");
+const { onNuevoPedido, onTransferenciaConfirmada } = require("./src/correos/enviarConfirmacion");
 const { enviarAvisoPedidoListo }                          = require("./src/correos/enviarAvisoPedidoListo");
 
 module.exports = {
@@ -21,8 +21,8 @@ module.exports = {
   enviarFacturaPorCorreo,
 
   // Correos — confirmación de número de pedido (efectivo / transferencia)
-  onNuevoPedidoEfectivo,       // onCreate: efectivo confirmado → envía #pedido
-  onTransferenciaConfirmada,   // onUpdate: admin confirma transferencia → envía #pedido
+  onNuevoPedido,               // onCreate: cualquier pedido nuevo → envía #pedido de inmediato
+  onTransferenciaConfirmada,   // onUpdate: admin confirma transferencia → avisa que entró a cocina
 
   // Correos — aviso al cliente cuando el pedido está listo para retirar
   enviarAvisoPedidoListo,      // onUpdate: estado → LISTO → email al cliente
