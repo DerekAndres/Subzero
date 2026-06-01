@@ -1030,20 +1030,6 @@ img,svg{display:block}
         <div class="opts" id="cbFlavorOpts"></div>
       </div>
 
-      <!-- Incluidos: Leche condensada + Frutas -->
-      <div class="cb-sec">
-        <div class="cb-sec-title">🥛 Base incluida</div>
-        <div class="cb-sec-hint">Estos ingredientes vienen incluidos en tu Subzero.</div>
-        <div class="cb-toggle-row">
-          <span class="cb-toggle-lbl">Leche condensada</span>
-          <span class="cb-free-chip">Incluido</span>
-        </div>
-        <div class="cb-toggle-row">
-          <span class="cb-toggle-lbl">Frutas frescas</span>
-          <span class="cb-free-chip">Incluido</span>
-        </div>
-      </div>
-
       <!-- Gomitas -->
       <div class="cb-sec">
         <div class="cb-sec-title">🐛 Gomitas</div>
@@ -1053,8 +1039,8 @@ img,svg{display:block}
 
       <!-- Toppings -->
       <div class="cb-sec" style="padding-bottom:20px">
-        <div class="cb-sec-title">🍯 Toppings extras</div>
-        <div class="cb-sec-hint">Todos los toppings tienen costo adicional.</div>
+        <div class="cb-sec-title">🍯 Toppings</div>
+        <div class="cb-included-note">✓ 2 incluidos (ej. chocolate, dulce de leche) — el 3ro+ tiene costo</div>
         <div class="opts" id="cbToppingOpts"></div>
       </div>
 
@@ -2112,7 +2098,7 @@ const CB = {
   size: null, sizePrice: 0,
   flavors: {},   // { nombre: { price, color } }
   gomitas: {},   // { nombre: { qty, price } }
-  toppings: {},  // { nombre: price }
+  toppings: [],  // [{ nombre, price }] — primeros 2 incluidos
 };
 
 function cbCalcTotal() {
@@ -2123,7 +2109,7 @@ function cbCalcTotal() {
   const freeGomita    = gomitaUnits > 0
     ? Math.min(...Object.values(CB.gomitas).map(g => g.price))
     : 0;
-  const toppingCost   = Object.values(CB.toppings).reduce((s, p) => s + p, 0);
+  const toppingCost   = CB.toppings.slice(2).reduce((s, t) => s + t.price, 0);
   return CB.sizePrice + extraFlavors + Math.max(0, gomitaCost - freeGomita) + toppingCost;
 }
 
@@ -2193,7 +2179,7 @@ function cbRenderToppings() {
 
 window.openCustomBuilder = () => {
   CB.size = null; CB.sizePrice = 0;
-  CB.flavors = {}; CB.gomitas = {}; CB.toppings = {};
+  CB.flavors = {}; CB.gomitas = {}; CB.toppings = [];
   cbRenderSizes(); cbRenderFlavors(); cbRenderGomitas(); cbRenderToppings();
   cbUpdateTotal();
   document.getElementById('cbOverlay').classList.add('open');
@@ -2258,11 +2244,12 @@ window.cbAdjGomita = (nombre, price, d) => {
 };
 
 window.cbToggleTopping = (nombre, price, btn) => {
-  if (CB.toppings[nombre] !== undefined) {
-    delete CB.toppings[nombre];
+  const idx = CB.toppings.findIndex(t => t.nombre === nombre);
+  if (idx >= 0) {
+    CB.toppings.splice(idx, 1);
     btn.classList.remove('selected'); btn.setAttribute('aria-pressed','false');
   } else {
-    CB.toppings[nombre] = price;
+    CB.toppings.push({ nombre, price });
     btn.classList.add('selected'); btn.setAttribute('aria-pressed','true');
   }
   cbUpdateTotal();
@@ -2272,10 +2259,9 @@ function cbBuildItem() {
   const tot      = cbCalcTotal();
   const flavorNms = Object.keys(CB.flavors);
   const gomNms    = Object.entries(CB.gomitas).map(([n,g]) => `${n} x${g.qty}`);
-  const topNms    = Object.keys(CB.toppings);
+  const topNms    = CB.toppings.map(t => t.nombre);
   const meta = [
     CB.size,
-    `Leche condensada, Frutas`,
     flavorNms.length ? `Sabores: ${flavorNms.join(', ')}` : '',
     gomNms.length    ? `Gomitas: ${gomNms.join(', ')}`    : '',
     topNms.length    ? `Toppings: ${topNms.join(', ')}`   : '',
