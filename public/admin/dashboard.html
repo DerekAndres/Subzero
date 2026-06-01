@@ -162,10 +162,95 @@
   .toast{position:fixed;bottom:24px;right:24px;background:var(--s900);color:var(--white);padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;transform:translateY(80px);opacity:0;transition:all 300ms}
   .toast.show{transform:translateY(0);opacity:1}
 
+  /* ── Mobile bottom nav ── */
+  .mobile-nav{display:none}
+
+  /* ══════════════════════════════════════
+     MOBILE  (≤ 768 px)
+  ══════════════════════════════════════ */
   @media(max-width:768px){
+
+    /* Ocultar sidebar, mostrar nav inferior */
     .sidebar{display:none}
-    .stats-grid{grid-template-columns:1fr 1fr}
-    .content{padding:20px}
+    .mobile-nav{
+      display:flex;position:fixed;bottom:0;left:0;right:0;
+      background:var(--s900);border-top:1px solid rgba(255,255,255,.08);
+      z-index:50;padding:0 4px;padding-bottom:env(safe-area-inset-bottom);
+    }
+    .mobile-nav-btn{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:3px;padding:10px 4px;border:none;background:none;color:var(--s400);
+      font-size:10px;font-weight:600;cursor:pointer;transition:color 150ms;
+      font-family:'Inter',sans-serif;letter-spacing:.3px;min-height:56px;
+    }
+    .mobile-nav-btn.active{color:#67E8F9}
+    .mobile-nav-btn svg{flex-shrink:0}
+
+    /* Topbar móvil */
+    .topbar{padding:14px 16px;gap:10px}
+    .topbar-title{font-size:15px}
+    .topbar-user{display:none}
+    .topbar-logo{display:flex;align-items:center;gap:8px}
+    .topbar-logo img{height:32px;object-fit:contain}
+
+    /* Contenido con padding para nav inferior */
+    .content{padding:16px;padding-bottom:80px;flex:1}
+
+    /* Stats: 2 columnas compactas */
+    .stats-grid{
+      grid-template-columns:1fr 1fr;
+      gap:10px;margin-bottom:20px;
+    }
+    .stat-card{padding:14px 16px;border-radius:12px}
+    .stat-value{font-size:22px}
+    .stat-label{font-size:10px;margin-bottom:4px}
+    .stat-sub{font-size:11px}
+
+    /* Tabs scrollables */
+    .tabs{
+      display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;
+      margin-bottom:16px;padding-bottom:4px;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .tabs::-webkit-scrollbar{display:none}
+    .tab-btn{white-space:nowrap;flex-shrink:0;padding:8px 14px;font-size:12px}
+
+    /* Pedidos: 1 columna */
+    .orders-grid{grid-template-columns:1fr;gap:12px}
+    .order-card{border-radius:12px}
+    .order-actions{flex-direction:column;gap:6px}
+    .action-btn{padding:11px;font-size:13px}
+
+    /* Productos/extras: 1 columna */
+    .items-grid{grid-template-columns:1fr;gap:10px}
+    .item-card{border-radius:12px;padding:14px}
+
+    /* Cabecera sección */
+    .menu-header{margin-bottom:16px}
+    .menu-header h2{font-size:15px}
+    .add-btn{padding:9px 14px;font-size:12px;border-radius:8px}
+
+    /* Modal: sheet desde abajo */
+    .overlay{align-items:flex-end;padding:0}
+    .modal{
+      border-radius:20px 20px 0 0;max-width:100%;width:100%;
+      max-height:92vh;padding:20px 20px 32px;
+      transform:translateY(40px);
+    }
+    .overlay.open .modal{transform:translateY(0)}
+    .modal::before{
+      content:'';display:block;width:40px;height:4px;
+      background:var(--s200);border-radius:99px;
+      margin:0 auto 16px;
+    }
+    .form-row{grid-template-columns:1fr}
+    .modal-actions{flex-direction:column;gap:8px}
+    .btn-save,.btn-cancel{padding:14px;font-size:15px}
+    .upload-area{padding:16px}
+
+    /* Toast arriba del nav inferior */
+    .toast{bottom:72px;right:12px;left:12px;text-align:center;border-radius:10px}
   }
 </style>
 </head>
@@ -377,6 +462,37 @@
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+
+<!-- Mobile bottom nav -->
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-btn active" id="mnav-pedidos" onclick="showSection('pedidos')">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+      <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+    </svg>
+    Pedidos
+  </button>
+  <button class="mobile-nav-btn" id="mnav-productos" onclick="showSection('productos')">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+    </svg>
+    Productos
+  </button>
+  <button class="mobile-nav-btn" id="mnav-extras" onclick="showSection('extras')">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+    Extras
+  </button>
+  <button class="mobile-nav-btn" id="mnav-logout" onclick="document.getElementById('logoutBtn').click()">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+    </svg>
+    Salir
+  </button>
+</nav>
 
 <script type="module">
 import { auth, db, storage } from "../assets/js/firebase-config.js";
@@ -893,8 +1009,11 @@ window.showSection = id => {
   Object.keys(sections).forEach(k => {
     document.getElementById(`sec-${k}`).classList.toggle("active", k===id);
     document.getElementById(`nav-${k}`).classList.toggle("active", k===id);
+    const mb = document.getElementById(`mnav-${k}`);
+    if (mb) mb.classList.toggle("active", k===id);
   });
   document.getElementById("pageTitle").textContent = sections[id];
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 // ══════════════════════════════════════════
