@@ -122,12 +122,15 @@ img,svg{display:block}
 
 .hero-cta{
   display:inline-flex;align-items:center;gap:10px;
-  background:var(--pink);color:var(--white);
-  font-size:13px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;
-  padding:14px 36px;border-radius:var(--r-full);
+  background:var(--pink);color:var(--white);border:2px solid var(--pink);
+  font-size:15px;font-weight:900;letter-spacing:1px;text-transform:uppercase;
+  padding:16px 40px;border-radius:var(--r-full);
   box-shadow:var(--sh-pink);transition:all 220ms var(--ease-out);
+  cursor:pointer;text-decoration:none;
 }
-.hero-cta:hover{background:var(--pink-l);transform:translateY(-2px);box-shadow:var(--sh-pink-lg)}
+.hero-cta:hover{background:var(--pink-l);border-color:var(--pink-l);transform:translateY(-3px);box-shadow:var(--sh-pink-lg)}
+.hero-cta.secondary{background:transparent;border-color:rgba(255,255,255,.8);color:white;box-shadow:none}
+.hero-cta.secondary:hover{background:rgba(255,255,255,.15);border-color:white;transform:translateY(-3px);box-shadow:none}
 
 .hero-stats{
   position:absolute;bottom:clamp(20px,4vh,40px);left:50%;transform:translateX(-50%);
@@ -767,18 +770,12 @@ img,svg{display:block}
       <span class="line-white">ARTESANALES</span>
     </h1>
     <p class="hero-sub">del mundo</p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
-      <a href="#catalogo" class="hero-cta">Ver el menú completo</a>
-      <button onclick="window.openCustomBuilder()" class="hero-cta" style="background:transparent;border:2px solid rgba(255,255,255,.7);color:white;box-shadow:none;">✨ Crear mi Subzero</button>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+      <a href="#catalogo" class="hero-cta">🍧 Ver el menú</a>
+      <button onclick="window.openCustomBuilder()" class="hero-cta secondary">✨ Crear mi Subzero</button>
     </div>
   </div>
 
-  <div class="hero-stats">
-    <div class="hs"><div class="hs-val">12+</div><div class="hs-lbl">Sabores</div></div>
-    <div class="hs"><div class="hs-val">100%</div><div class="hs-lbl">Artesanal</div></div>
-    <div class="hs"><div class="hs-val">5★</div><div class="hs-lbl">Rating</div></div>
-    <div class="hs"><div class="hs-val">&lt;10</div><div class="hs-lbl">Min.</div></div>
-  </div>
 </section>
 
 <!-- MARQUEE -->
