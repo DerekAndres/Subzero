@@ -386,9 +386,9 @@
       <input class="form-input" id="f-nombre" type="text" placeholder="Ej: Raspado Grande">
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label" id="lbl-precio">Precio (Lps.)</label>
-        <input class="form-input" id="f-precio" type="number" min="0" placeholder="2500">
+      <div class="form-group" id="grp-precio">
+        <label class="form-label" id="lbl-precio">Precio extra (Lps.)</label>
+        <input class="form-input" id="f-precio" type="number" min="0" placeholder="0">
       </div>
       <div class="form-group" id="grp-orden" style="display:none">
         <label class="form-label">Orden</label>
@@ -737,7 +737,7 @@ function renderProductos() {
       <div class="item-top">
         <div>
           <div class="item-name">${esc(p.nombre)}</div>
-          <div class="item-price">Lps.${(p.precio_base||0).toLocaleString()}</div>
+          <div class="item-price" style="font-size:11px;color:#8A6070">${esc(p.descripcion||'Sin descripción')}</div>
         </div>
         <div class="active-dot ${p.activo!==false?'dot-on':'dot-off'}" title="${p.activo!==false?'Activo':'Inactivo'}"></div>
       </div>
@@ -847,11 +847,11 @@ window.openModal = (mode, data) => {
   const isTopping  = !isProducto && (categoriaActiva === "toppings" || categoriaActiva === "extras");
 
   document.getElementById("grp-producto-fields").style.display = isProducto ? "block" : "none";
+  document.getElementById("grp-precio").style.display           = isProducto ? "none"  : "flex";
   document.getElementById("grp-orden").style.display            = isProducto ? "flex"  : "none";
   document.getElementById("grp-color").style.display            = isSabor    ? "block" : "none";
   document.getElementById("grp-icon").style.display             = isTopping  ? "block" : "none";
   document.getElementById("grp-extras").style.display           = isProducto ? "block" : "none";
-  document.getElementById("lbl-precio").textContent = isProducto ? "Precio base (Lps.)" : "Precio extra (Lps.)";
   if (isProducto) _buildExtrasPicker(data?.extrasIds || []);
 
   // Rellena con data existente
@@ -924,9 +924,9 @@ window.handleSave = async () => {
   if (btnSave) { btnSave.textContent = "Guardando..."; btnSave.disabled = true; }
 
   const nombre = document.getElementById("f-nombre").value.trim();
-  const precio = parseFloat(document.getElementById("f-precio").value);
+  const precio = parseFloat(document.getElementById("f-precio").value) || 0;
   if (!nombre) { showErr("Escribe el nombre del producto."); return; }
-  if (isNaN(precio) || precio < 0) { showErr("Escribe un precio válido."); return; }
+  if (!isNaN(precio) && precio < 0) { showErr("El precio no puede ser negativo."); return; }
 
   let saved = false;
   try {

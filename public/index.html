@@ -1160,7 +1160,12 @@ img,svg{display:block}
       <div class="pm-badge-pill" id="pmBadge"></div>
       <div class="pm-name"  id="pmName"></div>
       <div class="pm-desc"  id="pmDesc"></div>
-      <div class="pm-base-price" id="pmBasePrice"></div>
+    </div>
+
+    <!-- Tamaño (requerido) -->
+    <div class="pm-section" id="pmTamañoSection">
+      <div class="pm-sec-title">Tamaño <span style="color:#E8186D;font-size:11px;font-weight:500">* requerido</span></div>
+      <div class="pm-chips" id="pmTamañoChips"></div>
     </div>
 
     <!-- Sabores -->
@@ -1292,7 +1297,7 @@ onSnapshot(
             <div class="pc-name">${esc(p.nombre)}</div>
             <div class="pc-desc">${esc(p.descripcion||'')}</div>
             <div class="pc-foot">
-              <div class="pc-price">Lps.${(p.precio_base||0).toLocaleString()} <sub>HNL</sub></div>
+              <div class="pc-price" style="font-size:12px;color:var(--gray)">Elige tu tamaño →</div>
               <button class="add-btn-sm" onclick="event.stopPropagation();openProdModal('${p.id}')" aria-label="Ver ${esc(p.nombre)}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               </button>
@@ -1860,7 +1865,8 @@ document.getElementById('tnCartBtn').addEventListener('click', openDrawer);
 // ══════════════════════════════════════════════════════
 //  PRODUCT MODAL
 // ══════════════════════════════════════════════════════
-let pmProduct    = null;
+let pmProduct     = null;
+let pmSelTamaño   = null; // { name, precio } — requerido
 let pmSelSabores  = [];   // [{ name, precio, color }] — primeros 2 incluidos
 let pmSelGomitas  = [];   // [{ name, precio }]        — primeras 2 incluidas
 let pmSelToppings = [];   // [{ name, precio }]        — primeros 2 incluidos
@@ -1877,6 +1883,7 @@ window.openProdModal = (id) => {
   }
 
   pmProduct     = p;
+  pmSelTamaño   = null;
   pmSelSabores  = [];
   pmSelGomitas  = [];
   pmSelToppings = [];
@@ -1897,11 +1904,11 @@ window.openProdModal = (id) => {
   const badge = document.getElementById('pmBadge');
   badge.textContent = p.badge || '';
   badge.classList.toggle('show', !!p.badge);
-  document.getElementById('pmName').textContent      = p.nombre;
-  document.getElementById('pmDesc').textContent      = p.descripcion || '';
-  document.getElementById('pmBasePrice').textContent = `desde Lps.${(p.precio_base||0).toLocaleString()}`;
+  document.getElementById('pmName').textContent = p.nombre;
+  document.getElementById('pmDesc').textContent = p.descripcion || '';
 
   // Chips
+  _renderPMTamaños();
   _renderPMSabores();
   _renderPMGomitas();
   _renderPMToppings();
@@ -1924,6 +1931,22 @@ function _pmFilterExtras(list) {
   const ids = pmProduct?.extrasIds;
   if (!ids || !ids.length) return [];
   return list.filter(e => ids.includes(e.id));
+}
+
+function _renderPMTamaños() {
+  const chips = document.getElementById('pmTamañoChips');
+  const sec   = document.getElementById('pmTamañoSection');
+  if (!extras.tamaños.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  chips.innerHTML = extras.tamaños
+    .slice().sort((a,b) => (a.precio||0) - (b.precio||0))
+    .map(t => {
+      const precio = t.precio || 0;
+      return `<button class="pm-chip" onclick="togglePMTamaño('${esc(t.nombre)}',${precio},this)">
+        ${esc(t.nombre)}
+        <span class="pm-chip-price">Lps.${precio.toLocaleString()}</span>
+      </button>`;
+    }).join('');
 }
 
 function _renderPMSabores() {
@@ -1995,13 +2018,29 @@ function _calcExtraCost(items, included) {
 
 function _updatePMTotal() {
   if (!pmProduct) return;
+  const basePrice = pmSelTamaño ? pmSelTamaño.precio : 0;
   const xSabores  = _calcExtraCost(pmSelSabores, 2);
   const xGomitas  = _calcExtraCost(pmSelGomitas, 2);
   const xToppings = _calcExtraCost(pmSelToppings, 2);
   const xExtras   = pmSelExtras.reduce((s, e) => s + (e.precio || 0), 0);
-  const total = (pmProduct.precio_base || 0) + xSabores + xGomitas + xToppings + xExtras;
-  document.getElementById('pmTotal').textContent = `Lps.${total.toLocaleString()}`;
+  const total = basePrice + xSabores + xGomitas + xToppings + xExtras;
+  document.getElementById('pmTotal').textContent = pmSelTamaño
+    ? `Lps.${total.toLocaleString()}`
+    : 'Elige un tamaño';
+  const disabled = !pmSelTamaño;
+  document.querySelectorAll('.pm-add, .pm-order-now').forEach(b => b.disabled = disabled);
 }
+
+window.togglePMTamaño = (name, precio, btn) => {
+  document.querySelectorAll('#pmTamañoChips .pm-chip').forEach(b => b.classList.remove('selected'));
+  if (pmSelTamaño?.name === name) {
+    pmSelTamaño = null;
+  } else {
+    pmSelTamaño = { name, precio };
+    btn.classList.add('selected');
+  }
+  _updatePMTotal();
+};
 
 window.togglePMSabor = (name, precio, color, btn) => {
   const idx = pmSelSabores.findIndex(s => s.name === name);
@@ -2032,17 +2071,18 @@ window.togglePMExtra = (name, precio, btn) => {
 };
 
 window.addFromModal = () => {
-  if (!pmProduct) return;
+  if (!pmProduct || !pmSelTamaño) return;
   const xSabores  = _calcExtraCost(pmSelSabores, 2);
   const xGomitas  = _calcExtraCost(pmSelGomitas, 2);
   const xToppings = _calcExtraCost(pmSelToppings, 2);
   const xExtras   = pmSelExtras.reduce((s, e) => s + (e.precio || 0), 0);
-  const total     = (pmProduct.precio_base || 0) + xSabores + xGomitas + xToppings + xExtras;
+  const total     = pmSelTamaño.precio + xSabores + xGomitas + xToppings + xExtras;
   const saNames   = pmSelSabores.map(s => s.name);
   const gomNames  = pmSelGomitas.map(g => g.name);
   const topNames  = pmSelToppings.map(t => t.name);
   const extNames  = pmSelExtras.map(e => e.name);
   const meta = [
+    `Tamaño: ${pmSelTamaño.name}`,
     saNames.length  ? `Sabores: ${saNames.join(', ')}`   : '',
     gomNames.length ? `Gomitas: ${gomNames.join(', ')}`   : '',
     topNames.length ? `Toppings: ${topNames.join(', ')}` : '',
