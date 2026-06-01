@@ -31,8 +31,8 @@ exports.enviarAvisoPedidoListo = functions.firestore
     const msg = {
       to:   despues.clienteEmail,
       from: {
-        email: process.env.SENDGRID_FROM_EMAIL || "pedidos@subzero.com",
-        name:  process.env.SENDGRID_FROM_NAME  || "Subzero Raspados",
+        email: "pedidos@subzero.lat",
+        name:  "Sub Zero",
       },
       subject: `¡Tu pedido ${numero} está listo! 🎉`,
       html: `

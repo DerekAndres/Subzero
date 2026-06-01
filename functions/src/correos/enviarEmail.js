@@ -30,8 +30,8 @@ async function enviarConReintentos(pedidoId, pedido, intento = 1) {
   const msg = {
     to:   pedido.clienteEmail,
     from: {
-      email: process.env.SENDGRID_FROM_EMAIL || "facturas@subzero.com",
-      name:  process.env.SENDGRID_FROM_NAME  || "Subzero Raspados",
+      email: "pedidos@subzero.lat",
+      name:  "Sub Zero",
     },
     subject: `Tu factura Subzero — Pedido #${pedidoId.slice(-6).toUpperCase()}`,
     html: `

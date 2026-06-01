@@ -76,8 +76,8 @@ async function enviarEmail(pedidoId, pedido, tipo) {
   const msg = {
     to:   pedido.clienteEmail,
     from: {
-      email: process.env.SENDGRID_FROM_EMAIL || "pedidos@subzero.com",
-      name:  process.env.SENDGRID_FROM_NAME  || "Subzero Raspados",
+      email: "pedidos@subzero.lat",
+      name:  "Sub Zero",
     },
     subject,
     html: `
