@@ -1,0 +1,20 @@
+[
+  {
+    "origin": [
+      "https://subzero.derekperez.workers.dev",
+      "http://localhost",
+      "http://localhost:3000",
+      "http://localhost:5173",
+      "http://localhost:8788"
+    ],
+    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
+    "responseHeader": [
+      "Content-Type",
+      "Authorization",
+      "Content-Length",
+      "X-Goog-Resumable",
+      "X-Firebase-Storage-Version"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]
