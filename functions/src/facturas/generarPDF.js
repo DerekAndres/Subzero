@@ -19,6 +19,8 @@ exports.onPedidoCreado = functions.firestore
     // Solo actuar cuando el estado cambia a PENDIENTE (pago aprobado)
     if (antes.estado === despues.estado || despues.estado !== "PENDIENTE") return;
     if (despues.factura_url) return; // ya generada
+    // PDF solo para pagos con tarjeta/BAC; efectivo y transferencia reciben solo el número de orden
+    if (despues.metodoPago === "EFECTIVO" || despues.metodoPago === "TRANSFERENCIA") return;
 
     const pedido = despues;
 

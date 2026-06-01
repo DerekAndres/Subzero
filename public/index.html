@@ -391,6 +391,8 @@ img,svg{display:block}
 .mobile-nav a{font-family:'Fredoka One',sans-serif;font-size:28px;color:var(--ink);transition:color 160ms}
 .mobile-nav a:hover{color:var(--pink)}
 .mob-close{position:absolute;top:20px;right:20px;width:40px;height:40px;border-radius:50%;background:var(--pink-pale);border:2px solid var(--pink-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--pink)}
+.mob-admin-btn{margin-top:12px;display:flex!important;align-items:center;gap:8px;font-size:16px!important;padding:10px 24px;border-radius:var(--r-full);border:2px solid var(--pink-dim)!important;color:var(--pink)!important;background:var(--pink-pale);transition:background 160ms,color 160ms!important}
+.mob-admin-btn:hover{background:var(--pink)!important;color:var(--white)!important;border-color:var(--pink)!important}
 
 /* Toast */
 .toast{position:fixed;bottom:28px;left:50%;z-index:200;transform:translateX(-50%) translateY(14px);background:var(--ink);color:var(--white);border-radius:var(--r-full);padding:12px 22px;font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px;box-shadow:0 12px 40px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:all 320ms var(--ease-sp);white-space:nowrap;max-width:calc(100vw - 36px)}
@@ -581,6 +583,140 @@ img,svg{display:block}
   display:flex;align-items:center;gap:7px;white-space:nowrap;
 }
 .pm-add:hover{background:var(--pink-l);transform:translateY(-1px);box-shadow:var(--sh-pink-lg)}
+
+/* ── BOTÓN ORDENAR AHORA (product modal) ── */
+.pm-order-now{
+  background:var(--ink);color:var(--white);border:none;
+  border-radius:var(--r-full);padding:11px 20px;
+  font-size:13px;font-weight:800;font-family:'Nunito',sans-serif;
+  cursor:pointer;transition:background 200ms;white-space:nowrap;
+}
+.pm-order-now:hover{background:#2d1a24}
+
+/* ── FAB FLOTANTE ── */
+.fab{
+  position:fixed;bottom:28px;right:24px;z-index:89;
+  background:var(--ink);color:var(--white);border:none;
+  border-radius:var(--r-full);padding:14px 22px;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+  box-shadow:0 8px 32px rgba(28,13,20,.30);
+  transition:all 220ms var(--ease-out);
+  animation:fabIn 500ms var(--ease-sp) forwards;
+}
+.fab:hover{transform:translateY(-3px);box-shadow:0 14px 44px rgba(28,13,20,.4)}
+@keyframes fabIn{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+
+/* ── CUSTOM BUILDER POPUP ── */
+.cb-overlay{
+  position:fixed;inset:0;background:rgba(28,13,20,.65);z-index:140;
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 280ms;backdrop-filter:blur(6px);
+}
+@media(min-width:640px){.cb-overlay{align-items:center;padding:20px}}
+.cb-overlay.open{opacity:1;pointer-events:all}
+.cb-modal{
+  background:var(--white);border-radius:28px 28px 0 0;
+  width:100%;max-width:580px;max-height:92svh;
+  display:flex;flex-direction:column;
+  transform:translateY(60px);transition:transform 340ms var(--ease-out);
+}
+@media(min-width:640px){.cb-modal{border-radius:28px;transform:translateY(24px) scale(.97)}}
+.cb-overlay.open .cb-modal{transform:none}
+.cb-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 22px 14px;border-bottom:2px solid var(--gray-2);flex-shrink:0;
+}
+.cb-title{font-family:'Fredoka One',sans-serif;font-size:22px;color:var(--ink)}
+.cb-body{overflow-y:auto;flex:1;padding:0 22px}
+.cb-sec{padding-top:20px}
+.cb-sec-title{font-family:'Fredoka One',sans-serif;font-size:17px;color:var(--ink);margin-bottom:3px}
+.cb-sec-hint{font-size:12px;color:var(--gray);font-weight:600;margin-bottom:12px}
+.cb-included-note{
+  display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;
+  background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:var(--r-full);
+  padding:5px 13px;font-size:11px;font-weight:800;color:var(--success);
+}
+.cb-toggle-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 0;border-bottom:1.5px dashed var(--gray-2);
+}
+.cb-toggle-row:last-child{border-bottom:none}
+.cb-toggle-lbl{flex:1;font-size:13px;font-weight:700;color:var(--ink)}
+.cb-free-chip{
+  font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;
+  background:var(--pink-pale);color:var(--pink);border:1.5px solid var(--pink-dim);
+  padding:2px 8px;border-radius:var(--r-full);
+}
+.cb-size-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cb-foot{
+  padding:14px 22px 20px;border-top:2px solid var(--gray-2);flex-shrink:0;
+  display:flex;align-items:center;gap:10px;
+}
+.cb-total-wrap{flex:1}
+.cb-total-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);display:block}
+.cb-total-val{font-family:'Fredoka One',sans-serif;font-size:26px;color:var(--pink);line-height:1.1}
+.cb-btn-cart{
+  background:var(--pink);color:var(--white);border:none;
+  border-radius:var(--r-full);padding:12px 18px;
+  font-size:13px;font-weight:900;font-family:'Nunito',sans-serif;
+  cursor:pointer;box-shadow:var(--sh-pink);transition:all 200ms;
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+}
+.cb-btn-cart:hover:not(:disabled){background:var(--pink-l);transform:translateY(-1px)}
+.cb-btn-cart:disabled,.cb-btn-order:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.cb-btn-order{
+  background:var(--ink);color:var(--white);border:none;
+  border-radius:var(--r-full);padding:12px 18px;
+  font-size:13px;font-weight:900;font-family:'Nunito',sans-serif;
+  cursor:pointer;transition:background 200ms;white-space:nowrap;
+}
+.cb-btn-order:hover:not(:disabled){background:#2d1a24}
+
+/* ── MÉTODOS DE PAGO (shared) ── */
+.pay-methods-row{display:flex;gap:8px;margin:10px 0 4px}
+.pm-meth{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;border-radius:12px;border:2px solid var(--gray-2);background:var(--cream);cursor:pointer;font-size:11px;font-weight:700;color:var(--gray);font-family:inherit;transition:all 180ms}
+.pm-meth:hover{border-color:var(--pink);color:var(--pink)}
+.pm-meth.active{border-color:var(--pink);background:var(--pink-pale);color:var(--pink)}
+.pm-meth.dis{opacity:.55;cursor:not-allowed}
+.pm-meth .mi{font-size:20px}
+.soon-chip{font-size:9px;background:var(--gray-2);color:var(--gray);border-radius:99px;padding:1px 5px}
+.transfer-info{background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:12px;padding:14px;margin:8px 0;display:none;flex-direction:column;gap:8px}
+.transfer-info.show{display:flex}
+.transfer-info-title{font-size:12px;font-weight:800;color:#065F46}
+.t-row{display:flex;justify-content:space-between;font-size:12px;color:#475569}
+.t-row strong{color:#0F172A;font-weight:700}
+.wa-link{display:flex;align-items:center;justify-content:center;gap:7px;background:#22C55E;color:white;border-radius:99px;padding:11px;font-size:13px;font-weight:700;text-decoration:none;transition:background 200ms}
+.wa-link:hover{background:#16A34A}
+.email-hint{font-size:11px;color:var(--pink);font-weight:700;margin-top:3px}
+
+/* ── QUICK ORDER MODAL ── */
+.qo-overlay{
+  position:fixed;inset:0;background:rgba(28,13,20,.65);z-index:130;
+  display:flex;align-items:flex-end;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity 260ms;backdrop-filter:blur(6px);
+}
+@media(min-width:640px){.qo-overlay{align-items:center;padding:20px}}
+.qo-overlay.open{opacity:1;pointer-events:all}
+.qo-modal{
+  background:var(--white);border-radius:28px 28px 0 0;
+  width:100%;max-width:420px;padding:28px 24px 32px;
+  transform:translateY(40px);transition:transform 300ms var(--ease-out);
+  position:relative;
+}
+@media(min-width:640px){.qo-modal{border-radius:28px;transform:translateY(16px) scale(.97)}}
+.qo-overlay.open .qo-modal{transform:none}
+.qo-handle{width:40px;height:4px;border-radius:2px;background:var(--gray-2);margin:0 auto 20px}
+@media(min-width:640px){.qo-handle{display:none}}
+.qo-name{font-family:'Fredoka One',sans-serif;font-size:22px;color:var(--ink);text-align:center;margin-bottom:4px}
+.qo-price{font-size:15px;font-weight:700;color:var(--pink);text-align:center;margin-bottom:22px}
+
+/* ── PEDIDO STATUS en checkout ── */
+.qo-success{text-align:center;display:none}
+.qo-success.show{display:block}
+.qo-code-label{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
+.qo-code{font-family:'Fredoka One',sans-serif;font-size:52px;color:var(--pink);letter-spacing:6px;margin-bottom:8px}
+.qo-code-hint{font-size:13px;color:var(--gray);font-weight:600}
 </style>
 </head>
 <body>
@@ -588,10 +724,7 @@ img,svg{display:block}
 <!-- TOP NAV (aparece al hacer scroll) -->
 <nav class="topnav" id="topnav" aria-label="Navegación principal">
   <a href="#" class="tn-logo">
-    <div class="logo-cup" style="width:30px;height:30px;border-radius:8px">
-      <svg width="16" height="18" viewBox="0 0 22 26" fill="none"><path d="M3 8L1 24h20L19 8z" fill="white" fill-opacity=".9"/><ellipse cx="11" cy="8" rx="8" ry="4" fill="white"/><ellipse cx="11" cy="5" rx="6" ry="3.5" fill="#FFD6E8"/></svg>
-    </div>
-    Subzero
+    <img src="./assets/img/logo.png" alt="Subzero" style="height:60px;object-fit:contain">
   </a>
   <div class="tn-links">
     <a href="#catalogo"    class="tn-link hl">🍧 Catálogo</a>
@@ -622,15 +755,7 @@ img,svg{display:block}
   </button>
 
   <div class="hero-logo">
-    <div class="logo-cup">
-      <svg width="22" height="24" viewBox="0 0 22 26" fill="none">
-        <path d="M3 8L1 24h20L19 8z" fill="white" fill-opacity=".9"/>
-        <ellipse cx="11" cy="8" rx="8" ry="4" fill="white"/>
-        <ellipse cx="11" cy="5" rx="6" ry="3.5" fill="#FFD6E8"/>
-        <rect x="9.5" y="1" width="3" height="14" rx="1.5" fill="white" opacity=".7"/>
-      </svg>
-    </div>
-    Subzero
+    <img src="./assets/img/logo.png" alt="Subzero" style="height:220px;object-fit:contain">
   </div>
 
   <div class="hero-content">
@@ -835,10 +960,7 @@ img,svg{display:block}
     <div class="footer-grid">
       <div>
         <div class="footer-logo">
-          <div class="logo-cup" style="width:28px;height:28px;border-radius:8px">
-            <svg width="16" height="18" viewBox="0 0 22 26" fill="none"><path d="M3 8L1 24h20L19 8z" fill="white" fill-opacity=".9"/><ellipse cx="11" cy="8" rx="8" ry="4" fill="white"/><ellipse cx="11" cy="5" rx="6" ry="3.5" fill="#FFD6E8"/></svg>
-          </div>
-          Subzero
+          <img src="./assets/img/logo.png" alt="Subzero" style="height:90px;object-fit:contain;filter:brightness(0) invert(1)">
         </div>
         <p class="footer-tag">Raspados artesanales hechos con amor, hielo fresco y los mejores sabores de la región.</p>
       </div>
@@ -861,6 +983,10 @@ img,svg{display:block}
   <a href="#catalogo"    onclick="closeMob()">🍧 Catálogo</a>
   <a href="#personaliza" onclick="closeMob()">✨ Personaliza</a>
   <a href="#nosotros"    onclick="closeMob()">💖 Nosotros</a>
+  <a href="/admin/login.html" class="mob-admin-btn" onclick="closeMob()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    Admin
+  </a>
 </div>
 
 <!-- Cart drawer -->
@@ -888,7 +1014,7 @@ img,svg{display:block}
     <!-- Form view -->
     <div id="coForm">
       <div class="co-title">Confirmar pedido 🍧</div>
-      <p class="co-lead">Ingresa tus datos para enviar tu pedido a cocina.</p>
+      <p class="co-lead">Ingresa tus datos para enviar tu orden a cocina.</p>
 
       <div id="coSummaryBox" class="co-summary">
         <div class="co-summary-title">Tu pedido</div>
@@ -897,12 +1023,31 @@ img,svg{display:block}
       </div>
 
       <div class="co-field">
-        <label class="co-label" for="chkNombre">Nombre completo</label>
-        <input class="co-input" id="chkNombre" type="text" placeholder="Tu nombre" autocomplete="name">
+        <label class="co-label" for="chkNombre">Tu nombre *</label>
+        <input class="co-input" id="chkNombre" type="text" placeholder="Ej: Juan" autocomplete="name">
       </div>
       <div class="co-field">
-        <label class="co-label" for="chkEmail">Correo electrónico</label>
-        <input class="co-input" id="chkEmail" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email">
+        <label class="co-label" for="chkEmail">Correo electrónico *</label>
+        <input class="co-input" id="chkEmail" type="email" placeholder="juan@correo.com" autocomplete="email">
+        <p class="email-hint">📧 Tu número de pedido llegará aquí</p>
+      </div>
+      <div class="co-field">
+        <label class="co-label" for="chkTel">Teléfono (opcional)</label>
+        <input class="co-input" id="chkTel" type="tel" placeholder="Ej: 8888-8888" autocomplete="tel">
+      </div>
+
+      <label class="co-label" style="margin-bottom:4px">Método de pago</label>
+      <div class="pay-methods-row">
+        <button type="button" class="pm-meth active" id="coMEfectivo" onclick="setCOMetodo('efectivo')"><span class="mi">💵</span>Efectivo</button>
+        <button type="button" class="pm-meth dis"    onclick="alert('El pago con tarjeta estará disponible próximamente.')"><span class="mi">💳</span>Tarjeta<span class="soon-chip">Próx.</span></button>
+        <button type="button" class="pm-meth"        id="coMTransferencia" onclick="setCOMetodo('transferencia')"><span class="mi">🏦</span>Transferencia</button>
+      </div>
+
+      <div class="transfer-info" id="coTransferInfo">
+        <div class="transfer-info-title">📋 Datos para tu transferencia</div>
+        <div class="t-row"><span>SINPE Móvil</span><strong>8888-8888</strong></div>
+        <div class="t-row"><span>BAC Cta. corriente</span><strong>00-000-000000-0</strong></div>
+        <div class="t-row"><span>A nombre de</span><strong>Subzero Raspados S.A.</strong></div>
       </div>
 
       <div class="co-error" id="coError"></div>
@@ -910,17 +1055,184 @@ img,svg{display:block}
       <div class="co-actions">
         <button class="co-btn-cancel" onclick="closeCheckout()">Cancelar</button>
         <button class="co-btn-confirm" id="coConfirmBtn" onclick="confirmarPedido()">
-          Enviar pedido →
+          💵 Confirmar pedido
         </button>
       </div>
     </div>
 
-    <!-- Success view -->
+    <!-- Success efectivo — redirige a pedido.html -->
     <div class="co-success" id="coSuccess">
       <div class="co-success-icon">🎉</div>
-      <div class="co-success-title">¡Pedido enviado a cocina!</div>
-      <p class="co-success-msg">Tu raspado está en preparación. Te enviaremos una confirmación a tu correo cuando esté listo. ¡Gracias por elegir Subzero!</p>
-      <button class="co-btn-confirm" onclick="closeCheckout()" style="margin-top:24px;width:100%">Cerrar</button>
+      <div class="co-success-title">¡Pedido confirmado!</div>
+      <p class="co-success-msg">Tu turno:</p>
+      <div class="qo-code" id="coTurno"></div>
+      <p class="co-success-msg">Ya estamos preparando tu Subzero. Te enviaremos tu número de pedido al correo.</p>
+      <button class="co-btn-confirm" id="coVerEstadoBtn" style="margin-top:20px;width:100%">Ver estado del pedido →</button>
+      <button class="co-btn-cancel" onclick="window.closeCheckout();window.location.href='index.html'" style="margin-top:8px;width:100%;text-align:center">← Volver al inicio</button>
+    </div>
+
+    <!-- Success transferencia -->
+    <div class="co-success" id="coSuccessTransfer" style="display:none">
+      <div style="font-size:52px;margin-bottom:8px">🏦</div>
+      <div class="co-success-title">Pedido registrado</div>
+      <p class="co-success-msg" style="font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--gray)">Número de pedido</p>
+      <div class="qo-code" id="coTransferCodigo"></div>
+      <p class="co-success-msg" style="max-width:280px;margin:0 auto">Envíanos el comprobante por WhatsApp y lo activamos a la brevedad.</p>
+      <a class="wa-link" id="coWaLink" href="#" target="_blank" rel="noopener" style="margin-top:12px;text-decoration:none">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Enviar comprobante por WhatsApp
+      </a>
+      <button class="co-btn-confirm" id="coVerEstadoTransferBtn" style="margin-top:10px;width:100%;background:var(--ink)">Ver estado del pedido →</button>
+      <button class="co-btn-cancel" onclick="window.closeCheckout();window.location.href='index.html'" style="margin-top:8px;width:100%;text-align:center">← Volver al inicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOTÓN FLOTANTE ══ -->
+<button class="fab" onclick="window.openCustomBuilder()" aria-label="Crear mi Subzero">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+  Crear mi Subzero
+</button>
+
+<!-- ══ CUSTOM BUILDER POPUP ══ -->
+<div class="cb-overlay" id="cbOverlay" onclick="if(event.target.id==='cbOverlay')window.closeCustomBuilder()">
+  <div class="cb-modal">
+
+    <div class="cb-header">
+      <div class="cb-title">✨ Crea tu Subzero</div>
+      <button class="pm-close" onclick="window.closeCustomBuilder()" aria-label="Cerrar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="cb-body">
+
+      <!-- Tamaño -->
+      <div class="cb-sec">
+        <div class="cb-sec-title">📏 Elige tu tamaño</div>
+        <div class="cb-sec-hint">El tamaño define el precio base de tu Subzero.</div>
+        <div class="cb-size-grid" id="cbSizeGrid"></div>
+      </div>
+
+      <!-- Sabores -->
+      <div class="cb-sec">
+        <div class="cb-sec-title">🎨 Sabores</div>
+        <div class="cb-included-note">✓ 2 sabores incluidos — adicionales tienen costo extra</div>
+        <div class="opts" id="cbFlavorOpts"></div>
+      </div>
+
+      <!-- Incluidos: Leche condensada + Frutas -->
+      <div class="cb-sec">
+        <div class="cb-sec-title">🥛 Base incluida</div>
+        <div class="cb-sec-hint">Estos ingredientes vienen incluidos en tu Subzero.</div>
+        <div class="cb-toggle-row">
+          <span class="cb-toggle-lbl">Leche condensada</span>
+          <span class="cb-free-chip">Incluido</span>
+        </div>
+        <div class="cb-toggle-row">
+          <span class="cb-toggle-lbl">Frutas frescas</span>
+          <span class="cb-free-chip">Incluido</span>
+        </div>
+      </div>
+
+      <!-- Gomitas -->
+      <div class="cb-sec">
+        <div class="cb-sec-title">🐛 Gomitas</div>
+        <div class="cb-included-note">✓ 1ª porción incluida — porciones adicionales tienen costo</div>
+        <div id="cbGomList"></div>
+      </div>
+
+      <!-- Toppings -->
+      <div class="cb-sec" style="padding-bottom:20px">
+        <div class="cb-sec-title">🍯 Toppings extras</div>
+        <div class="cb-sec-hint">Todos los toppings tienen costo adicional.</div>
+        <div class="opts" id="cbToppingOpts"></div>
+      </div>
+
+    </div>
+
+    <div class="cb-foot">
+      <div class="cb-total-wrap">
+        <span class="cb-total-lbl">Total</span>
+        <span class="cb-total-val" id="cbTotal">Lps.0</span>
+      </div>
+      <button class="cb-btn-cart"  id="cbBtnCart"  onclick="window.cbAddToCart()"  disabled>🛒 Al carrito</button>
+      <button class="cb-btn-order" id="cbBtnOrder" onclick="window.cbOrderNow()"   disabled>Ordenar →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ QUICK ORDER MODAL ══ -->
+<div class="qo-overlay" id="qoOverlay" onclick="if(event.target.id==='qoOverlay')window.closeQO()">
+  <div class="qo-modal">
+    <div class="qo-handle"></div>
+
+    <!-- Formulario -->
+    <div id="qoForm">
+      <div class="qo-name" id="qoProductName"></div>
+      <div class="qo-price" id="qoProductPrice"></div>
+
+      <div class="co-field">
+        <label class="co-label" for="qoNombre">Tu nombre *</label>
+        <input class="co-input" id="qoNombre" type="text" placeholder="Ej: Juan Pérez" autocomplete="name">
+      </div>
+      <div class="co-field">
+        <label class="co-label" for="qoEmail">Correo electrónico *</label>
+        <input class="co-input" id="qoEmail" type="email" placeholder="juan@correo.com" autocomplete="email">
+        <p class="email-hint">📧 Tu número de pedido llegará aquí</p>
+      </div>
+      <div class="co-field">
+        <label class="co-label" for="qoTel">Teléfono (opcional)</label>
+        <input class="co-input" id="qoTel" type="tel" placeholder="Ej: 8888-8888" autocomplete="tel">
+      </div>
+
+      <label class="co-label" style="margin-bottom:4px">Método de pago</label>
+      <div class="pay-methods-row">
+        <button type="button" class="pm-meth active" id="qoMEfectivo" onclick="setQOMetodo('efectivo')"><span class="mi">💵</span>Efectivo</button>
+        <button type="button" class="pm-meth dis"    onclick="alert('El pago con tarjeta estará disponible próximamente.')"><span class="mi">💳</span>Tarjeta<span class="soon-chip">Próx.</span></button>
+        <button type="button" class="pm-meth"        id="qoMTransferencia" onclick="setQOMetodo('transferencia')"><span class="mi">🏦</span>Transferencia</button>
+      </div>
+
+      <div class="transfer-info" id="qoTransferInfo">
+        <div class="transfer-info-title">📋 Datos para tu transferencia</div>
+        <div class="t-row"><span>SINPE Móvil</span><strong>8888-8888</strong></div>
+        <div class="t-row"><span>BAC Cta. corriente</span><strong>00-000-000000-0</strong></div>
+        <div class="t-row"><span>A nombre de</span><strong>Subzero Raspados S.A.</strong></div>
+      </div>
+
+      <div class="co-error" id="qoError"></div>
+
+      <div class="co-actions">
+        <button class="co-btn-cancel" onclick="window.closeQO()">Cancelar</button>
+        <button class="co-btn-confirm" id="qoConfirmBtn" onclick="window.confirmarQO()">
+          💵 Confirmar pedido
+        </button>
+      </div>
+    </div>
+
+    <!-- Éxito efectivo -->
+    <div class="qo-success" id="qoSuccess">
+      <div style="font-size:52px;margin-bottom:8px">🎉</div>
+      <div class="qo-code-label">Tu turno</div>
+      <div class="qo-code" id="qoTurnoCodigo"></div>
+      <p class="qo-code-hint">¡Pedido confirmado! Ya estamos preparando tu Subzero.</p>
+      <button class="co-btn-confirm" id="qoVerBtn" style="margin-top:20px;width:100%">Ver estado del pedido →</button>
+      <button class="co-btn-cancel" onclick="window.closeQO();window.location.href='index.html'" style="margin-top:8px;width:100%;text-align:center">← Volver al inicio</button>
+    </div>
+
+    <!-- Éxito transferencia -->
+    <div class="qo-success" id="qoSuccessTransfer" style="display:none">
+      <div style="font-size:52px;margin-bottom:8px">🏦</div>
+      <div class="qo-code-label">Número de pedido</div>
+      <div class="qo-code" id="qoTransferCodigo"></div>
+      <p class="qo-code-hint" style="text-align:center;max-width:280px;">Envíanos el comprobante por WhatsApp y lo activamos a la brevedad.</p>
+      <a class="wa-link" id="qoWaLink" href="#" target="_blank" rel="noopener" style="margin-top:8px;width:100%">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Enviar comprobante por WhatsApp
+      </a>
+      <button class="co-btn-confirm" id="qoVerBtnTransfer" style="margin-top:10px;width:100%;background:var(--ink)">Ver estado del pedido →</button>
+      <button class="co-btn-cancel" onclick="window.closeQO();window.location.href='index.html'" style="margin-top:8px;width:100%;text-align:center">← Volver al inicio</button>
     </div>
   </div>
 </div>
@@ -949,6 +1261,13 @@ img,svg{display:block}
       <div class="pm-chips" id="pmSaboresChips"></div>
     </div>
 
+    <!-- Gomitas -->
+    <div class="pm-section" id="pmGomitasSection">
+      <div class="pm-sec-title">Gomitas</div>
+      <div class="pm-sec-hint">Elige las que quieras</div>
+      <div class="pm-chips" id="pmGomitasChips"></div>
+    </div>
+
     <!-- Toppings -->
     <div class="pm-section" id="pmToppingsSection">
       <div class="pm-sec-title">Toppings</div>
@@ -961,10 +1280,13 @@ img,svg{display:block}
         <span class="pm-total-label">Total</span>
         <span class="pm-total-val" id="pmTotal">Lps.0</span>
       </div>
-      <button class="pm-add" onclick="addFromModal()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        Agregar al carrito
-      </button>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <button class="pm-add" onclick="addFromModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          Agregar al carrito
+        </button>
+        <button class="pm-order-now" onclick="window.orderNowFromModal()">Ordenar ahora →</button>
+      </div>
     </div>
 
   </div>
@@ -980,8 +1302,13 @@ img,svg{display:block}
 import { db } from "./assets/js/firebase-config.js";
 import {
   collection, query, where, orderBy, onSnapshot,
-  addDoc, serverTimestamp
+  addDoc, serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { enviarConfirmacionPedido } from "./assets/js/email.js";
+
+const WA_NUMBER = '50432198769';
+let qoMetodo = 'efectivo';
+let coMetodo = 'efectivo';
 
 // ── Paletas de color para productos ──────────────────────────────
 const PALETTES = [
@@ -1287,6 +1614,8 @@ function renderCart() {
   const bubble = document.getElementById('cartBubble');
   bubble.textContent = n;
   bubble.classList.toggle('show', n > 0);
+  const tnB = document.getElementById('tnCartBubble');
+  if (tnB) { tnB.textContent = n; tnB.classList.toggle('show', n > 0); }
 
   const body  = document.getElementById('drawerBody');
   const foot  = document.getElementById('drawerFoot');
@@ -1330,22 +1659,36 @@ function renderCart() {
 // ══════════════════════════════════════════════════════
 //  CHECKOUT — guarda pedido en Firestore
 // ══════════════════════════════════════════════════════
+window.setCOMetodo = (m) => {
+  coMetodo = m;
+  document.getElementById('coMEfectivo').classList.toggle('active', m === 'efectivo');
+  document.getElementById('coMTransferencia').classList.toggle('active', m === 'transferencia');
+  document.getElementById('coTransferInfo').classList.toggle('show', m === 'transferencia');
+  document.getElementById('coConfirmBtn').textContent = m === 'efectivo' ? '💵 Confirmar pedido' : '🏦 Registrar pedido';
+};
+
 window.openCheckout = () => {
   if (!cart.length) { showToast('Tu carrito está vacío'); return; }
 
-  // Actualiza resumen en modal
   const tot = cart.reduce((s,i) => s + i.price, 0);
   document.getElementById('coSummaryItems').innerHTML = cart.map(i =>
     `• ${esc(i.name)}${i.meta ? ` (${esc(i.meta)})` : ''} — Lps.${i.price.toLocaleString()}`
   ).join('<br>');
   document.getElementById('coSummaryTotal').textContent = `Lps.${tot.toLocaleString()}`;
 
-  // Reset form
   document.getElementById('chkNombre').value = '';
   document.getElementById('chkEmail').value  = '';
+  document.getElementById('chkTel').value    = '';
+  coMetodo = 'efectivo';
+  document.getElementById('coMEfectivo').classList.add('active');
+  document.getElementById('coMTransferencia').classList.remove('active');
+  document.getElementById('coTransferInfo').classList.remove('show');
+  document.getElementById('coConfirmBtn').textContent = '💵 Confirmar pedido';
   document.getElementById('coError').classList.remove('show');
   document.getElementById('coForm').style.display = 'block';
   document.getElementById('coSuccess').classList.remove('show');
+  const coSuccessTransfer = document.getElementById('coSuccessTransfer');
+  if (coSuccessTransfer) coSuccessTransfer.style.display = 'none';
 
   document.getElementById('checkoutModal').classList.add('open');
   document.getElementById('chkNombre').focus();
@@ -1358,42 +1701,175 @@ window.closeCheckout = () => {
 window.confirmarPedido = async () => {
   const nombre = document.getElementById('chkNombre').value.trim();
   const email  = document.getElementById('chkEmail').value.trim();
+  const tel    = document.getElementById('chkTel').value.trim();
   const errEl  = document.getElementById('coError');
   const btn    = document.getElementById('coConfirmBtn');
 
   if (!nombre) { errEl.textContent = 'Por favor escribe tu nombre.'; errEl.classList.add('show'); return; }
-  if (!email || !email.includes('@')) { errEl.textContent = 'Por favor escribe un correo válido.'; errEl.classList.add('show'); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = 'Por favor escribe un correo válido.'; errEl.classList.add('show'); return; }
+  if (coMetodo === 'tarjeta') { errEl.textContent = 'El pago con tarjeta estará disponible próximamente.'; errEl.classList.add('show'); return; }
   errEl.classList.remove('show');
 
+  const originalText = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Enviando...';
 
   try {
-    const tot = cart.reduce((s,i) => s + i.price, 0);
-    await addDoc(collection(db,'pedidos'), {
-      estado:        'PENDIENTE',
-      fecha:         serverTimestamp(),
-      clienteNombre: nombre,
-      clienteEmail:  email,
-      items:         cart.map(i => ({ nombre: i.name, precio: i.price, meta: i.meta || '' })),
+    const tot   = cart.reduce((s,i) => s + i.price, 0);
+    const items = cart.map(i => ({ nombre: i.name, precio: i.price, meta: i.meta || '' }));
+    const metodoPago = coMetodo === 'transferencia' ? 'TRANSFERENCIA' : 'EFECTIVO';
+    const ref = await addDoc(collection(db, 'pedidos'), {
+      items,
       total:         tot,
+      clienteEmail:  email,
+      clienteNombre: nombre,
+      clienteTel:    tel,
+      metodoPago,
+      estado:        metodoPago === 'EFECTIVO' ? 'PENDIENTE' : 'ESPERANDO_PAGO',
+      fecha:         serverTimestamp(),
+      factura_url:   null,
     });
 
-    // Limpiar carrito
     cart = [];
     renderCart();
     closeDrawer();
 
-    // Mostrar éxito
-    document.getElementById('coForm').style.display = 'none';
-    document.getElementById('coSuccess').classList.add('show');
+    const pedidoId = ref.id;
+    enviarConfirmacionPedido({ email, nombre, pedidoId, metodoPago });
+    const code = pedidoId.slice(-6).toUpperCase();
+
+    if (coMetodo === 'transferencia') {
+      document.getElementById('coTransferCodigo').textContent = '#' + code;
+      const texto = `Hola! Les envío el comprobante de mi transferencia. Pedido: #${code}`;
+      document.getElementById('coWaLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(texto)}`;
+      document.getElementById('coVerEstadoTransferBtn').onclick = () => { window.location.href = `pedido.html?id=${pedidoId}`; };
+      document.getElementById('coForm').style.display = 'none';
+      document.getElementById('coSuccessTransfer').style.display = 'block';
+    } else {
+      document.getElementById('coTurno').textContent = '#' + code;
+      document.getElementById('coVerEstadoBtn').onclick = () => { window.location.href = `pedido.html?id=${pedidoId}`; };
+      document.getElementById('coForm').style.display = 'none';
+      document.getElementById('coSuccess').classList.add('show');
+    }
 
   } catch (err) {
     errEl.textContent = 'Error al enviar: ' + err.message;
     errEl.classList.add('show');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Enviar pedido →';
+    btn.textContent = originalText;
+  }
+};
+
+// ══════════════════════════════════════════════════════
+//  QUICK ORDER (Ordenar ahora desde tarjeta de producto)
+// ══════════════════════════════════════════════════════
+let qoProductId = null;
+
+window.setQOMetodo = (m) => {
+  qoMetodo = m;
+  document.getElementById('qoMEfectivo').classList.toggle('active', m === 'efectivo');
+  document.getElementById('qoMTransferencia').classList.toggle('active', m === 'transferencia');
+  document.getElementById('qoTransferInfo').classList.toggle('show', m === 'transferencia');
+  document.getElementById('qoConfirmBtn').textContent = m === 'efectivo' ? '💵 Confirmar pedido' : '🏦 Registrar pedido';
+};
+
+function _resetQOForm() {
+  document.getElementById('qoNombre').value = '';
+  document.getElementById('qoEmail').value  = '';
+  document.getElementById('qoTel').value    = '';
+  qoMetodo = 'efectivo';
+  document.getElementById('qoMEfectivo').classList.add('active');
+  document.getElementById('qoMTransferencia').classList.remove('active');
+  document.getElementById('qoTransferInfo').classList.remove('show');
+  document.getElementById('qoConfirmBtn').textContent = '💵 Confirmar pedido';
+  document.getElementById('qoError').classList.remove('show');
+  document.getElementById('qoForm').style.display = 'block';
+  document.getElementById('qoSuccess').classList.remove('show');
+  document.getElementById('qoSuccessTransfer').style.display = 'none';
+}
+
+window.openQuickOrder = (id) => {
+  const p = prodMap[id];
+  if (!p) return;
+  qoProductId = id;
+  document.getElementById('qoProductName').textContent  = p.nombre;
+  document.getElementById('qoProductPrice').textContent = `Lps.${(p.precio_base||0).toLocaleString()}`;
+  _resetQOForm();
+  document.getElementById('qoOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('qoNombre').focus(), 300);
+};
+
+window.closeQO = () => {
+  document.getElementById('qoOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  qoProductId = null;
+};
+
+window.confirmarQO = async () => {
+  const nombre = document.getElementById('qoNombre').value.trim();
+  const email  = document.getElementById('qoEmail').value.trim();
+  const tel    = document.getElementById('qoTel').value.trim();
+  const errEl  = document.getElementById('qoError');
+  const btn    = document.getElementById('qoConfirmBtn');
+
+  if (!nombre) { errEl.textContent = 'Por favor escribe tu nombre.'; errEl.classList.add('show'); return; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { errEl.textContent = 'Por favor escribe un correo válido.'; errEl.classList.add('show'); return; }
+  if (qoMetodo === 'tarjeta') { errEl.textContent = 'El pago con tarjeta estará disponible próximamente.'; errEl.classList.add('show'); return; }
+  errEl.classList.remove('show');
+
+  const customItem = window._qoCustomItem;
+  const p = !customItem ? prodMap[qoProductId] : null;
+  if (!customItem && !p) return;
+
+  const itemNombre = customItem ? customItem.name  : p.nombre;
+  const itemPrecio = customItem ? customItem.price : (p.precio_base || 0);
+  const itemMeta   = customItem ? customItem.meta  : '';
+
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+
+  try {
+    const metodoPago = qoMetodo === 'transferencia' ? 'TRANSFERENCIA' : 'EFECTIVO';
+    const ref = await addDoc(collection(db, 'pedidos'), {
+      items:         [{ nombre: itemNombre, precio: itemPrecio, meta: itemMeta }],
+      total:         itemPrecio,
+      clienteEmail:  email,
+      clienteNombre: nombre,
+      clienteTel:    tel,
+      metodoPago,
+      estado:        metodoPago === 'EFECTIVO' ? 'PENDIENTE' : 'ESPERANDO_PAGO',
+      fecha:         serverTimestamp(),
+      factura_url:   null,
+    });
+    window._qoCustomItem = null;
+
+    const pedidoId = ref.id;
+    enviarConfirmacionPedido({ email, nombre, pedidoId, metodoPago });
+    const code = pedidoId.slice(-6).toUpperCase();
+
+    if (qoMetodo === 'transferencia') {
+      document.getElementById('qoTransferCodigo').textContent = '#' + code;
+      const texto = `Hola! Les envío el comprobante de mi transferencia. Pedido: #${code}`;
+      document.getElementById('qoWaLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(texto)}`;
+      document.getElementById('qoVerBtnTransfer').onclick = () => { window.location.href = `pedido.html?id=${pedidoId}`; };
+      document.getElementById('qoForm').style.display = 'none';
+      document.getElementById('qoSuccessTransfer').style.display = 'block';
+    } else {
+      document.getElementById('qoTurnoCodigo').textContent = '#' + code;
+      document.getElementById('qoVerBtn').onclick = () => { window.location.href = `pedido.html?id=${pedidoId}`; };
+      document.getElementById('qoForm').style.display = 'none';
+      document.getElementById('qoSuccess').classList.add('show');
+    }
+
+  } catch (err) {
+    errEl.textContent = 'Error: ' + err.message;
+    errEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
   }
 };
 
@@ -1464,20 +1940,13 @@ new IntersectionObserver(([e]) => {
 document.getElementById('tnCartBtn').addEventListener('click', openDrawer);
 
 // Sync topnav cart bubble with main bubble
-const _origRenderCart = renderCart;
-// Override renderCart to also update topnav bubble
-function renderCart() {
-  _origRenderCart.call(this);
-  const n = cart.length;
-  const tnB = document.getElementById('tnCartBubble');
-  if (tnB) { tnB.textContent = n; tnB.classList.toggle('show', n > 0); }
-}
 
 // ══════════════════════════════════════════════════════
 //  PRODUCT MODAL
 // ══════════════════════════════════════════════════════
 let pmProduct    = null;
 let pmSelSabores  = {};   // { name: { price, color } }
+let pmSelGomitas  = {};   // { name: price }
 let pmSelToppings = {};   // { name: price }
 
 window.openProdModal = (id) => {
@@ -1492,6 +1961,7 @@ window.openProdModal = (id) => {
 
   pmProduct     = p;
   pmSelSabores  = {};
+  pmSelGomitas  = {};
   pmSelToppings = {};
 
   // Visual
@@ -1515,6 +1985,7 @@ window.openProdModal = (id) => {
 
   // Chips
   _renderPMSabores();
+  _renderPMGomitas();
   _renderPMToppings();
   _updatePMTotal();
 
@@ -1530,10 +2001,16 @@ window.closeProdModal = () => {
 
 window.closePMOutside = (e) => { if (e.target.id === 'pmOverlay') closeProdModal(); };
 
+function _pmFilterExtras(list) {
+  const ids = pmProduct?.extrasIds;
+  if (!ids || !ids.length) return [];
+  return list.filter(e => ids.includes(e.id));
+}
+
 function _renderPMSabores() {
   const chips = document.getElementById('pmSaboresChips');
   const sec   = document.getElementById('pmSaboresSection');
-  const list  = extras.sabores;
+  const list  = _pmFilterExtras(extras.sabores);
   if (!list.length) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
   chips.innerHTML = list.map(f => {
@@ -1547,10 +2024,25 @@ function _renderPMSabores() {
   }).join('');
 }
 
+function _renderPMGomitas() {
+  const chips = document.getElementById('pmGomitasChips');
+  const sec   = document.getElementById('pmGomitasSection');
+  const list  = _pmFilterExtras(extras.gomitas);
+  if (!list.length) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+  chips.innerHTML = list.map(g => {
+    const precio = g.precio || 0;
+    return `<button class="pm-chip" onclick="togglePMGomita('${esc(g.nombre)}',${precio},this)">
+      ${g.icon ? `${g.icon} ` : ''}${esc(g.nombre)}
+      ${precio > 0 ? `<span class="pm-chip-price">+Lps.${precio.toLocaleString()}</span>` : ''}
+    </button>`;
+  }).join('');
+}
+
 function _renderPMToppings() {
   const chips = document.getElementById('pmToppingsChips');
   const sec   = document.getElementById('pmToppingsSection');
-  const list  = extras.toppings;
+  const list  = _pmFilterExtras(extras.toppings);
   if (!list.length) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
   chips.innerHTML = list.map(t => {
@@ -1565,14 +2057,21 @@ function _renderPMToppings() {
 function _updatePMTotal() {
   if (!pmProduct) return;
   const xSabores  = Object.values(pmSelSabores).reduce((s, f) => s + f.price, 0);
+  const xGomitas  = Object.values(pmSelGomitas).reduce((s, p) => s + p, 0);
   const xToppings = Object.values(pmSelToppings).reduce((s, p) => s + p, 0);
-  const total = (pmProduct.precio_base || 0) + xSabores + xToppings;
+  const total = (pmProduct.precio_base || 0) + xSabores + xGomitas + xToppings;
   document.getElementById('pmTotal').textContent = `Lps.${total.toLocaleString()}`;
 }
 
 window.togglePMSabor = (name, price, color, btn) => {
   if (pmSelSabores[name]) { delete pmSelSabores[name]; btn.classList.remove('selected'); }
   else { pmSelSabores[name] = { price, color }; btn.classList.add('selected'); }
+  _updatePMTotal();
+};
+
+window.togglePMGomita = (name, price, btn) => {
+  if (pmSelGomitas[name]) { delete pmSelGomitas[name]; btn.classList.remove('selected'); }
+  else { pmSelGomitas[name] = price; btn.classList.add('selected'); }
   _updatePMTotal();
 };
 
@@ -1585,22 +2084,230 @@ window.togglePMTopping = (name, price, btn) => {
 window.addFromModal = () => {
   if (!pmProduct) return;
   const xSabores  = Object.values(pmSelSabores).reduce((s, f) => s + f.price, 0);
+  const xGomitas  = Object.values(pmSelGomitas).reduce((s, p) => s + p, 0);
   const xToppings = Object.values(pmSelToppings).reduce((s, p) => s + p, 0);
-  const total  = (pmProduct.precio_base || 0) + xSabores + xToppings;
+  const total  = (pmProduct.precio_base || 0) + xSabores + xGomitas + xToppings;
   const saNames  = Object.keys(pmSelSabores);
+  const gomNames = Object.keys(pmSelGomitas);
   const topNames = Object.keys(pmSelToppings);
   const meta = [
     saNames.length  ? `Sabores: ${saNames.join(', ')}`  : '',
+    gomNames.length ? `Gomitas: ${gomNames.join(', ')}` : '',
     topNames.length ? `Toppings: ${topNames.join(', ')}` : '',
   ].filter(Boolean).join(' · ');
   addToCart({ name: pmProduct.nombre, price: total, meta });
   closeProdModal();
 };
 
-// Escape key closes product modal too
+// orderNowFromModal — abre quick order con el producto del modal abierto
+window.orderNowFromModal = () => {
+  if (!pmProduct) return;
+  const id = pmProduct.id;
+  closeProdModal();
+  window.openQuickOrder(id);
+};
+
+// Escape key closes modals
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeProdModal(); closeDrawer(); closeMob(); window.closeCheckout(); }
+  if (e.key === 'Escape') { closeProdModal(); closeDrawer(); closeMob(); window.closeCheckout(); window.closeQO(); window.closeCustomBuilder(); }
 });
+
+// ══════════════════════════════════════════════════════
+//  CUSTOM BUILDER POPUP
+// ══════════════════════════════════════════════════════
+const CB = {
+  size: null, sizePrice: 0,
+  flavors: {},   // { nombre: { price, color } }
+  gomitas: {},   // { nombre: { qty, price } }
+  toppings: {},  // { nombre: price }
+};
+
+function cbCalcTotal() {
+  const selFlavors    = Object.values(CB.flavors);
+  const extraFlavors  = selFlavors.slice(2).reduce((s, f) => s + f.price, 0);
+  const gomitaUnits   = Object.values(CB.gomitas).reduce((s, g) => s + g.qty, 0);
+  const gomitaCost    = Object.values(CB.gomitas).reduce((s, g) => s + g.qty * g.price, 0);
+  const freeGomita    = gomitaUnits > 0
+    ? Math.min(...Object.values(CB.gomitas).map(g => g.price))
+    : 0;
+  const toppingCost   = Object.values(CB.toppings).reduce((s, p) => s + p, 0);
+  return CB.sizePrice + extraFlavors + Math.max(0, gomitaCost - freeGomita) + toppingCost;
+}
+
+function cbUpdateTotal() {
+  const tot = cbCalcTotal();
+  document.getElementById('cbTotal').textContent = `Lps.${tot.toLocaleString()}`;
+  const ok = !!CB.size;
+  document.getElementById('cbBtnCart').disabled  = !ok;
+  document.getElementById('cbBtnOrder').disabled = !ok;
+}
+
+function cbRenderSizes() {
+  const svgSz = [
+    `<svg width="22" height="28" viewBox="0 0 28 36" fill="none"><path d="M4 14L2 34h24L24 14z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="14" cy="14" rx="10" ry="6" fill="#FFB3D1" opacity=".8"/><ellipse cx="14" cy="10" rx="7" ry="5" fill="#E8186D"/></svg>`,
+    `<svg width="28" height="34" viewBox="0 0 34 42" fill="none"><path d="M5 17L2 40h30L27 17z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="17" cy="17" rx="12" ry="7" fill="#FFB3D1" opacity=".8"/><ellipse cx="17" cy="12" rx="9" ry="6" fill="#E8186D"/></svg>`,
+    `<svg width="34" height="42" viewBox="0 0 40 50" fill="none"><path d="M6 20L2 48h36L34 20z" fill="#FFD6E8" stroke="#FF6B9D" stroke-width="1.5"/><ellipse cx="20" cy="20" rx="14" ry="8" fill="#FFB3D1" opacity=".8"/><ellipse cx="20" cy="14" rx="10" ry="7" fill="#E8186D"/></svg>`,
+  ];
+  const sizes = [...extras.tamaños].sort((a,b) => (a.precio||0)-(b.precio||0));
+  document.getElementById('cbSizeGrid').innerHTML = sizes.length
+    ? sizes.map((s,i) => `
+        <button class="sz" id="cbSz_${esc(s.nombre)}" onclick="window.cbPickSize(this,'${esc(s.nombre)}',${s.precio||0})" role="radio" aria-checked="false">
+          <div class="sz-icon">${svgSz[Math.min(i,2)]}</div>
+          <div>
+            <div class="sz-label">${esc(s.nombre)}</div>
+            <div class="sz-price">Lps.${(s.precio||0).toLocaleString()}</div>
+          </div>
+        </button>`).join('')
+    : `<div style="color:var(--gray);font-size:13px;grid-column:1/-1">Sin tamaños configurados.</div>`;
+}
+
+function cbRenderFlavors() {
+  document.getElementById('cbFlavorOpts').innerHTML = extras.sabores.map(f => {
+    const color  = f.color || '#F48FB1';
+    const precio = f.precio || 0;
+    return `<button class="opt" id="cbFl_${esc(f.nombre)}" onclick="window.cbToggleFlavor('${esc(f.nombre)}',${precio},'${color}',this)" aria-pressed="false">
+      <span class="opt-sw" style="background:${color}"></span>
+      ${esc(f.nombre)}
+      ${precio > 0 ? `<span class="opt-p">+Lps.${precio.toLocaleString()}</span>` : '<span class="opt-p" style="color:var(--success)">Incluido</span>'}
+    </button>`;
+  }).join('') || `<div style="color:var(--gray);font-size:13px">Sin sabores configurados.</div>`;
+}
+
+function cbRenderGomitas() {
+  document.getElementById('cbGomList').innerHTML = extras.gomitas.map((g,i) => `
+    <div class="ctr-item">
+      <div style="flex:1">
+        <div class="ctr-name">${g.icon?g.icon+' ':''}${esc(g.nombre)}</div>
+        <div class="ctr-plbl">Lps.${(g.precio||0).toLocaleString()} c/u</div>
+      </div>
+      <div class="ctr-ctrl">
+        <button class="cb" onclick="window.cbAdjGomita('${esc(g.nombre)}',${g.precio||0},-1)">−</button>
+        <span class="cv" id="cbGv${i}">0</span>
+        <button class="cb" onclick="window.cbAdjGomita('${esc(g.nombre)}',${g.precio||0},1)">+</button>
+      </div>
+    </div>`).join('') || `<div style="color:var(--gray);font-size:13px;padding:12px 0">Sin gomitas configuradas.</div>`;
+}
+
+function cbRenderToppings() {
+  document.getElementById('cbToppingOpts').innerHTML = extras.toppings.map(t => {
+    const precio = t.precio || 0;
+    return `<button class="opt" onclick="window.cbToggleTopping('${esc(t.nombre)}',${precio},this)" aria-pressed="false">
+      ${t.icon?t.icon+' ':''}${esc(t.nombre)}
+      ${precio > 0 ? `<span class="opt-p">+Lps.${precio.toLocaleString()}</span>` : ''}
+    </button>`;
+  }).join('') || `<div style="color:var(--gray);font-size:13px">Sin toppings configurados.</div>`;
+}
+
+window.openCustomBuilder = () => {
+  CB.size = null; CB.sizePrice = 0;
+  CB.flavors = {}; CB.gomitas = {}; CB.toppings = {};
+  cbRenderSizes(); cbRenderFlavors(); cbRenderGomitas(); cbRenderToppings();
+  cbUpdateTotal();
+  document.getElementById('cbOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+
+window.closeCustomBuilder = () => {
+  document.getElementById('cbOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+};
+
+window.cbPickSize = (btn, name, price) => {
+  document.querySelectorAll('#cbSizeGrid .sz').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-checked','false'); });
+  btn.classList.add('selected'); btn.setAttribute('aria-checked','true');
+  CB.size = name; CB.sizePrice = price;
+  cbUpdateTotal();
+};
+
+window.cbToggleFlavor = (nombre, price, color, btn) => {
+  const selCount = Object.keys(CB.flavors).length;
+  if (CB.flavors[nombre]) {
+    delete CB.flavors[nombre];
+    btn.classList.remove('selected'); btn.setAttribute('aria-pressed','false');
+  } else {
+    CB.flavors[nombre] = { price, color };
+    btn.classList.add('selected'); btn.setAttribute('aria-pressed','true');
+  }
+  // Update labels to show which are free (first 2) vs extra
+  const keys = Object.keys(CB.flavors);
+  document.querySelectorAll('#cbFlavorOpts .opt').forEach(b => {
+    const name = b.querySelector('.opt-sw')?.nextSibling?.textContent?.trim();
+    const idx  = keys.indexOf(Object.keys(CB.flavors).find(k => b.id === 'cbFl_'+k));
+    // Reset price hint
+    const hint = b.querySelector('.opt-p');
+    if (!hint) return;
+    const f = extras.sabores.find(x => b.id === 'cbFl_' + x.nombre);
+    if (!f) return;
+    const pos = keys.findIndex(k => k === f.nombre);
+    if (pos === -1) {
+      hint.textContent = f.precio > 0 ? `+Lps.${f.precio.toLocaleString()}` : 'Incluido';
+      hint.style.color = '';
+    } else if (pos < 2) {
+      hint.textContent = 'Incluido';
+      hint.style.color = 'var(--success)';
+    } else {
+      hint.textContent = f.precio > 0 ? `+Lps.${f.precio.toLocaleString()} extra` : 'Gratis';
+      hint.style.color = 'var(--danger)';
+    }
+  });
+  cbUpdateTotal();
+};
+
+window.cbAdjGomita = (nombre, price, d) => {
+  const cur  = CB.gomitas[nombre]?.qty || 0;
+  const next = Math.max(0, cur + d);
+  if (next === 0) delete CB.gomitas[nombre];
+  else CB.gomitas[nombre] = { qty: next, price };
+  const idx = extras.gomitas.findIndex(g => g.nombre === nombre);
+  const el  = document.getElementById('cbGv' + idx);
+  if (el) el.textContent = next;
+  cbUpdateTotal();
+};
+
+window.cbToggleTopping = (nombre, price, btn) => {
+  if (CB.toppings[nombre] !== undefined) {
+    delete CB.toppings[nombre];
+    btn.classList.remove('selected'); btn.setAttribute('aria-pressed','false');
+  } else {
+    CB.toppings[nombre] = price;
+    btn.classList.add('selected'); btn.setAttribute('aria-pressed','true');
+  }
+  cbUpdateTotal();
+};
+
+function cbBuildItem() {
+  const tot      = cbCalcTotal();
+  const flavorNms = Object.keys(CB.flavors);
+  const gomNms    = Object.entries(CB.gomitas).map(([n,g]) => `${n} x${g.qty}`);
+  const topNms    = Object.keys(CB.toppings);
+  const meta = [
+    CB.size,
+    `Leche condensada, Frutas`,
+    flavorNms.length ? `Sabores: ${flavorNms.join(', ')}` : '',
+    gomNms.length    ? `Gomitas: ${gomNms.join(', ')}`    : '',
+    topNms.length    ? `Toppings: ${topNms.join(', ')}`   : '',
+  ].filter(Boolean).join(' · ');
+  return { name: 'Subzero Personalizado', price: tot, meta };
+}
+
+window.cbAddToCart = () => {
+  if (!CB.size) return;
+  addToCart(cbBuildItem());
+  window.closeCustomBuilder();
+};
+
+window.cbOrderNow = () => {
+  if (!CB.size) return;
+  const item = cbBuildItem();
+  window.closeCustomBuilder();
+  document.getElementById('qoProductName').textContent  = item.name;
+  document.getElementById('qoProductPrice').textContent = `Lps.${item.price.toLocaleString()}`;
+  _resetQOForm();
+  window._qoCustomItem = item;
+  document.getElementById('qoOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('qoNombre').focus(), 300);
+};
 </script>
 </body>
 </html>

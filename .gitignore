@@ -4,3 +4,10 @@
 !.dev.vars.example
 .env*
 !.env.example
+
+# Node
+node_modules/
+functions/node_modules/
+
+# IDE / herramientas internas
+.claude/

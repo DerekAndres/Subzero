@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estado de tu pedido — Subzero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink:      #E8186D;
+  --pink-pale: #FFE8F2;
+  --pink-dim:  #FFADD1;
+  --cream:     #FAF4ED;
+  --white:     #FFFFFF;
+  --ink:       #1C0D14;
+  --gray:      #8A6070;
+  --gray-2:    #EDE0D5;
+  --success:   #22C55E;
+  --danger:    #EF4444;
+  --sh-pink:   0 8px 32px rgba(232,24,109,.28);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--cream);color:var(--ink);
+  min-height:100svh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px;
+}
+
+.card{
+  background:var(--white);border-radius:28px;
+  padding:40px 32px;width:100%;max-width:400px;
+  border:2px solid var(--gray-2);
+  box-shadow:0 8px 40px rgba(28,13,20,.08);
+  display:flex;flex-direction:column;align-items:center;gap:20px;
+}
+
+/* ── Logo ── */
+.logo{display:flex;align-items:center;gap:8px;font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--pink);margin-bottom:4px}
+.logo-cup{width:34px;height:34px;border-radius:9px;background:var(--pink);display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-pink)}
+
+/* ── Estado LISTO ── */
+.ready-icon{font-size:64px}
+.ready-title{font-family:'Fredoka One',sans-serif;font-size:24px;color:var(--ink);text-align:center}
+.ready-sub{font-size:14px;color:var(--gray);font-weight:600;text-align:center}
+
+/* ── Código de turno ── */
+.code-label{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--gray)}
+.code{font-family:'Fredoka One',sans-serif;font-size:56px;color:var(--pink);letter-spacing:8px;line-height:1}
+.code-hint{font-size:12px;color:var(--gray);font-weight:600;text-align:center}
+
+/* ── Progress steps ── */
+.steps{align-self:stretch;display:flex;flex-direction:column;gap:0}
+.step-row{display:flex;align-items:center;gap:12px}
+.dot{
+  width:40px;height:40px;flex-shrink:0;border-radius:50%;
+  background:var(--gray-2);display:flex;align-items:center;justify-content:center;
+  font-size:17px;transition:background 400ms;
+}
+.dot.active{background:var(--pink);box-shadow:var(--sh-pink)}
+.dot.done{background:var(--success)}
+.step-lbl{font-size:14px;font-weight:600;color:var(--gray);transition:color 400ms}
+.step-lbl.active{font-weight:900;color:var(--ink)}
+.step-lbl.done{color:var(--success);font-weight:700}
+.connector{padding-left:19px;padding-block:4px}
+.conn-line{width:2px;height:20px;background:var(--gray-2);transition:background 400ms}
+.conn-line.done{background:var(--success)}
+
+/* ── Buttons ── */
+.btn{
+  align-self:stretch;background:var(--ink);color:var(--white);
+  border:none;border-radius:999px;padding:14px;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;
+  cursor:pointer;text-align:center;text-decoration:none;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 200ms;
+}
+.btn:hover{background:#2d1a24}
+.btn.pink{background:var(--pink);box-shadow:var(--sh-pink)}
+.btn.pink:hover{background:#c71460}
+
+/* ── Loading / error ── */
+.spinner{width:40px;height:40px;border:4px solid var(--pink-pale);border-top-color:var(--pink);border-radius:50%;animation:spin 800ms linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.msg{font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--gray);text-align:center}
+
+/* ── Cancelled ── */
+.cancel-icon{font-size:56px}
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <!-- Logo -->
+  <a href="index.html" class="logo">
+    <img src="./assets/img/logo.png" alt="Subzero" style="height:90px;object-fit:contain">
+  </a>
+
+  <!-- Contenido dinámico -->
+  <div class="spinner" id="spinner"></div>
+  <div class="msg" id="msgTxt" style="display:none"></div>
+  <div id="orderContent" style="display:contents"></div>
+</div>
+
+<script type="module">
+import { db } from "./assets/js/firebase-config.js";
+import {
+  doc, onSnapshot,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const params    = new URLSearchParams(location.search);
+const pedidoId  = params.get('id');
+const spinner   = document.getElementById('spinner');
+const msgTxt    = document.getElementById('msgTxt');
+const content   = document.getElementById('orderContent');
+
+const STEPS = [
+  { estado: 'PENDIENTE',      label: 'Pedido recibido',      icon: '📋' },
+  { estado: 'EN_PREPARACION', label: 'En preparación',       icon: '🧊' },
+  { estado: 'LISTO',          label: '¡Listo para retirar!', icon: '🎉' },
+];
+
+function stepIndex(estado) {
+  const i = STEPS.findIndex(s => s.estado === estado);
+  return i === -1 ? 0 : i;
+}
+
+function renderWaiting(estado, nombre, code) {
+  const cur = stepIndex(estado);
+  content.innerHTML = `
+    <div class="code-label">Tu turno</div>
+    <div class="code">#${code}</div>
+    <div class="code-hint">Mantén esta página abierta 📱</div>
+
+    <div class="steps">
+      ${STEPS.map((step, i) => {
+        const done   = i < cur;
+        const active = i === cur;
+        const dotCls = done ? 'done' : active ? 'active' : '';
+        const lblCls = done ? 'done' : active ? 'active' : '';
+        return `
+          <div class="step-row">
+            <div class="dot ${dotCls}">${done ? '✓' : step.icon}</div>
+            <div class="step-lbl ${lblCls}">${step.label}</div>
+          </div>
+          ${i < STEPS.length - 1 ? `<div class="connector"><div class="conn-line ${done ? 'done' : ''}"></div></div>` : ''}
+        `;
+      }).join('')}
+    </div>
+
+    <a href="index.html" class="btn">Pedir algo más</a>
+  `;
+}
+
+function renderListo(nombre, code) {
+  content.innerHTML = `
+    <div class="ready-icon">🎉</div>
+    <div class="ready-title">${nombre ? `¡${nombre}, tu pedido está listo!` : '¡Tu pedido está listo!'}</div>
+    <div class="ready-sub">Acércate al mostrador a retirar tu Subzero 🍧</div>
+
+    <div class="steps">
+      ${STEPS.map((step, i) => `
+        <div class="step-row">
+          <div class="dot done">✓</div>
+          <div class="step-lbl done">${step.label}</div>
+        </div>
+        ${i < STEPS.length - 1 ? `<div class="connector"><div class="conn-line done"></div></div>` : ''}
+      `).join('')}
+    </div>
+
+    <a href="index.html" class="btn pink">Volver al inicio</a>
+  `;
+}
+
+function renderEsperandoPago(nombre, code, metodoPago) {
+  const numero = "50432198769";
+  const texto  = `Hola! Les envío el comprobante de mi transferencia. Pedido: #${code}`;
+  const waHref = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+  content.innerHTML = `
+    <div class="ready-icon">🏦</div>
+    <div class="ready-title">Pedido registrado</div>
+    <div class="ready-sub">Número de pedido</div>
+    <div class="code">#${code}</div>
+    <div class="code-hint" style="text-align:center;max-width:280px;">
+      Estamos esperando la confirmación de tu transferencia. <br>
+      Envíanos el comprobante por WhatsApp y lo activaremos a la brevedad.
+    </div>
+    <a href="${waHref}" target="_blank" rel="noopener"
+      style="display:flex;align-items:center;justify-content:center;gap:8px;
+             background:#22C55E;color:white;border-radius:999px;padding:14px 28px;
+             font-weight:900;font-size:14px;text-decoration:none;align-self:stretch;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+      Enviar comprobante por WhatsApp
+    </a>
+    <a href="index.html" class="btn" style="background:var(--ink)">Volver al menú</a>
+  `;
+}
+
+function renderCancelado() {
+  content.innerHTML = `
+    <div class="cancel-icon">😕</div>
+    <div class="ready-title">Pedido cancelado</div>
+    <div class="ready-sub">Acércate a la caja para más información.</div>
+    <a href="index.html" class="btn">Volver al inicio</a>
+  `;
+}
+
+function renderError(msg) {
+  spinner.style.display = 'none';
+  msgTxt.textContent = msg;
+  msgTxt.style.display = 'block';
+}
+
+if (!pedidoId) {
+  renderError('No se encontró el pedido.');
+} else {
+  let first = true;
+  onSnapshot(doc(db, 'pedidos', pedidoId), (snap) => {
+    spinner.style.display = 'none';
+
+    if (!snap.exists()) {
+      renderError('Pedido no encontrado.');
+      return;
+    }
+
+    const data   = snap.data();
+    const estado = data.estado;
+    const nombre = data.clienteNombre || '';
+    const code   = pedidoId.slice(-6).toUpperCase();
+
+    if (estado === 'CANCELADO') {
+      renderCancelado();
+    } else if (estado === 'LISTO' || estado === 'ENTREGADO') {
+      renderListo(nombre, code);
+      if (!first) document.title = '✅ ¡Listo! — Subzero';
+    } else if (estado === 'ESPERANDO_PAGO') {
+      renderEsperandoPago(nombre, code, data.metodoPago);
+    } else {
+      renderWaiting(estado, nombre, code);
+    }
+
+    first = false;
+  }, (err) => {
+    renderError('Error al conectar con Firestore: ' + err.message);
+  });
+}
+</script>
+</body>
+</html>

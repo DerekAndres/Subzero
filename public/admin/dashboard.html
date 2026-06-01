@@ -62,10 +62,13 @@
   .order-id{font-size:13px;font-weight:700;color:var(--s900)}
   .order-time{font-size:12px;color:var(--s400)}
   .status-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px}
+  .status-ESPERANDO_PAGO{background:#FEF3C7;color:#92400E;border:1px solid #FCD34D}
   .status-PENDIENTE{background:#FEF9C3;color:#92400E}
   .status-EN_PREPARACION{background:#FEF3C7;color:#92400E}
   .status-LISTO{background:#D1FAE5;color:#065F46}
   .status-ENTREGADO{background:var(--s100);color:var(--s400)}
+  .action-warn{background:#FEF3C7;color:#92400E}
+  .action-warn:hover{background:#FDE68A}
   .order-body{padding:14px 18px}
   .order-client{font-size:13px;font-weight:600;color:var(--s700);margin-bottom:2px}
   .order-email{font-size:12px;color:var(--s400);margin-bottom:12px}
@@ -136,6 +139,16 @@
   .color-preview-row{display:flex;align-items:center;gap:10px}
   .color-big{width:36px;height:36px;border-radius:8px;border:1px solid var(--s200);flex-shrink:0}
 
+  /* ── Extras picker ── */
+  .extras-picker{display:flex;flex-direction:column;gap:14px;margin-top:4px}
+  .ep-cat-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--s400);margin-bottom:6px}
+  .ep-chips{display:flex;flex-wrap:wrap;gap:6px}
+  .ep-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;border:2px solid var(--s200);background:var(--white);font-size:12px;font-weight:600;cursor:pointer;transition:all 160ms;color:var(--s600);font-family:'Inter',sans-serif}
+  .ep-chip:hover{border-color:var(--ice);color:var(--ice-d)}
+  .ep-chip.selected{border-color:var(--ice);background:var(--ice-bg);color:var(--ice-d)}
+  .ep-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .ep-empty{font-size:12px;color:var(--s400);font-style:italic}
+
   /* ── Toast ── */
   .toast{position:fixed;bottom:24px;right:24px;background:var(--s900);color:var(--white);padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;transform:translateY(80px);opacity:0;transition:all 300ms}
   .toast.show{transform:translateY(0);opacity:1}
@@ -151,7 +164,7 @@
 <div class="layout">
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="sidebar-logo">SUBZERO</div>
+    <div class="sidebar-logo"><img src="../assets/img/logo.png" alt="Subzero" style="height:80px;object-fit:contain;filter:brightness(0) invert(1)"></div>
 
     <div class="sidebar-label">Cocina</div>
     <button class="nav-btn active" id="nav-pedidos" onclick="showSection('pedidos')">
@@ -189,6 +202,11 @@
       <!-- ═══════════ SECCIÓN PEDIDOS ═══════════ -->
       <div id="sec-pedidos" class="section active">
         <div class="stats-grid">
+          <div class="stat-card" style="border-left:4px solid var(--warn)">
+            <div class="stat-label">Esperando pago</div>
+            <div class="stat-value" id="cnt-ESPERANDO_PAGO">—</div>
+            <div class="stat-sub">Transferencias</div>
+          </div>
           <div class="stat-card">
             <div class="stat-label">Pendientes</div>
             <div class="stat-value" id="cnt-PENDIENTE">—</div>
@@ -204,14 +222,10 @@
             <div class="stat-value" id="cnt-LISTO">—</div>
             <div class="stat-sub">Para entregar</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-label">Hoy entregados</div>
-            <div class="stat-value" id="cnt-ENTREGADO">—</div>
-            <div class="stat-sub">Completados</div>
-          </div>
         </div>
 
         <div class="tabs">
+          <button class="tab-btn"        id="tab-ESPERANDO_PAGO" onclick="filtrarPedidos('ESPERANDO_PAGO',this)">⏳ Transferencias <span class="tab-badge" id="badge-ESPERANDO_PAGO">0</span></button>
           <button class="tab-btn active" id="tab-PENDIENTE"      onclick="filtrarPedidos('PENDIENTE',this)">Pendientes <span class="tab-badge" id="badge-PENDIENTE">0</span></button>
           <button class="tab-btn"        id="tab-EN_PREPARACION" onclick="filtrarPedidos('EN_PREPARACION',this)">En preparación <span class="tab-badge" id="badge-EN_PREPARACION">0</span></button>
           <button class="tab-btn"        id="tab-LISTO"          onclick="filtrarPedidos('LISTO',this)">Listos <span class="tab-badge" id="badge-LISTO">0</span></button>
@@ -301,6 +315,16 @@
         <label class="form-label">URL de imagen (opcional)</label>
         <img class="img-preview" id="imgPreview" alt="Preview">
         <input class="form-input" id="f-imagen" type="url" placeholder="https://… (pega el link de la imagen)" oninput="previewImg(this.value)">
+      </div>
+    </div>
+
+    <!-- Extras del producto (solo modo producto) -->
+    <div id="grp-extras" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Extras disponibles para este producto</label>
+        <div class="extras-picker" id="extrasPicker">
+          <div class="ep-empty">Cargando extras...</div>
+        </div>
       </div>
     </div>
 
@@ -452,10 +476,15 @@ onSnapshot(
   snap => {
     allOrders = snap.docs.map(d => ({ id:d.id, ...d.data() }));
 
-    const nuevos = allOrders.filter(o => o.estado==="PENDIENTE" && !prevIds.has(o.id));
+    const nuevos = allOrders.filter(o =>
+      (o.estado === "PENDIENTE" || o.estado === "ESPERANDO_PAGO") && !prevIds.has(o.id)
+    );
     if (nuevos.length && prevIds.size > 0) {
-      document.title = `🔔 ¡${nuevos.length} nuevo(s)! — Dashboard`;
-      setTimeout(() => { document.title = "Dashboard — Subzero"; }, 5000);
+      const hayTransf = nuevos.some(o => o.estado === "ESPERANDO_PAGO");
+      document.title = hayTransf
+        ? `🏦 ¡Transferencia pendiente! — Dashboard`
+        : `🔔 ¡${nuevos.length} nuevo(s)! — Dashboard`;
+      setTimeout(() => { document.title = "Dashboard — Subzero"; }, 6000);
     }
     prevIds = new Set(allOrders.map(o => o.id));
     actualizarContadores();
@@ -464,12 +493,18 @@ onSnapshot(
 );
 
 function actualizarContadores() {
-  ["PENDIENTE","EN_PREPARACION","LISTO","ENTREGADO"].forEach(e => {
+  ["ESPERANDO_PAGO","PENDIENTE","EN_PREPARACION","LISTO","ENTREGADO"].forEach(e => {
     const cnt = allOrders.filter(o => o.estado === e).length;
     const el  = document.getElementById(`cnt-${e}`);
     const b   = document.getElementById(`badge-${e}`);
     if (el) el.textContent = cnt;
     if (b)  b.textContent  = cnt;
+    // Resaltar tab de transferencias si hay pedidos esperando
+    const tabEl = document.getElementById(`tab-${e}`);
+    if (e === "ESPERANDO_PAGO" && tabEl) {
+      tabEl.style.borderColor = cnt > 0 ? "var(--warn)" : "";
+      tabEl.style.color       = cnt > 0 ? "#92400E"     : "";
+    }
   });
 }
 
@@ -485,7 +520,11 @@ function renderPedidos() {
     const itemsHTML = (o.items||[]).map(i =>
       `<div>• ${i.nombre}${i.meta ? ` <span style="color:var(--s400)">(${i.meta})</span>` : ""}</div>`
     ).join("");
+    const metodoBadge = o.metodoPago
+      ? `<span style="font-size:10px;background:var(--s100);color:var(--s600);border-radius:99px;padding:2px 8px;font-weight:600;margin-left:6px;">${o.metodoPago}</span>`
+      : "";
     const acciones = {
+      ESPERANDO_PAGO: `<button class="action-btn action-warn" onclick="confirmarTransferencia('${o.id}')">✅ Confirmar transferencia</button>`,
       PENDIENTE:      `<button class="action-btn action-primary" onclick="cambiarEstado('${o.id}','EN_PREPARACION')">Empezar preparación</button>`,
       EN_PREPARACION: `<button class="action-btn action-success" onclick="cambiarEstado('${o.id}','LISTO')">Marcar LISTO</button>`,
       LISTO:          `<button class="action-btn action-primary" onclick="cambiarEstado('${o.id}','ENTREGADO')">Marcar ENTREGADO</button>`,
@@ -498,10 +537,10 @@ function renderPedidos() {
             <div class="order-id">Pedido #${o.id.slice(-6).toUpperCase()}</div>
             <div class="order-time">${hora}</div>
           </div>
-          <span class="status-badge status-${o.estado}">${o.estado.replace("_"," ")}</span>
+          <span class="status-badge status-${o.estado}">${o.estado.replace(/_/g," ")}</span>
         </div>
         <div class="order-body">
-          <div class="order-client">${o.clienteNombre||"Cliente"}</div>
+          <div class="order-client">${o.clienteNombre||"Cliente"}${metodoBadge}</div>
           <div class="order-email">${o.clienteEmail||""}</div>
           <div class="order-items">${itemsHTML||"Sin detalle"}</div>
           <div class="order-total">Lps.${(o.total||0).toLocaleString()}</div>
@@ -512,7 +551,17 @@ function renderPedidos() {
 }
 
 window.cambiarEstado = async (id, estado) => {
-  await restUpdate("pedidos", id, { estado });
+  try {
+    await restUpdate("pedidos", id, { estado });
+  } catch (err) { showToast("Error: " + err.message); }
+};
+
+window.confirmarTransferencia = async (id) => {
+  if (!confirm("¿Confirmar que recibiste el comprobante de transferencia? Se notificará al cliente con su número de pedido.")) return;
+  try {
+    await restUpdate("pedidos", id, { estado: "PENDIENTE" });
+    showToast("Transferencia confirmada ✓ — se enviará email al cliente");
+  } catch (err) { showToast("Error: " + err.message); }
 };
 window.filtrarPedidos = (estado, btn) => {
   estadoActivo = estado;
@@ -557,10 +606,11 @@ function renderProductos() {
       ${p.descripcion ? `<div class="item-desc">${esc(p.descripcion)}</div>` : ""}
       <div class="item-meta">
         ${p.badge ? `<span class="badge-pill">${esc(p.badge)}</span>` : ""}
+        ${p.extrasIds?.length ? `<span class="badge-pill" style="background:#E0F7FA;color:#00838F">${p.extrasIds.length} extras</span>` : `<span class="badge-pill" style="background:#FEF9C3;color:#92400E">Sin extras</span>`}
         <span style="font-size:11px;color:var(--s400)">Orden: ${p.orden||"—"}</span>
       </div>
       <div class="item-actions">
-        <button class="btn-edit" onclick='editItem("producto",${JSON.stringify({id:p.id,nombre:p.nombre,precio_base:p.precio_base,descripcion:p.descripcion||"",badge:p.badge||"",imagen:p.imagen||"",orden:p.orden||1,activo:p.activo!==false})})'>Editar</button>
+        <button class="btn-edit" onclick='editItem("producto",${JSON.stringify({id:p.id,nombre:p.nombre,precio_base:p.precio_base,descripcion:p.descripcion||"",badge:p.badge||"",imagen:p.imagen||"",orden:p.orden||1,activo:p.activo!==false,extrasIds:p.extrasIds||[]})})'>Editar</button>
         <button class="btn-toggle ${p.activo!==false?'on':'off'}" onclick="toggleItem('productos','${p.id}',${p.activo!==false})">
           ${p.activo!==false?'Desactivar':'Activar'}
         </button>
@@ -658,7 +708,9 @@ window.openModal = (mode, data) => {
   document.getElementById("grp-orden").style.display            = isProducto ? "flex"  : "none";
   document.getElementById("grp-color").style.display            = isSabor    ? "block" : "none";
   document.getElementById("grp-icon").style.display             = isTopping  ? "block" : "none";
+  document.getElementById("grp-extras").style.display           = isProducto ? "block" : "none";
   document.getElementById("lbl-precio").textContent = isProducto ? "Precio base (Lps.)" : "Precio extra (Lps.)";
+  if (isProducto) _buildExtrasPicker(data?.extrasIds || []);
 
   // Rellena con data existente
   if (data) {
@@ -694,6 +746,28 @@ window.closeModal    = () => document.getElementById("overlay").classList.remove
 window.closeModalOutside = e => { if (e.target.id==="overlay") closeModal(); };
 window.editItem      = (mode, data) => openModal(mode, data);
 
+function _buildExtrasPicker(selectedIds) {
+  const picker = document.getElementById("extrasPicker");
+  const cats = [
+    { key:"sabores",  label:"Sabores"  },
+    { key:"gomitas",  label:"Gomitas"  },
+    { key:"toppings", label:"Toppings" },
+  ];
+  const html = cats.map(({ key, label }) => {
+    const items = extras.filter(e => e.categoria === key && e.activo !== false);
+    if (!items.length) return "";
+    const chips = items.map(e => {
+      const sel = selectedIds.includes(e.id) ? "selected" : "";
+      const dot = e.color ? `<span class="ep-dot" style="background:${esc(e.color)}"></span>` : "";
+      const icon = e.icon ? `${esc(e.icon)} ` : "";
+      return `<button type="button" class="ep-chip ${sel}" data-extra-id="${e.id}"
+        onclick="this.classList.toggle('selected')">${dot}${icon}${esc(e.nombre)}</button>`;
+    }).join("");
+    return `<div><div class="ep-cat-label">${label}</div><div class="ep-chips">${chips}</div></div>`;
+  }).join("");
+  picker.innerHTML = html || `<div class="ep-empty">Sin extras configurados aún. Agrégalos desde la sección Extras.</div>`;
+}
+
 window.handleSave = async () => {
   const errEl   = document.getElementById("modalError");
   const btnSave = document.getElementById("btnSave");
@@ -716,6 +790,8 @@ window.handleSave = async () => {
     if (modalMode === "producto") {
       const orden  = parseInt(document.getElementById("f-orden").value) || (productos.length + 1);
       const imagen = document.getElementById("f-imagen").value.trim();
+      const extrasIds = [...document.querySelectorAll('#extrasPicker .ep-chip.selected')]
+        .map(el => el.dataset.extraId);
       const data   = {
         nombre:      nombre,
         precio_base: precio,
@@ -723,6 +799,7 @@ window.handleSave = async () => {
         badge:       document.getElementById("f-badge").value.trim(),
         orden:       orden,
         activo:      true,
+        extrasIds:   extrasIds,
       };
       if (imagen) data.imagen = imagen;
 
