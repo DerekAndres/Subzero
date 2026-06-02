@@ -73,6 +73,14 @@
   .order-client{font-size:13px;font-weight:600;color:var(--s700);margin-bottom:2px}
   .order-email{font-size:12px;color:var(--s400);margin-bottom:12px}
   .order-items{font-size:13px;color:var(--s600);line-height:1.6;margin-bottom:12px}
+  .item-block{background:var(--s100);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .item-block:last-child{margin-bottom:0}
+  .item-block-nombre{font-size:13px;font-weight:700;color:var(--s900);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+  .item-detail-row{display:flex;align-items:baseline;gap:6px;padding:2px 0;border-bottom:1px dashed var(--s200)}
+  .item-detail-row:last-child{border-bottom:none}
+  .item-detail-icon{font-size:13px;flex-shrink:0;width:18px;text-align:center}
+  .item-detail-label{font-size:11px;font-weight:700;color:var(--s600);white-space:nowrap;min-width:68px}
+  .item-detail-val{font-size:12px;color:var(--s700);line-height:1.4}
   .order-total{font-size:15px;font-weight:700;color:var(--ice-d)}
   .order-actions{padding:14px 18px;border-top:1px solid var(--s100);display:flex;gap:8px}
   .action-btn{flex:1;padding:9px;border-radius:99px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 200ms}
@@ -697,6 +705,41 @@ function actualizarContadores() {
   });
 }
 
+const DETALLE_MAP = {
+  'Sabores':  { icon:'🎨', label:'Sabores'  },
+  'Sabor':    { icon:'🎨', label:'Sabor'    },
+  'Gomitas':  { icon:'🐛', label:'Gomitas'  },
+  'Toppings': { icon:'🍯', label:'Toppings' },
+  'Extras':   { icon:'➕', label:'Extras'   },
+  'Base':     { icon:'🥛', label:'Base'     },
+};
+
+function renderItemDetalle(nombre, meta) {
+  const partes = (meta || '').split(' · ').map(s => s.trim()).filter(Boolean);
+  const filas  = partes.map(parte => {
+    const colonIdx = parte.indexOf(':');
+    if (colonIdx === -1) {
+      return `<div class="item-detail-row">
+        <span class="item-detail-icon">📏</span>
+        <span class="item-detail-label">Tamaño</span>
+        <span class="item-detail-val">${parte}</span>
+      </div>`;
+    }
+    const key  = parte.slice(0, colonIdx).trim();
+    const val  = parte.slice(colonIdx + 1).trim();
+    const map  = DETALLE_MAP[key] || { icon:'•', label: key };
+    return `<div class="item-detail-row">
+      <span class="item-detail-icon">${map.icon}</span>
+      <span class="item-detail-label">${map.label}</span>
+      <span class="item-detail-val">${val}</span>
+    </div>`;
+  });
+  return `<div class="item-block">
+    <div class="item-block-nombre">🍧 ${nombre}</div>
+    ${filas.length ? filas.join('') : '<span style="font-size:12px;color:var(--s400)">Sin personalización</span>'}
+  </div>`;
+}
+
 function renderPedidos() {
   const grid     = document.getElementById("ordersGrid");
   const filtered = allOrders.filter(o => o.estado === estadoActivo);
@@ -711,9 +754,7 @@ function renderPedidos() {
     const hora    = diaISO === hoyISO
       ? fechaD.toLocaleTimeString("es-HN",{hour:"2-digit",minute:"2-digit"})
       : fechaD.toLocaleDateString("es-HN",{day:"2-digit",month:"2-digit"}) + " " + fechaD.toLocaleTimeString("es-HN",{hour:"2-digit",minute:"2-digit"});
-    const itemsHTML = (o.items||[]).map(i =>
-      `<div>• ${i.nombre}${i.meta ? ` <span style="color:var(--s400)">(${i.meta})</span>` : ""}</div>`
-    ).join("");
+    const itemsHTML = (o.items||[]).map(i => renderItemDetalle(i.nombre, i.meta)).join("");
     const metodoBadge = o.metodoPago
       ? `<span style="font-size:10px;background:var(--s100);color:var(--s600);border-radius:99px;padding:2px 8px;font-weight:600;margin-left:6px;">${o.metodoPago}</span>`
       : "";
