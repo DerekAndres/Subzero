@@ -231,10 +231,7 @@ body{
     </p>
   </div>
 
-  <a class="btn-ver" id="btnVerEstado" href="pedido.html">
-    Ver estado del pedido →
-  </a>
-  <a class="btn-back" href="index.html">← Volver al inicio</a>
+  <a class="btn-ver" href="index.html">← Volver al inicio</a>
 
 </div>
 
@@ -253,7 +250,6 @@ if (pedidoId) {
   document.getElementById('orderCode').textContent = '#' + code;
   const texto = `Hola! Les envío el comprobante de mi transferencia. Pedido: #${code}`;
   document.getElementById('waBtn').href = `https://wa.me/${WA}?text=${encodeURIComponent(texto)}`;
-  document.getElementById('btnVerEstado').href = `pedido.html?id=${pedidoId}`;
 }
 
 let toastTimer;
