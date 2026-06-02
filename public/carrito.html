@@ -374,10 +374,7 @@ document.getElementById("checkoutForm").addEventListener("submit", async e => {
 
     } else if (metodoActual === "transferencia") {
       const pedidoId = await confirmarTransferencia(datosCliente);
-      actualizarWhatsapp(pedidoId);
-      setTimeout(() => {
-        window.location.href = `pedido.html?id=${pedidoId}`;
-      }, 4000);
+      window.location.href = `transferencia.html?id=${pedidoId}`;
 
     } else {
       alert("El pago con tarjeta estará disponible próximamente. Por favor elige Efectivo o Transferencia.");

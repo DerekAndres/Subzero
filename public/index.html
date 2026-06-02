@@ -1653,12 +1653,7 @@ window.confirmarPedido = async () => {
     const code = pedidoId.slice(-6).toUpperCase();
 
     if (coMetodo === 'transferencia') {
-      document.getElementById('coTransferCodigo').textContent = '#' + code;
-      const texto = `Hola! Les envío el comprobante de mi transferencia. Pedido: #${code}`;
-      document.getElementById('coWaLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(texto)}`;
-      document.getElementById('coVerEstadoTransferBtn').onclick = () => { window.location.href = `pedido.html?id=${pedidoId}`; };
-      document.getElementById('coForm').style.display = 'none';
-      document.getElementById('coSuccessTransfer').style.display = 'block';
+      window.location.href = `transferencia.html?id=${pedidoId}`;
     } else {
       document.getElementById('coTurno').textContent = '#' + code;
       document.getElementById('coVerEstadoBtn').onclick = () => { window.location.href = `pedido.html?id=${pedidoId}`; };
@@ -1765,12 +1760,7 @@ window.confirmarQO = async () => {
     const code = pedidoId.slice(-6).toUpperCase();
 
     if (qoMetodo === 'transferencia') {
-      document.getElementById('qoTransferCodigo').textContent = '#' + code;
-      const texto = `Hola! Les envío el comprobante de mi transferencia. Pedido: #${code}`;
-      document.getElementById('qoWaLink').href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(texto)}`;
-      document.getElementById('qoVerBtnTransfer').onclick = () => { window.location.href = `pedido.html?id=${pedidoId}`; };
-      document.getElementById('qoForm').style.display = 'none';
-      document.getElementById('qoSuccessTransfer').style.display = 'block';
+      window.location.href = `transferencia.html?id=${pedidoId}`;
     } else {
       document.getElementById('qoTurnoCodigo').textContent = '#' + code;
       document.getElementById('qoVerBtn').onclick = () => { window.location.href = `pedido.html?id=${pedidoId}`; };

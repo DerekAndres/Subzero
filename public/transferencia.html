@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datos de transferencia — Subzero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --pink:      #E8186D;
+  --pink-pale: #FFE8F2;
+  --pink-dim:  #FFADD1;
+  --cream:     #FAF4ED;
+  --white:     #FFFFFF;
+  --ink:       #1C0D14;
+  --gray:      #8A6070;
+  --gray-2:    #EDE0D5;
+  --success:   #22C55E;
+  --sh-pink:   0 8px 32px rgba(232,24,109,.28);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Nunito',sans-serif;
+  background:var(--cream);color:var(--ink);
+  min-height:100svh;display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;
+  padding:28px 20px 48px;gap:0;
+}
+
+/* ── Logo ── */
+.logo{
+  display:flex;align-items:center;gap:8px;
+  font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--pink);
+  margin-bottom:24px;text-decoration:none;
+}
+
+/* ── Card principal ── */
+.card{
+  background:var(--white);border-radius:28px;
+  padding:32px 24px;width:100%;max-width:420px;
+  border:2px solid var(--gray-2);
+  box-shadow:0 8px 40px rgba(28,13,20,.08);
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+}
+
+/* ── Badge pedido ── */
+.order-badge{
+  background:var(--pink-pale);border:2px solid var(--pink-dim);
+  border-radius:16px;padding:14px 24px;text-align:center;align-self:stretch;
+}
+.order-badge-label{font-size:10px;font-weight:900;letter-spacing:2.5px;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
+.order-badge-code{font-family:'Fredoka One',sans-serif;font-size:44px;color:var(--pink);letter-spacing:6px;line-height:1}
+
+/* ── Sección título ── */
+.section-title{
+  font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--ink);
+  text-align:center;align-self:stretch;
+}
+.section-hint{font-size:13px;color:var(--gray);font-weight:600;text-align:center}
+
+/* ── Tarjetas de banco ── */
+.bank-card{
+  align-self:stretch;background:var(--cream);
+  border:2px solid var(--gray-2);border-radius:18px;
+  padding:16px 18px;display:flex;flex-direction:column;gap:10px;
+  transition:border-color 200ms;
+}
+.bank-card:hover{border-color:var(--pink-dim)}
+.bank-header{display:flex;align-items:center;gap:10px}
+.bank-logo{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.bank-logo.bac{background:#C41E3A}
+.bank-logo.atlantida{background:#005BAA}
+.bank-logo svg,.bank-logo img{width:26px;height:26px}
+.bank-name{font-family:'Fredoka One',sans-serif;font-size:16px;color:var(--ink)}
+.bank-holder{font-size:12px;color:var(--gray);font-weight:700;margin-top:1px}
+
+.bank-account-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--white);border:1.5px solid var(--gray-2);
+  border-radius:12px;padding:10px 14px;
+}
+.bank-account-num{
+  flex:1;font-family:'Fredoka One',sans-serif;font-size:20px;
+  color:var(--ink);letter-spacing:2px;
+}
+.copy-btn{
+  display:flex;align-items:center;gap:5px;
+  background:var(--pink);color:var(--white);border:none;
+  border-radius:8px;padding:7px 12px;
+  font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;
+  cursor:pointer;transition:all 160ms;flex-shrink:0;white-space:nowrap;
+}
+.copy-btn:hover{background:#c71460;transform:scale(1.04)}
+.copy-btn.copied{background:var(--success)}
+.copy-btn svg{width:13px;height:13px;flex-shrink:0}
+
+/* ── Separador ── */
+.divider{align-self:stretch;border:none;border-top:2px dashed var(--gray-2)}
+
+/* ── WhatsApp button ── */
+.wa-btn{
+  align-self:stretch;background:#22C55E;color:var(--white);
+  border:none;border-radius:999px;padding:16px;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;
+  text-decoration:none;transition:background 200ms,transform 160ms;
+  box-shadow:0 6px 24px rgba(34,197,94,.35);
+}
+.wa-btn:hover{background:#16A34A;transform:translateY(-2px)}
+.wa-btn svg{width:20px;height:20px;flex-shrink:0}
+.wa-hint{font-size:12px;color:var(--gray);font-weight:600;text-align:center}
+
+/* ── Botones secundarios ── */
+.btn-ver{
+  align-self:stretch;background:var(--ink);color:var(--white);
+  border:none;border-radius:999px;padding:14px;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:900;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  text-decoration:none;transition:background 200ms;
+}
+.btn-ver:hover{background:#2d1a24}
+.btn-back{
+  font-size:13px;color:var(--gray);font-weight:700;
+  text-decoration:none;margin-top:-4px;
+  transition:color 160ms;
+}
+.btn-back:hover{color:var(--pink)}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:var(--ink);color:var(--white);border-radius:999px;
+  padding:11px 22px;font-size:13px;font-weight:800;
+  display:flex;align-items:center;gap:7px;
+  opacity:0;pointer-events:none;transition:all 280ms;
+  white-space:nowrap;z-index:99;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-check{color:var(--success)}
+</style>
+</head>
+<body>
+
+<a href="index.html" class="logo">
+  <img src="./assets/img/logo.png" alt="Subzero" style="height:80px;object-fit:contain">
+</a>
+
+<div class="card">
+
+  <!-- Número de pedido -->
+  <div class="order-badge">
+    <div class="order-badge-label">Número de pedido</div>
+    <div class="order-badge-code" id="orderCode">------</div>
+  </div>
+
+  <div class="section-title">Realiza tu transferencia 🏦</div>
+  <p class="section-hint">Elige cualquiera de las siguientes cuentas para realizar tu pago.</p>
+
+  <!-- BAC -->
+  <div class="bank-card">
+    <div class="bank-header">
+      <div class="bank-logo bac">
+        <svg viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#C41E3A"/>
+          <path d="M6 8h8l6 16H12L6 8z" fill="white" opacity=".9"/>
+          <path d="M14 8h8l4 16h-8l-4-16z" fill="white" opacity=".6"/>
+        </svg>
+      </div>
+      <div>
+        <div class="bank-name">BAC Credomatic</div>
+        <div class="bank-holder">LIBNY RACHELL MENA TROCHEZ</div>
+      </div>
+    </div>
+    <div class="bank-account-row">
+      <div class="bank-account-num" id="bacNum">790163450</div>
+      <button class="copy-btn" onclick="copiar('bacNum', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copiar
+      </button>
+    </div>
+  </div>
+
+  <!-- Atlántida -->
+  <div class="bank-card">
+    <div class="bank-header">
+      <div class="bank-logo atlantida">
+        <svg viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#005BAA"/>
+          <path d="M16 6L26 24H6L16 6z" fill="white" opacity=".9"/>
+          <rect x="13" y="14" width="6" height="10" rx="1" fill="#005BAA"/>
+        </svg>
+      </div>
+      <div>
+        <div class="bank-name">Banco Atlántida</div>
+        <div class="bank-holder">LISSY MICHELLE ROSALES MATUTE</div>
+      </div>
+    </div>
+    <div class="bank-account-row">
+      <div class="bank-account-num" id="atlNum">31120053835</div>
+      <button class="copy-btn" onclick="copiar('atlNum', this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copiar
+      </button>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- WhatsApp -->
+  <a class="wa-btn" id="waBtn" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+    </svg>
+    Enviar comprobante por WhatsApp
+  </a>
+  <p class="wa-hint">Toca el botón y adjunta la foto del comprobante en el chat.</p>
+
+  <a class="btn-ver" id="btnVerEstado" href="pedido.html">
+    Ver estado del pedido →
+  </a>
+  <a class="btn-back" href="index.html">← Volver al inicio</a>
+
+</div>
+
+<div class="toast" id="toast">
+  <svg class="toast-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+const params   = new URLSearchParams(location.search);
+const pedidoId = params.get('id') || '';
+const WA       = '50432198769';
+
+if (pedidoId) {
+  const code = pedidoId.slice(-6).toUpperCase();
+  document.getElementById('orderCode').textContent = '#' + code;
+  const texto = `Hola! Les envío el comprobante de mi transferencia. Pedido: #${code}`;
+  document.getElementById('waBtn').href = `https://wa.me/${WA}?text=${encodeURIComponent(texto)}`;
+  document.getElementById('btnVerEstado').href = `pedido.html?id=${pedidoId}`;
+}
+
+let toastTimer;
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function copiar(elementId, btn) {
+  const texto = document.getElementById(elementId).textContent.trim();
+  navigator.clipboard.writeText(texto).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" style="width:13px;height:13px"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!`;
+    mostrarToast('Número copiado al portapapeles ✓');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:13px;height:13px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar`;
+    }, 2000);
+  }).catch(() => {
+    mostrarToast('Toca el número para copiarlo');
+  });
+}
+</script>
+</body>
+</html>
