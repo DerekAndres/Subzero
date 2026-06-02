@@ -318,12 +318,25 @@
           </div>
         </div>
 
+        <!-- Selector de fecha -->
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+          <label style="font-size:13px;font-weight:600;color:var(--s600)">📅 Ver pedidos del día:</label>
+          <input type="date" id="fechaFiltro"
+            style="padding:8px 12px;border-radius:10px;border:1.5px solid var(--s200);font-size:13px;font-family:'Inter',sans-serif;color:var(--s900);background:var(--white);cursor:pointer"
+            onchange="cambiarFecha(this.value)">
+          <button onclick="cambiarFecha('hoy')"
+            style="padding:8px 14px;border-radius:10px;border:1.5px solid var(--ice);background:var(--ice-bg);color:var(--ice-d);font-size:13px;font-weight:600;cursor:pointer">
+            Hoy
+          </button>
+          <span id="fechaLabel" style="font-size:12px;color:var(--s400);font-weight:500"></span>
+        </div>
+
         <div class="tabs">
           <button class="tab-btn"        id="tab-ESPERANDO_PAGO" onclick="filtrarPedidos('ESPERANDO_PAGO',this)">⏳ Transferencias <span class="tab-badge" id="badge-ESPERANDO_PAGO">0</span></button>
           <button class="tab-btn active" id="tab-PENDIENTE"      onclick="filtrarPedidos('PENDIENTE',this)">Pendientes <span class="tab-badge" id="badge-PENDIENTE">0</span></button>
           <button class="tab-btn"        id="tab-EN_PREPARACION" onclick="filtrarPedidos('EN_PREPARACION',this)">En preparación <span class="tab-badge" id="badge-EN_PREPARACION">0</span></button>
           <button class="tab-btn"        id="tab-LISTO"          onclick="filtrarPedidos('LISTO',this)">Listos <span class="tab-badge" id="badge-LISTO">0</span></button>
-          <button class="tab-btn"        id="tab-ENTREGADO"      onclick="filtrarPedidos('ENTREGADO',this)">Historial</button>
+          <button class="tab-btn"        id="tab-ENTREGADO"      onclick="filtrarPedidos('ENTREGADO',this)">Entregados</button>
         </div>
 
         <div class="orders-grid" id="ordersGrid">
@@ -604,31 +617,69 @@ async function restDelete(col, id) {
 // ══════════════════════════════════════════
 //  PEDIDOS
 // ══════════════════════════════════════════
-let allOrders = [];
+let allOrders    = [];
 let estadoActivo = "PENDIENTE";
-let prevIds = new Set();
+let prevIds      = new Set();
+let unsubPedidos = null;
 
-const hoyInicio = new Date(); hoyInicio.setHours(0,0,0,0);
-onSnapshot(
-  query(collection(db,"pedidos"), where("fecha",">=",Timestamp.fromDate(hoyInicio)), orderBy("fecha","desc")),
-  snap => {
-    allOrders = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+function fechaLocalISO(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
-    const nuevos = allOrders.filter(o =>
-      (o.estado === "PENDIENTE" || o.estado === "ESPERANDO_PAGO") && !prevIds.has(o.id)
-    );
-    if (nuevos.length && prevIds.size > 0) {
-      const hayTransf = nuevos.some(o => o.estado === "ESPERANDO_PAGO");
-      document.title = hayTransf
-        ? `🏦 ¡Transferencia pendiente! — Dashboard`
-        : `🔔 ¡${nuevos.length} nuevo(s)! — Dashboard`;
-      setTimeout(() => { document.title = "Dashboard — Subzero"; }, 6000);
+function suscribirPedidos(iso) {
+  if (unsubPedidos) unsubPedidos();
+
+  const inicio = new Date(iso + 'T00:00:00');
+  const fin    = new Date(iso + 'T23:59:59');
+
+  // Actualizar selector visual
+  const input = document.getElementById('fechaFiltro');
+  if (input) input.value = iso;
+
+  const hoyISO = fechaLocalISO(new Date());
+  const label  = document.getElementById('fechaLabel');
+  if (label) {
+    if (iso === hoyISO) {
+      label.textContent = '— Hoy';
+    } else {
+      const d = new Date(iso + 'T12:00:00');
+      label.textContent = '— ' + d.toLocaleDateString('es-HN', { weekday:'long', day:'numeric', month:'long' });
     }
-    prevIds = new Set(allOrders.map(o => o.id));
-    actualizarContadores();
-    renderPedidos();
   }
-);
+
+  unsubPedidos = onSnapshot(
+    query(
+      collection(db,"pedidos"),
+      where("fecha",">=",Timestamp.fromDate(inicio)),
+      where("fecha","<=",Timestamp.fromDate(fin)),
+      orderBy("fecha","desc")
+    ),
+    snap => {
+      allOrders = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+      const nuevos = allOrders.filter(o =>
+        (o.estado === "PENDIENTE" || o.estado === "ESPERANDO_PAGO") && !prevIds.has(o.id)
+      );
+      if (nuevos.length && prevIds.size > 0 && iso === fechaLocalISO(new Date())) {
+        const hayTransf = nuevos.some(o => o.estado === "ESPERANDO_PAGO");
+        document.title = hayTransf
+          ? `🏦 ¡Transferencia pendiente! — Dashboard`
+          : `🔔 ¡${nuevos.length} nuevo(s)! — Dashboard`;
+        setTimeout(() => { document.title = "Dashboard — Subzero"; }, 6000);
+      }
+      prevIds = new Set(allOrders.map(o => o.id));
+      actualizarContadores();
+      renderPedidos();
+    }
+  );
+}
+
+window.cambiarFecha = (val) => {
+  const iso = val === 'hoy' ? fechaLocalISO(new Date()) : val;
+  suscribirPedidos(iso);
+};
+
+// Arrancar con hoy
+suscribirPedidos(fechaLocalISO(new Date()));
 
 function actualizarContadores() {
   ["ESPERANDO_PAGO","PENDIENTE","EN_PREPARACION","LISTO","ENTREGADO"].forEach(e => {
@@ -654,7 +705,12 @@ function renderPedidos() {
     return;
   }
   grid.innerHTML = filtered.map(o => {
-    const hora = (o.fecha?.toDate?.() || new Date()).toLocaleTimeString("es-CR",{hour:"2-digit",minute:"2-digit"});
+    const fechaD  = o.fecha?.toDate?.() || new Date();
+    const hoyISO  = fechaLocalISO(new Date());
+    const diaISO  = fechaLocalISO(fechaD);
+    const hora    = diaISO === hoyISO
+      ? fechaD.toLocaleTimeString("es-HN",{hour:"2-digit",minute:"2-digit"})
+      : fechaD.toLocaleDateString("es-HN",{day:"2-digit",month:"2-digit"}) + " " + fechaD.toLocaleTimeString("es-HN",{hour:"2-digit",minute:"2-digit"});
     const itemsHTML = (o.items||[]).map(i =>
       `<div>• ${i.nombre}${i.meta ? ` <span style="color:var(--s400)">(${i.meta})</span>` : ""}</div>`
     ).join("");
